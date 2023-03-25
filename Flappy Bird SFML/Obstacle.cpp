@@ -47,9 +47,15 @@ void Obstacle::spawnObstacle()
 
 	sf::Sprite upObstacle;
 	upObstacle.setTexture(upObstTexture);
+	float num = (float)myHeight / (float)upObstacle.getLocalBounds().height;
+	num /= 1.75;
+	upObstacle.setScale(num,num);
 
 	sf::Sprite downObstacle;
 	downObstacle.setTexture(downObstTexture);
+	num = (float)myHeight / (float)upObstacle.getLocalBounds().height;
+	num /= 1.75;
+	downObstacle.setScale(num, num);
 
 	int x = myWidth + upObstacle.getLocalBounds().width / 2;
 

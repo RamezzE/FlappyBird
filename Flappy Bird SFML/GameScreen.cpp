@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace std;
+
 GameScreen::GameScreen(sf::RenderWindow& window)
 {
     myWindow = &window;
@@ -46,29 +47,29 @@ void GameScreen::initialize()
     menuButton.setTexture(menuIMG);
     pauseButton.setTexture(pauseIMG);
 
-    retryButton.setScale(0.3, 0.3);
-    menuButton.setScale(0.3, 0.3);
-    pauseButton.setScale(0.3, 0.3);
+    float num = (float)myHeight / (float)menuButton.getLocalBounds().height;
+    num /= 10;
+    retryButton.setScale(num, num);
+    menuButton.setScale(num, num);
+    pauseButton.setScale(num, num);
 
-    sf::FloatRect temp;
-    temp = menuButton.getGlobalBounds();
-    menuButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    retryButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    pauseButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-
-    menuButton.setPosition(sf::Vector2f(myPlayer.startXpos / 1.4, myHeight * 0.92));
-    retryButton.setPosition(sf::Vector2f(menuButton.getPosition().x + retryButton.getGlobalBounds().width * 1.2, myHeight * 0.92));
-    pauseButton.setPosition(sf::Vector2f(myWidth - pauseButton.getGlobalBounds().width, pauseButton.getGlobalBounds().height / 3 - 5));
+    menuButton.setPosition(sf::Vector2f(myWidth - (pauseButton.getGlobalBounds().width*3 + myWidth * 0.005f*3), myHeight * 0.005f));
+    retryButton.setPosition(sf::Vector2f(myWidth - (pauseButton.getGlobalBounds().width*2 + myWidth * 0.005f*2), myHeight * 0.005f));
+    pauseButton.setPosition(sf::Vector2f(myWidth - (pauseButton.getGlobalBounds().width + myWidth * 0.005f), myHeight * 0.005f));
 
     //loading font and setting up score and highscore text
     font.loadFromFile(FONT_FILEPATH);
+    scoreText.setString("Score: 000");
     scoreText.setFont(font);
-    scoreText.setCharacterSize(myWidth / 17);
-    scoreText.setPosition(sf::Vector2f(myWidth * 0.6, myHeight * 0.88 + 10));
+    scoreText.setCharacterSize(myHeight / 20);
 
+    sf::FloatRect temp = highScoreText.getGlobalBounds();
+    highScoreText.setString("High Score: 000");
     highScoreText.setFont(font);
-    highScoreText.setCharacterSize(myWidth / 20);
-    highScoreText.setPosition(sf::Vector2f(myWidth * 0.6, myHeight * 0.93 + 10));
+    highScoreText.setCharacterSize(myHeight / 20);
+    highScoreText.setPosition(sf::Vector2f(myWidth-highScoreText.getGlobalBounds().width, myHeight-highScoreText.getGlobalBounds().height*2));
+    
+    scoreText.setPosition(sf::Vector2f(myWidth-highScoreText.getGlobalBounds().width, myHeight-highScoreText.getGlobalBounds().height*3.5));
 
 }
 

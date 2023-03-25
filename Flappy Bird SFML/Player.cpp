@@ -27,7 +27,9 @@ void Player::initializePlayer()
     playerSprite.setTexture(playerSpriteSheet[0]);
 
     //setting scale and position
-    playerSprite.setScale(0.1, 0.1);
+    float num = (float)myHeight / (float)playerSprite.getLocalBounds().height;
+    num /= 15;
+    playerSprite.setScale(num, num);
    
     playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));
 

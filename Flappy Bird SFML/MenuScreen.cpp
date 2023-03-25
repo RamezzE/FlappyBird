@@ -48,7 +48,6 @@ void MenuScreen::initialize() {
     temp = playButton.getGlobalBounds();
     playButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
     playButton.setPosition(sf::Vector2f(myWidth / 2, title.getPosition().y + title.getGlobalBounds().height * 2));
-    //playButton.setScale(0.4, 0.4);
     float num = (float)myHeight / (float)playButton.getLocalBounds().height;
     num /= 10;
     playButton.setScale(num, num);
@@ -56,9 +55,8 @@ void MenuScreen::initialize() {
 
     temp = closeButton.getGlobalBounds();
     //closeButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    closeButton.setOrigin(temp.left,temp.top);
+    //closeButton.setOrigin(temp.left,temp.top);
 
-    //closeButton.setScale(0.3, 0.3);
     closeButton.setPosition(sf::Vector2f(myWidth - (closeButton.getGlobalBounds().width + myWidth*0.005f), myHeight * 0.005f));
 }
 

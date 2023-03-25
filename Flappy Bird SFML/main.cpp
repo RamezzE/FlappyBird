@@ -50,7 +50,8 @@ int main()
     } while (!exitLoop);
 
     //myWidth = 300; myHeight = 400;
-
+    /*myWidth = sf::VideoMode::getDesktopMode().width/2;
+    myHeight = sf::VideoMode::getDesktopMode().height;*/
 
 
     sf::RenderWindow myWindow;
