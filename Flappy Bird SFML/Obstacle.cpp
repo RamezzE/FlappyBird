@@ -41,7 +41,8 @@ static bool addScore = true;
 void Obstacle::spawnObstacle()
 {
 	if (ObstacleSprites.size() != 0) { // checks when to insert next obstacle if the vector isn't empty
-		if (ObstacleSprites.back().getPosition().x > SCREEN_WIDTH - distanceBetweenObstacles) return;
+		if (ObstacleSprites.back().getPosition().x > myWidth - distanceBetweenObstacles) return;
+		//if (ObstacleSprites.back().getPosition().x > myWidth - distanceBetweenObstacles) return;
 	}
 
 	sf::Sprite upObstacle;
@@ -50,7 +51,7 @@ void Obstacle::spawnObstacle()
 	sf::Sprite downObstacle;
 	downObstacle.setTexture(downObstTexture);
 
-	int x = SCREEN_WIDTH + upObstacle.getLocalBounds().width / 2;
+	int x = myWidth + upObstacle.getLocalBounds().width / 2;
 
 	int upperlimit = OBSTACLE_AREA * 0.45;
 	int downObstY = rand() % int(OBSTACLE_AREA - upperlimit) + upperlimit;
@@ -70,9 +71,11 @@ void Obstacle::spawnObstacle()
 
 void Obstacle::drawObstacles(sf::RenderWindow* myWindow)
 {
+	myWindow->draw(fakeObstacle);
 	for (int i = 0; i < ObstacleSprites.size(); i++) {
 		myWindow->draw(ObstacleSprites[i]);
 	}
+	
 }
 
 bool Obstacle::moveObstacles(QuadTree& quadTree, float dt, Player player, unsigned short& score)

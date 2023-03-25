@@ -4,8 +4,8 @@ using namespace std;
 
 Player::Player()
 {
-    startXpos = SCREEN_WIDTH / 8; //starting x coordinate
-    startYpos = SCREEN_HEIGHT / 2; //starting y cooridinate 
+    startXpos = myWidth / 8; //starting x coordinate
+    startYpos = myHeight / 2; //starting y cooridinate 
 
     movementSpeed = 200;
 
@@ -28,6 +28,7 @@ void Player::initializePlayer()
 
     //setting scale and position
     playerSprite.setScale(0.1, 0.1);
+   
     playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));
 
     sf::FloatRect temp;

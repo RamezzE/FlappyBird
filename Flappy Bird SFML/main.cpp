@@ -6,26 +6,57 @@
 #include <SFML/Graphics.hpp>
 #include <windows.h>
 
-#include "Definitions.h"
 #include "MenuScreen.h"
 
-
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 800
-
 using namespace std;
+
+//still need to create a button class and adjust all sprite scales
+
+unsigned short widthRatio, heightRatio, myWidth, myHeight;
 
 int main()
 {
     // hiding console
     HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, 0);
+    ShowWindow(hWnd, 1);
 
     srand(time(NULL));
 
+    unsigned short screenWidth = sf::VideoMode::getDesktopMode().width;
+    unsigned short screenHeight = sf::VideoMode::getDesktopMode().height*0.9;
+    
+    widthRatio = 3;  heightRatio = 4;
+
+    myWidth = 0, myHeight = 0;
+    
+    bool exitLoop = false;
+    do {
+        if (myWidth < screenWidth) {
+            myWidth += widthRatio;
+        }
+        else {
+            exitLoop = true;
+        }
+        if (!exitLoop) {
+            if (myHeight < screenHeight) {
+                myHeight += heightRatio;
+            }
+            else {
+                exitLoop = true;
+            }
+        }
+
+
+    } while (!exitLoop);
+
+    //myWidth = 300; myHeight = 400;
+
+
+
     sf::RenderWindow myWindow;
 
-    myWindow.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Flappy Bird", sf::Style::Titlebar | sf::Style::Close);
+    //myWindow.create(sf::VideoMode(myWidth,myHeight), "Flappy Bird", sf::Style::Titlebar | sf::Style::Close);
+    myWindow.create(sf::VideoMode(myWidth, myHeight), "Flappy Bird", sf::Style::Titlebar | sf::Style::Close);
 
     //setting framerate limit 
     myWindow.setFramerateLimit(60);

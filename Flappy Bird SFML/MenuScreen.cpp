@@ -21,7 +21,7 @@ void MenuScreen::initialize() {
     closeButton.setTexture(closeButtonTexture);
 
     //setting background size and position
-    background.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+    background.setSize(sf::Vector2f(myWidth, myHeight));
     background.setPosition(0, 0);
 
 
@@ -32,29 +32,34 @@ void MenuScreen::initialize() {
 
     //setting up title font;
     title.setFont(font);
-    title.setString("Flappy Bird");
-    title.setCharacterSize(SCREEN_WIDTH / 7);
+    title.setString("FlarKy Bird");
+    title.setCharacterSize(myWidth / 8);
+    title.setOutlineThickness(title.getCharacterSize() / 8);
+
     title.setOutlineColor(sf::Color(45, 119, 8, 255));
     title.setFillColor(sf::Color(246, 239, 215, 255));
-    title.setOutlineThickness(8);
 
     //adjusting origin of title to correctly place it in the middle
     temp = title.getGlobalBounds();
     title.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    title.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 - 10));
+    title.setPosition(sf::Vector2f(myWidth / 2, myHeight / 4 - 10));
 
     //adjusting origin, scale and details of buttons to correctly place it in proper position etc
     temp = playButton.getGlobalBounds();
     playButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    playButton.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, title.getPosition().y + title.getGlobalBounds().height * 2));
-    playButton.setScale(0.4, 0.4);
+    playButton.setPosition(sf::Vector2f(myWidth / 2, title.getPosition().y + title.getGlobalBounds().height * 2));
+    //playButton.setScale(0.4, 0.4);
+    float num = (float)myHeight / (float)playButton.getLocalBounds().height;
+    num /= 10;
+    playButton.setScale(num, num);
+    closeButton.setScale(num, num);
 
     temp = closeButton.getGlobalBounds();
-    closeButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    closeButton.setScale(0.3, 0.3);
-    closeButton.setPosition(sf::Vector2f(SCREEN_WIDTH - closeButton.getGlobalBounds().width / 1.5, closeButton.getGlobalBounds().height / 2 + 5));
+    //closeButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
+    closeButton.setOrigin(temp.left,temp.top);
 
-
+    //closeButton.setScale(0.3, 0.3);
+    closeButton.setPosition(sf::Vector2f(myWidth - (closeButton.getGlobalBounds().width + myWidth*0.005f), myHeight * 0.005f));
 }
 
 bool MenuScreen::isSpritePressed(sf::Sprite sprite, sf::RenderWindow* myWindow)

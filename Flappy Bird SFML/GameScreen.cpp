@@ -11,15 +11,15 @@ GameScreen::GameScreen(sf::RenderWindow& window)
 
     score = 0;
 
-    myObstacle.setGap(SCREEN_WIDTH / 3, myPlayer.getHeight() * 4);
+    myObstacle.setGap(myWidth / 3, myPlayer.getHeight() * 4);
 
     //setting QuadTree boundary to the whole screen
-    boundary.setData(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    boundary.setData(0, 0, myWidth, myHeight);
 
     highScore = 0;
     //gets high score from file
     readHighScore();
-
+    
 }
 
 void GameScreen::initialize()
@@ -32,8 +32,8 @@ void GameScreen::initialize()
     ground.setTexture(&groundIMG);
 
     //setting background size
-    sky.setSize(sf::Vector2f(SCREEN_WIDTH * 1.5, SCREEN_HEIGHT));
-    ground.setSize(sf::Vector2f(SCREEN_WIDTH * 1.5, SCREEN_HEIGHT));
+    sky.setSize(sf::Vector2f(myWidth * 1.5, myHeight));
+    ground.setSize(sf::Vector2f(myWidth * 1.5, myHeight));
 
     //setting buttons textures aka imgs
     retryIMG.loadFromFile(RETRY_BUTTON);
@@ -56,19 +56,19 @@ void GameScreen::initialize()
     retryButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
     pauseButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
 
-    menuButton.setPosition(sf::Vector2f(myPlayer.startXpos / 1.4, SCREEN_HEIGHT * 0.92));
-    retryButton.setPosition(sf::Vector2f(menuButton.getPosition().x + retryButton.getGlobalBounds().width * 1.2, SCREEN_HEIGHT * 0.92));
-    pauseButton.setPosition(sf::Vector2f(SCREEN_WIDTH - pauseButton.getGlobalBounds().width, pauseButton.getGlobalBounds().height / 3 - 5));
+    menuButton.setPosition(sf::Vector2f(myPlayer.startXpos / 1.4, myHeight * 0.92));
+    retryButton.setPosition(sf::Vector2f(menuButton.getPosition().x + retryButton.getGlobalBounds().width * 1.2, myHeight * 0.92));
+    pauseButton.setPosition(sf::Vector2f(myWidth - pauseButton.getGlobalBounds().width, pauseButton.getGlobalBounds().height / 3 - 5));
 
     //loading font and setting up score and highscore text
     font.loadFromFile(FONT_FILEPATH);
     scoreText.setFont(font);
-    scoreText.setCharacterSize(SCREEN_WIDTH / 17);
-    scoreText.setPosition(sf::Vector2f(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.88 + 10));
+    scoreText.setCharacterSize(myWidth / 17);
+    scoreText.setPosition(sf::Vector2f(myWidth * 0.6, myHeight * 0.88 + 10));
 
     highScoreText.setFont(font);
-    highScoreText.setCharacterSize(SCREEN_WIDTH / 20);
-    highScoreText.setPosition(sf::Vector2f(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.93 + 10));
+    highScoreText.setCharacterSize(myWidth / 20);
+    highScoreText.setPosition(sf::Vector2f(myWidth * 0.6, myHeight * 0.93 + 10));
 
 }
 
@@ -303,7 +303,6 @@ void GameScreen::draw()
 }
 
 
-
 void GameScreen::initializeTree()
 {
     myTree = QuadTree(boundary, 1);
@@ -322,7 +321,7 @@ void GameScreen::flashScreen()
     //displays quick flash (white square) for a few milliseconds when dying or at restarting the game
     if (flashCLK.getElapsedTime().asSeconds() < FLASH_TIME) {
 
-        sf::RectangleShape white(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+        sf::RectangleShape white(sf::Vector2f(myWidth, myHeight));
 
         white.setFillColor(sf::Color(255, 255, 255, 100));
 
