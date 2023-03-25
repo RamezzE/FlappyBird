@@ -61,9 +61,9 @@ bool Player::moveUp(float dt, float rotationAngle) {
     playerSprite.move(0, -movementSpeed * dt);
 
     // adjusting rotation
-    if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
+    /*if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
         playerSprite.rotate(-rotationAngle * dt);
-    }
+    }*/
 
     return true;
 }
@@ -73,9 +73,9 @@ bool Player::moveDown(float dt, float rotationAngle) {
     playerSprite.move(0, movementSpeed * dt);
 
     //adjusting rotation
-    if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
+    /*if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
         playerSprite.rotate(rotationAngle * dt);
-    }
+    }*/
 
     return true;
 }
@@ -103,27 +103,27 @@ void Player::draw(sf::RenderWindow* myWindow)
 
 
 //some getters
-unsigned short Player::getX()
+float Player::getX()
 {
     return playerSprite.getPosition().x;
 }
 
-unsigned short Player::getY()
+float Player::getY()
 {
     return playerSprite.getPosition().y;
 }
 
-unsigned short Player::getHeight()
+float Player::getHeight()
 {
     return playerSprite.getGlobalBounds().height;
 }
 
-unsigned short Player::getWidth()
+float Player::getWidth()
 {
     return playerSprite.getGlobalBounds().width;
 }
 
-unsigned short Player::getRotation()
+float Player::getRotation()
 {
     return playerSprite.getRotation();
 }

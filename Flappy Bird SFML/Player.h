@@ -19,11 +19,11 @@ public:
 
 	bool die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree);
 
-	unsigned short getX();
-	unsigned short getY();
-	unsigned short getHeight();
-	unsigned short getWidth();
-	unsigned short getRotation();
+	float getX();
+	float getY();
+	float getHeight();
+	float getWidth();
+	float getRotation();
 
 private:
 	sf::Texture playerSpriteSheet[4];

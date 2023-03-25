@@ -6,7 +6,7 @@ Obstacle::Obstacle() {
 	upObstTexture.loadFromFile(OBSTACLE_UP_FILEPATH);
 	downObstTexture.loadFromFile(OBSTACLE_DOWN_FILEPATH);
 
-	movementSpeed = 200;
+	movementSpeed = (float)myHeight/4;
 
 	spawnFakeGround();
 }
@@ -28,7 +28,7 @@ void Obstacle::spawnFakeGround() {
 	fakeObstacle.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
 
 	fakeObstacle.setRotation(90);
-	fakeObstacle.setPosition(sf::Vector2f(0, OBSTACLE_AREA * 1.2 + 10));
+	fakeObstacle.setPosition(sf::Vector2f(0, myHeight * 0.6875 * 1.2 + 10));
 	fakeObstacle.setScale(1, 2.5);
 }
 
@@ -42,46 +42,59 @@ void Obstacle::spawnObstacle()
 {
 	if (ObstacleSprites.size() != 0) { // checks when to insert next obstacle if the vector isn't empty
 		if (ObstacleSprites.back().getPosition().x > myWidth - distanceBetweenObstacles) return;
-		//if (ObstacleSprites.back().getPosition().x > myWidth - distanceBetweenObstacles) return;
 	}
 
 	sf::Sprite upObstacle;
 	upObstacle.setTexture(upObstTexture);
 	float num = (float)myHeight / (float)upObstacle.getLocalBounds().height;
 	num /= 1.75;
-	upObstacle.setScale(num,num);
+	upObstacle.setScale(num, num);
 
 	sf::Sprite downObstacle;
 	downObstacle.setTexture(downObstTexture);
-	num = (float)myHeight / (float)upObstacle.getLocalBounds().height;
+	num = (float)myHeight / (float)downObstacle.getLocalBounds().height;
 	num /= 1.75;
 	downObstacle.setScale(num, num);
 
-	int x = myWidth + upObstacle.getLocalBounds().width / 2;
 
-	int upperlimit = OBSTACLE_AREA * 0.45;
-	int downObstY = rand() % int(OBSTACLE_AREA - upperlimit) + upperlimit;
+	
+	float x = myWidth + upObstacle.getGlobalBounds().width * 0.5f;
 
-	int upObstY = downObstY - verticalGap - upObstacle.getLocalBounds().height * 0.9;
+	//sf::FloatRect bounds = upObstacle.getLocalBounds();
 
-	upObstacle.setPosition(sf::Vector2f(x, upObstY));
-	downObstacle.setPosition(sf::Vector2f(x, downObstY));
+	float upLimit = myHeight*0.1f;
+	float downLimit = myHeight*0.5f;
+	//rand between upLimit and downLimit
+
+	int upObstY = rand() % int(downLimit-upLimit) + upLimit;
+	//int downObstY = upObstY;
+
+	upObstacle.setPosition(sf::Vector2f(x, upObstY-upObstacle.getGlobalBounds().height));
+	downObstacle.setPosition(sf::Vector2f(x, upObstY+verticalGap));
 
 	//pushes spawned obstacles into the vector
-	ObstacleSprites.push_back(upObstacle);
 	ObstacleSprites.push_back(downObstacle);
+	ObstacleSprites.push_back(upObstacle);
 
 	addScore = true;
-
 }
 
 void Obstacle::drawObstacles(sf::RenderWindow* myWindow)
 {
+	sf::RectangleShape rect;
+
 	myWindow->draw(fakeObstacle);
 	for (int i = 0; i < ObstacleSprites.size(); i++) {
+
+		rect.setOrigin(ObstacleSprites[i].getOrigin());
+		rect.setPosition(ObstacleSprites[i].getPosition().x, ObstacleSprites[i].getPosition().y);
+		rect.setSize(sf::Vector2f(ObstacleSprites[i].getGlobalBounds().width, ObstacleSprites[i].getGlobalBounds().height));
+
+		rect.setFillColor(sf::Color(34, 133, 23, 150));
 		myWindow->draw(ObstacleSprites[i]);
+		myWindow->draw(rect);
+		
 	}
-	
 }
 
 bool Obstacle::moveObstacles(QuadTree& quadTree, float dt, Player player, unsigned short& score)
@@ -89,13 +102,13 @@ bool Obstacle::moveObstacles(QuadTree& quadTree, float dt, Player player, unsign
 	if (ObstacleSprites.empty()) return false; // no obstacles to move
 
 	//removing obstacles that totally passed the screen
-	if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getLocalBounds().width < 0) {
+	if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < 0) {
 		ObstacleSprites.pop_front();
 	}
 
 	//adds score 
 	if (addScore) {
-		if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getLocalBounds().width < player.startXpos && addScore) {
+		if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < player.startXpos && addScore) {
 			score++;
 			addScore = false;
 		}

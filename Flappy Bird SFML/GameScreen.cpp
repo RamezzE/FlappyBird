@@ -12,7 +12,7 @@ GameScreen::GameScreen(sf::RenderWindow& window)
 
     score = 0;
 
-    myObstacle.setGap(myWidth / 3, myPlayer.getHeight() * 4);
+    myObstacle.setGap(myWidth / 3, myPlayer.getHeight()*3);
 
     //setting QuadTree boundary to the whole screen
     boundary.setData(0, 0, myWidth, myHeight);
@@ -238,7 +238,7 @@ void GameScreen::update()
     }
 
 
-    unsigned short x1, x2, y1, y2;
+    float x1, x2, y1, y2;
     x1 = myPlayer.getX();
     y1 = myPlayer.getY();
     x2 = x1 + myPlayer.getWidth();
@@ -288,7 +288,7 @@ void GameScreen::draw()
     myWindow->draw(sky);
     myObstacle.drawObstacles(myWindow);
 
-    myWindow->draw(ground);
+    //myWindow->draw(ground);
     myWindow->draw(scoreText);
     myWindow->draw(highScoreText);
     myWindow->draw(pauseButton);
@@ -300,9 +300,27 @@ void GameScreen::draw()
         myWindow->draw(retryButton);
         myWindow->draw(menuButton);
     }
+    
+    sf::RectangleShape myRectangle;
+    myRectangle.setFillColor(sf::Color(255, 255, 255,150));
+    myRectangle.setSize(sf::Vector2f(myWidth, myHeight*0.5f-myHeight*0.1f));
+    myRectangle.setPosition(0, myHeight*0.1f);
+    myWindow->draw(myRectangle);
+
+    sf::RectangleShape myRectangle2;
+    myRectangle2.setFillColor(sf::Color(24, 251, 255, 150));
+    myRectangle2.setSize(sf::Vector2f(myPlayer.getWidth(),myPlayer.getHeight()));
+    sf::FloatRect bounds = myRectangle2.getLocalBounds();
+    myRectangle2.setOrigin(bounds.left+bounds.width /2.0f, bounds.top + bounds.height /2.0f );
+    myRectangle2.setPosition(myPlayer.getX(),myPlayer.getY());
+    myRectangle.setRotation(myPlayer.getRotation());
+
+
+    //myRectangle2.setSize(sf::Vector2f(playerRect.x2 - myPlayer.getWidth(), playerRect.y2 - myPlayer.getHeight()));
+    myWindow->draw(myRectangle2);
+    
     myWindow->display();
 }
-
 
 void GameScreen::initializeTree()
 {

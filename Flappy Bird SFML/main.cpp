@@ -10,8 +10,7 @@
 
 using namespace std;
 
-//still need to create a button class and adjust all sprite scales
-
+//still need to create a button class
 unsigned short widthRatio, heightRatio, myWidth, myHeight;
 
 int main()
@@ -49,15 +48,13 @@ int main()
 
     } while (!exitLoop);
 
-    //myWidth = 300; myHeight = 400;
-    /*myWidth = sf::VideoMode::getDesktopMode().width/2;
-    myHeight = sf::VideoMode::getDesktopMode().height;*/
-
+    //myWidth = 390; myHeight = 520;
+    //myWidth = sf::VideoMode::getDesktopMode().width;
+    //myHeight = sf::VideoMode::getDesktopMode().height;
 
     sf::RenderWindow myWindow;
 
-    //myWindow.create(sf::VideoMode(myWidth,myHeight), "Flappy Bird", sf::Style::Titlebar | sf::Style::Close);
-    myWindow.create(sf::VideoMode(myWidth, myHeight), "Flappy Bird", sf::Style::Titlebar | sf::Style::Close);
+    myWindow.create(sf::VideoMode(myWidth, myHeight), "FlarKy Bird", sf::Style::Titlebar | sf::Style::Close);
 
     //setting framerate limit 
     myWindow.setFramerateLimit(60);

@@ -40,14 +40,14 @@ void MenuScreen::initialize() {
     title.setFillColor(sf::Color(246, 239, 215, 255));
 
     //adjusting origin of title to correctly place it in the middle
-    temp = title.getGlobalBounds();
+    temp = title.getLocalBounds();
     title.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    title.setPosition(sf::Vector2f(myWidth / 2, myHeight / 4 - 10));
+    title.setPosition(sf::Vector2f(myWidth / 2.0f, myHeight / 4 - 10));
 
     //adjusting origin, scale and details of buttons to correctly place it in proper position etc
-    temp = playButton.getGlobalBounds();
+    temp = playButton.getLocalBounds();
     playButton.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-    playButton.setPosition(sf::Vector2f(myWidth / 2, title.getPosition().y + title.getGlobalBounds().height * 2));
+    playButton.setPosition(sf::Vector2f(myWidth / 2.0f, title.getPosition().y + title.getGlobalBounds().height * 2.0f));
     float num = (float)myHeight / (float)playButton.getLocalBounds().height;
     num /= 10;
     playButton.setScale(num, num);
