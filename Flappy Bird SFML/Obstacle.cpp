@@ -6,7 +6,7 @@ Obstacle::Obstacle() {
 	upObstTexture.loadFromFile(OBSTACLE_UP_FILEPATH);
 	downObstTexture.loadFromFile(OBSTACLE_DOWN_FILEPATH);
 
-	movementSpeed = (float)myHeight/4;
+	movementSpeed = (float)myHeight/4.0f;
 
 	spawnFakeGround();
 }
@@ -55,8 +55,6 @@ void Obstacle::spawnObstacle()
 	num = (float)myHeight / (float)downObstacle.getLocalBounds().height;
 	num /= 1.75;
 	downObstacle.setScale(num, num);
-
-
 	
 	float x = myWidth + upObstacle.getGlobalBounds().width * 0.5f;
 
@@ -81,19 +79,18 @@ void Obstacle::spawnObstacle()
 
 void Obstacle::drawObstacles(sf::RenderWindow* myWindow)
 {
-	sf::RectangleShape rect;
+	//sf::RectangleShape rect;
 
 	myWindow->draw(fakeObstacle);
 	for (int i = 0; i < ObstacleSprites.size(); i++) {
+		myWindow->draw(ObstacleSprites[i]);
 
-		rect.setOrigin(ObstacleSprites[i].getOrigin());
+		/*rect.setOrigin(ObstacleSprites[i].getOrigin());
 		rect.setPosition(ObstacleSprites[i].getPosition().x, ObstacleSprites[i].getPosition().y);
 		rect.setSize(sf::Vector2f(ObstacleSprites[i].getGlobalBounds().width, ObstacleSprites[i].getGlobalBounds().height));
 
-		rect.setFillColor(sf::Color(34, 133, 23, 150));
-		myWindow->draw(ObstacleSprites[i]);
-		myWindow->draw(rect);
-		
+		rect.setFillColor(sf::Color(34, 133, 23, 150));*/
+		//myWindow->draw(rect);
 	}
 }
 

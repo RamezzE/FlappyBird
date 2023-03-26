@@ -288,7 +288,7 @@ void GameScreen::draw()
     myWindow->draw(sky);
     myObstacle.drawObstacles(myWindow);
 
-    //myWindow->draw(ground);
+    myWindow->draw(ground);
     myWindow->draw(scoreText);
     myWindow->draw(highScoreText);
     myWindow->draw(pauseButton);
@@ -301,7 +301,7 @@ void GameScreen::draw()
         myWindow->draw(menuButton);
     }
     
-    sf::RectangleShape myRectangle;
+   /* sf::RectangleShape myRectangle;
     myRectangle.setFillColor(sf::Color(255, 255, 255,150));
     myRectangle.setSize(sf::Vector2f(myWidth, myHeight*0.5f-myHeight*0.1f));
     myRectangle.setPosition(0, myHeight*0.1f);
@@ -315,9 +315,7 @@ void GameScreen::draw()
     myRectangle2.setPosition(myPlayer.getX(),myPlayer.getY());
     myRectangle.setRotation(myPlayer.getRotation());
 
-
-    //myRectangle2.setSize(sf::Vector2f(playerRect.x2 - myPlayer.getWidth(), playerRect.y2 - myPlayer.getHeight()));
-    myWindow->draw(myRectangle2);
+    myWindow->draw(myRectangle2);*/
     
     myWindow->display();
 }

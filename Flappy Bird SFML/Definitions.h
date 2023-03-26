@@ -1,8 +1,5 @@
 #pragma once	
 
-//#define OBSTACLE_AREA myHeight*0.6875
-#define OBSTACLE_AREA myHeight*0.6875
-
 #define PLAYER_FRAME_1 "pics\\bird\\frame-1.png"
 #define PLAYER_FRAME_2 "pics\\bird\\frame-2.png"
 #define PLAYER_FRAME_3 "pics\\bird\\frame-3.png"

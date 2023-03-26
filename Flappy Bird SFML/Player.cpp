@@ -7,7 +7,7 @@ Player::Player()
     startXpos = myWidth / 8; //starting x coordinate
     startYpos = myHeight / 2; //starting y cooridinate 
 
-    movementSpeed = 200;
+    movementSpeed = (float)myHeight/4.0f;
 
     upRotationLimit = 340;
     downRotationLimit = 10;
