@@ -41,7 +41,7 @@ private:
 	sf::RectangleShape sky;
 	sf::RectangleShape ground;
 
-	sf::Clock flashCLK;
+	sf::Clock jumpCLK,flashCLK;
 
 	sf::Texture skyIMG;
 	sf::Texture groundIMG;

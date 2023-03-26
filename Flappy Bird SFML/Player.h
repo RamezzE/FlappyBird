@@ -12,8 +12,11 @@ public:
 	Player();
 	void animate(float dt);
 
-	bool moveUp(float dt, float rotationAngle = 100);
+	bool jump(sf::Clock &clk, float dt, float rotationAngle = 100);
 	bool moveDown(float dt, float rotationAngle = 100);
+
+	void setVelocity(float x, float y);
+	void setVelocity(sf::Vector2f velocity);
 
 	void draw(sf::RenderWindow* myWindow);
 
@@ -25,15 +28,15 @@ public:
 	float getWidth();
 	float getRotation();
 
+
+
 private:
 	sf::Texture playerSpriteSheet[4];
 	sf::Sprite playerSprite;
-	sf::Clock moveUpCLK;
-
-	float movementSpeed;
-
+	
+	sf::Vector2f velocity;
 	unsigned short  upRotationLimit, downRotationLimit;
 	void initializePlayer();
-
+	
 };
 

@@ -7,8 +7,6 @@ Player::Player()
     startXpos = myWidth / 8; //starting x coordinate
     startYpos = myHeight / 2; //starting y cooridinate 
 
-    movementSpeed = (float)myHeight/4.0f;
-
     upRotationLimit = 340;
     downRotationLimit = 10;
 
@@ -53,16 +51,26 @@ void Player::animate(float dt) {
 
 }
 
-bool Player::moveUp(float dt, float rotationAngle) {
+bool Player::jump(sf::Clock &clk,float dt, float rotationAngle) {
 
     // limits the up movement so bird doesnt get out of screen
-    if (playerSprite.getPosition().y <= getHeight() / 2) return false;
+    if (playerSprite.getPosition().y <= getHeight()) {
+        velocity.y = 0;
+        return false;
+    }
+    
+    if (clk.getElapsedTime().asSeconds() > PLAYER_FLYING_DURATION) {
+        return false;
+    }
 
-    playerSprite.move(0, -movementSpeed * dt);
+    velocity.y = 0;
+    velocity.y -= PLAYER_SPEED;
+    velocity.y += GRAVITY * dt;
+    playerSprite.move(velocity * dt);
 
     // adjusting rotation
-    /*if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
-        playerSprite.rotate(-rotationAngle * dt);
+   /* if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
+        playerSprite.rotate(-rotationAngle * dt *4);
     }*/
 
     return true;
@@ -70,8 +78,9 @@ bool Player::moveUp(float dt, float rotationAngle) {
 
 bool Player::moveDown(float dt, float rotationAngle) {
 
-    playerSprite.move(0, movementSpeed * dt);
-
+    velocity.y += GRAVITY * dt;
+    playerSprite.move(velocity * dt);
+    
     //adjusting rotation
     /*if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
         playerSprite.rotate(rotationAngle * dt);
@@ -79,6 +88,8 @@ bool Player::moveDown(float dt, float rotationAngle) {
 
     return true;
 }
+
+
 
 bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
 
@@ -89,7 +100,10 @@ bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
     if (spritesFound.size() > 0) return true;
 
     //if no collision detected it continues the dying animation
-    playerSprite.move(movementSpeed / 2 * dt, movementSpeed * 1.2 * dt);
+
+    velocity.y += GRAVITY * dt;
+
+    playerSprite.move(velocity * dt);
 
     playerSprite.rotate(100 * dt);
 
@@ -102,7 +116,17 @@ void Player::draw(sf::RenderWindow* myWindow)
 }
 
 
-//some getters
+//some setters & getters
+void Player::setVelocity(float x, float y)
+{
+    this->velocity = sf::Vector2f(x, y);
+}
+
+void Player::setVelocity(sf::Vector2f velocity)
+{
+    this->velocity = velocity;
+}
+
 float Player::getX()
 {
     return playerSprite.getPosition().x;
@@ -127,3 +151,5 @@ float Player::getRotation()
 {
     return playerSprite.getRotation();
 }
+
+

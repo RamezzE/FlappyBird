@@ -12,8 +12,7 @@ GameScreen::GameScreen(sf::RenderWindow& window)
 
     score = 0;
 
-    myObstacle.setGap(myWidth / 3, myPlayer.getHeight()*3);
-
+    myObstacle.setGap(myWidth / 3.0f, myPlayer.getHeight() * 2.7f);
     //setting QuadTree boundary to the whole screen
     boundary.setData(0, 0, myWidth, myHeight);
 
@@ -161,57 +160,49 @@ void GameScreen::handleInput()
                             highScore = score;
                             saveHighScore();
                         }
+                        break;
                     }
                 }
 
                 // normal left click lets moveUp = true
                 moveUp = true;
+                jumpCLK.restart();
                 pause = false;
                 break;
             }
         }
 
-        if (event.type == sf::Event::MouseButtonReleased) {
-            switch (event.mouseButton.button) {
-            case sf::Mouse::Left:
+        //if (event.type == sf::Event::KeyPressed) {
+        //    switch (event.key.code) {
+        //    case sf::Keyboard::Space:
 
-                //starts falling when mouse button is released
-                moveUp = false;
-                break;
-            }
-        }
+        //        // move up if space is pressed
+        //        moveUp = true;
+        //        pause = false;
+        //        if (died) {
+        //            replay();
+        //        }
+        //        break;
+        //    case sf::Keyboard::Escape:
 
-        if (event.type == sf::Event::KeyPressed) {
-            switch (event.key.code) {
-            case sf::Keyboard::Space:
-
-                // move up if space is pressed
-                moveUp = true;
-                pause = false;
-                if (died) {
-                    replay();
-                }
-                break;
-            case sf::Keyboard::Escape:
-
-                //toggle between pause and play states
-                if (pause) pause = false;
-                else pause = true;
-                break;
-            }
-        }
-        if (event.type == sf::Event::KeyReleased) {
-            switch (event.key.code) {
-            case sf::Keyboard::Space:
-                //starts falling if space is released
-                moveUp = false;
-                break;
-            case sf::Keyboard::Escape:
-                //returns to menu if pressed Escape after player died
-                if (died) backToMenu = true;
-                break;
-            }
-        }
+        //        //toggle between pause and play states
+        //        if (pause) pause = false;
+        //        else pause = true;
+        //        break;
+        //    }
+        //}
+        //if (event.type == sf::Event::KeyReleased) {
+        //    switch (event.key.code) {
+        //    case sf::Keyboard::Space:
+        //        //starts falling if space is released
+        //        moveUp = false;
+        //        break;
+        //    case sf::Keyboard::Escape:
+        //        //returns to menu if pressed Escape after player died
+        //        if (died) backToMenu = true;
+        //        break;
+        //    }
+        //}
     }
 }
 
@@ -232,8 +223,14 @@ void GameScreen::update()
             myObstacle.moveObstacles(myTree, dt, myPlayer, score);
             myObstacle.spawnObstacle();
 
-            if (moveUp) myPlayer.moveUp(dt); //moveUP
-            else myPlayer.moveDown(dt); //moveDOWN
+            if (moveUp) {
+                if (!myPlayer.jump(jumpCLK, dt)) {
+                    moveUp = false;
+                }
+            }
+            else {
+                myPlayer.moveDown(dt);
+            }
         }
     }
 
@@ -253,6 +250,7 @@ void GameScreen::update()
     //if obstaclesFound vector has size > 0, it means an object is detected so player loses
 
     if (obstaclesFound.size() > 0 && !collision) { //player lost
+        myPlayer.setVelocity(0, 0);
         collision = true; //collision detected
         initializeTree();
         obstaclesFound.clear(); //reseting vector

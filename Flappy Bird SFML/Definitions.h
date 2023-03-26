@@ -22,12 +22,13 @@
 
 #define HIGH_SCORE_FILEPATH "files\\highScore.dat"
 
-//#define MOVEMENT_GAP 0.05f
 #define PLAYER_ANIMATION_DURATION 0.08f
 
-//#define OBSTACLE_MOVEMENT_GAP 0.01f
+#define PLAYER_FLYING_DURATION 0.01f
+#define PLAYER_SPEED myHeight/1.5f
+#define GRAVITY PLAYER_SPEED * 3.5f
 
-#define FLASH_TIME 0.1
+#define FLASH_TIME 0.1f
 
 extern unsigned short myWidth, myHeight;
 
