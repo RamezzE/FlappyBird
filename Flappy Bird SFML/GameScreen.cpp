@@ -4,26 +4,20 @@
 using namespace std;
 
 GameScreen::GameScreen(sf::RenderWindow& window)
+    :myObstacle(Obstacle(myPlayer))
 {
     myWindow = &window;
-
-    moveUp = collision = died = backToMenu = newHighScore = false;
-    focus = pause = true;
-
-    score = 0;
-
-    myObstacle.setGap(myWidth / 3, myPlayer.getHeight()*3);
+    myObstacle.setGap(myWidth / 3.0f, myPlayer.getHeight() * 2.7f);
 
     //setting QuadTree boundary to the whole screen
     boundary.setData(0, 0, myWidth, myHeight);
 
-    highScore = 0;
-    //gets high score from file
-    readHighScore();
+    init();
+    newGame();
     
 }
 
-void GameScreen::initialize()
+void GameScreen::init()
 {
     // setting up background imgs
     skyIMG.loadFromFile(SKY_FILEPATH);
@@ -71,6 +65,27 @@ void GameScreen::initialize()
     
     scoreText.setPosition(sf::Vector2f(myWidth-highScoreText.getGlobalBounds().width, myHeight-highScoreText.getGlobalBounds().height*3.5));
 
+    highScoreText.setString("High Score: " + to_string(myPlayer.highScore));
+}
+
+void GameScreen::newGame()
+{
+    collision = died = backToMenu = newHighScore = false;
+    focus = pause = true;
+    obstaclesFound.clear();
+
+    scoreText.setString("Score: " + to_string(myPlayer.score));
+
+    flashCLK.restart();
+}
+
+void GameScreen::replay()
+{
+    //resetting everything to the initial values
+    newGame();
+    myPlayer.newGame();
+    myObstacle.newGame();
+
 }
 
 void GameScreen::gameLoop()
@@ -89,28 +104,12 @@ void GameScreen::gameLoop()
             break;
         }
 
-        update();
+        update(dt);
 
         myWindow->clear();
 
         draw();
     }
-}
-
-void GameScreen::replay()
-{
-    //resetting everything to the initial values
-    myPlayer = Player();
-    myObstacle.ObstacleSprites.clear();
-    obstaclesFound.clear();
-
-    moveUp = collision = died = backToMenu = newHighScore = false;
-    focus = pause = true;
-
-    score = 0;
-    scoreText.setString("Score: " + to_string(score));
-
-    flashCLK.restart();
 }
 
 void GameScreen::handleInput()
@@ -130,10 +129,7 @@ void GameScreen::handleInput()
 
         //saves score before closing window
         if (event.type == sf::Event::Closed) {
-            if (score > highScore) {
-                highScore = score;
-                saveHighScore();
-            }
+            myPlayer.saveHighScore();
             myWindow->close();
         }
 
@@ -141,14 +137,13 @@ void GameScreen::handleInput()
             switch (event.mouseButton.button) {
             case sf::Mouse::Left:
                 if (MenuScreen::isSpritePressed(pauseButton, myWindow)) {
-
                     //toggle between play and pause states if pause button is pressed
-
                     if (pause) pause = false;
                     else {
                         pause = true;
                         break;
                     }
+                    break;
                 }
                 if (died || pause) { // only detect clicks on restart and menu buttons if game is paused or player died
                     if (MenuScreen::isSpritePressed(retryButton, myWindow)) {
@@ -157,26 +152,14 @@ void GameScreen::handleInput()
                     }
                     else if (MenuScreen::isSpritePressed(menuButton, myWindow)) {
                         backToMenu = true;
-                        if (score > highScore) {
-                            highScore = score;
-                            saveHighScore();
-                        }
+                        myPlayer.saveHighScore();
+                        break;
                     }
                 }
 
                 // normal left click lets moveUp = true
-                moveUp = true;
+                myPlayer.tap();
                 pause = false;
-                break;
-            }
-        }
-
-        if (event.type == sf::Event::MouseButtonReleased) {
-            switch (event.mouseButton.button) {
-            case sf::Mouse::Left:
-
-                //starts falling when mouse button is released
-                moveUp = false;
                 break;
             }
         }
@@ -184,40 +167,37 @@ void GameScreen::handleInput()
         if (event.type == sf::Event::KeyPressed) {
             switch (event.key.code) {
             case sf::Keyboard::Space:
-
                 // move up if space is pressed
-                moveUp = true;
-                pause = false;
-                if (died) {
+                if (died)
                     replay();
+                else {
+                    myPlayer.tap();
+                    pause = false;
                 }
                 break;
             case sf::Keyboard::Escape:
-
                 //toggle between pause and play states
-                if (pause) pause = false;
-                else pause = true;
+                if (pause) 
+                    pause = false;
+                else 
+                    pause = true;
                 break;
             }
         }
         if (event.type == sf::Event::KeyReleased) {
             switch (event.key.code) {
-            case sf::Keyboard::Space:
-                //starts falling if space is released
-                moveUp = false;
-                break;
             case sf::Keyboard::Escape:
                 //returns to menu if pressed Escape after player died
-                if (died) backToMenu = true;
+                if (died) 
+                    backToMenu = true;
                 break;
             }
         }
     }
 }
 
-void GameScreen::update()
-{
-
+void GameScreen::update(float dt)
+{   
     if (!pause || died || collision) {
         //pause Button displays pauseIMG if game is running normally
         pauseButton.setTexture(pauseIMG);
@@ -226,18 +206,14 @@ void GameScreen::update()
     else pauseButton.setTexture(playIMG);
 
     // moves player, object and background if no collisions && window is focused && game is not paused
-    if (!collision && focus) {
-        myPlayer.animate(dt);   //animating player and moves obstacles if game is not paused
+    if (!collision && focus) {   
+        myPlayer.animate(dt); //animating player and moves obstacles if game is not paused
         if (!pause) {
-            myObstacle.moveObstacles(myTree, dt, myPlayer, score);
-            myObstacle.spawnObstacle();
-
-            if (moveUp) myPlayer.moveUp(dt); //moveUP
-            else myPlayer.moveDown(dt); //moveDOWN
+            myPlayer.update(dt);
+            myObstacle.update(dt);
         }
     }
-
-
+    
     float x1, x2, y1, y2;
     x1 = myPlayer.getX();
     y1 = myPlayer.getY();
@@ -253,6 +229,7 @@ void GameScreen::update()
     //if obstaclesFound vector has size > 0, it means an object is detected so player loses
 
     if (obstaclesFound.size() > 0 && !collision) { //player lost
+        myPlayer.setVelocity(0, 0);
         collision = true; //collision detected
         initializeTree();
         obstaclesFound.clear(); //reseting vector
@@ -260,33 +237,30 @@ void GameScreen::update()
     }
 
     if (collision && !died) { //player dying animation
-        if (myPlayer.die(dt, playerRect, myTree)) died = true; //died = true when player eventually hits the ground
+        if (myPlayer.die(dt, playerRect, myTree)) 
+            died = true; //died = true when player eventually hits the ground
     }
 
     //saves new high score when player dies if score > high score
-    if (score > highScore && died) {
-        highScore = score;
+    if (myPlayer.score > myPlayer.highScore && died) {
         newHighScore = true;
-        saveHighScore();
+        myPlayer.saveHighScore();
     }
 
     //display text if new high score is detected
     if (newHighScore) {
         scoreText.setString("Bravo!!");
+        highScoreText.setString("High Score: " + to_string(myPlayer.highScore));
     }
     else {
-        scoreText.setString("Score: " + to_string(score));
+        scoreText.setString("Score: " + to_string(myPlayer.score));
     }
-
-    //high score normal text
-    highScoreText.setString("High Score: " + to_string(highScore));
-
 }
 
 void GameScreen::draw()
 {
     myWindow->draw(sky);
-    myObstacle.drawObstacles(myWindow);
+    myObstacle.draw(myWindow);
 
     myWindow->draw(ground);
     myWindow->draw(scoreText);
@@ -301,7 +275,7 @@ void GameScreen::draw()
         myWindow->draw(menuButton);
     }
     
-   /* sf::RectangleShape myRectangle;
+    /*sf::RectangleShape myRectangle;
     myRectangle.setFillColor(sf::Color(255, 255, 255,150));
     myRectangle.setSize(sf::Vector2f(myWidth, myHeight*0.5f-myHeight*0.1f));
     myRectangle.setPosition(0, myHeight*0.1f);
@@ -313,7 +287,6 @@ void GameScreen::draw()
     sf::FloatRect bounds = myRectangle2.getLocalBounds();
     myRectangle2.setOrigin(bounds.left+bounds.width /2.0f, bounds.top + bounds.height /2.0f );
     myRectangle2.setPosition(myPlayer.getX(),myPlayer.getY());
-    myRectangle.setRotation(myPlayer.getRotation());
 
     myWindow->draw(myRectangle2);*/
     
@@ -326,12 +299,16 @@ void GameScreen::initializeTree()
     myTree.insert(myObstacle.spawnGround()); //insert ground every frame
 
     if (collision) return; // if collision is detected, no obstacles are inserted into the tree
+    
+    deque<sf::Sprite> obstacles = myObstacle.getSprites();
 
-    for (int i = 0; i < myObstacle.ObstacleSprites.size(); i++) {
+    for (int i = 0; i < obstacles.size(); i++) {
         //inserting objects in the tree
-        myTree.insert(myObstacle.ObstacleSprites[i]);
+        myTree.insert(obstacles[i]);
     }
 }
+
+
 
 void GameScreen::flashScreen()
 {
@@ -344,24 +321,6 @@ void GameScreen::flashScreen()
 
         myWindow->draw(white);
     }
-}
-
-void GameScreen::saveHighScore()
-{
-    //saves high Score into binary file
-    ofstream fileWrite(HIGH_SCORE_FILEPATH, ios::out | ios::binary);
-    fileWrite.write((char*)&highScore, sizeof(highScore));
-    fileWrite.close();
-
-}
-
-void GameScreen::readHighScore()
-{
-    //reads high score from binary file and saves it into highScore variable
-    ifstream fileRead(HIGH_SCORE_FILEPATH, ios::in | ios::binary);
-    fileRead.read((char*)&highScore, sizeof(highScore));
-    fileRead.close();
-
 }
 
 

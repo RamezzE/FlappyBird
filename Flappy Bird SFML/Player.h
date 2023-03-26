@@ -2,20 +2,27 @@
 #include <SFML/Graphics.hpp>
 #include "Definitions.h"
 #include "Quadtree.h"
+#include <fstream>
 
 
 class Player
 {
 public:
-	unsigned short startXpos, startYpos;
+	unsigned short startXpos, startYpos, score, highScore;
 
 	Player();
-	void animate(float dt);
+	void newGame();
 
-	bool moveUp(float dt, float rotationAngle = 100);
-	bool moveDown(float dt, float rotationAngle = 100);
+	void animate(float dt);
+	
+	void setVelocity(float x, float y);
+	void setVelocity(sf::Vector2f velocity);
+
+	void update(float dt);
 
 	void draw(sf::RenderWindow* myWindow);
+
+	void tap();
 
 	bool die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree);
 
@@ -23,17 +30,24 @@ public:
 	float getY();
 	float getHeight();
 	float getWidth();
-	float getRotation();
-
+	
+	void saveHighScore();
+	
 private:
 	sf::Texture playerSpriteSheet[4];
 	sf::Sprite playerSprite;
-	sf::Clock moveUpCLK;
+	
+	sf::Vector2f velocity;
 
-	float movementSpeed;
+	sf::Clock jumpCLK;
 
-	unsigned short  upRotationLimit, downRotationLimit;
-	void initializePlayer();
+	float rotation;
+	void init();
 
+	void jump(float dt);
+	void fall(float dt);
+
+	void readHighScore();
+	
 };
 

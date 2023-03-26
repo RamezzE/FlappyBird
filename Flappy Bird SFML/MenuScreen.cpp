@@ -123,7 +123,6 @@ void MenuScreen::update() {
         // starting the GameScreen
         startGame = false;
         GameScreen game(*myWindow);
-        game.initialize();
         game.gameLoop();
     }
 }

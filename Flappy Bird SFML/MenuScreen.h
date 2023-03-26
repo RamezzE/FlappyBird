@@ -17,8 +17,6 @@ public:
 	static bool isSpritePressed(sf::Sprite sprite, sf::RenderWindow* myWindow);
 
 private:
-
-
 	sf::RenderWindow* myWindow;
 
 	sf::RectangleShape background;

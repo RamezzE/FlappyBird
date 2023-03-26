@@ -4,39 +4,53 @@ using namespace std;
 
 Player::Player()
 {
-    startXpos = myWidth / 8; //starting x coordinate
-    startYpos = myHeight / 2; //starting y cooridinate 
-
-    movementSpeed = (float)myHeight/4.0f;
-
-    upRotationLimit = 340;
-    downRotationLimit = 10;
-
-    initializePlayer();
+    init();
+    newGame();
 }
 
-void Player::initializePlayer()
+void Player::init()
 {
+    startXpos = myWidth / 8; //starting x coordinate
+    startYpos = myHeight / 2; //starting y cooridinate 
+    highScore = 0;
+
     //loading the 4 frame imgs of the bird
     playerSpriteSheet[0].loadFromFile(PLAYER_FRAME_1);
     playerSpriteSheet[1].loadFromFile(PLAYER_FRAME_2);
     playerSpriteSheet[2].loadFromFile(PLAYER_FRAME_3);
     playerSpriteSheet[3].loadFromFile(PLAYER_FRAME_4);
-
-    //setting initial img for the player
     playerSprite.setTexture(playerSpriteSheet[0]);
-
     //setting scale and position
     float num = (float)myHeight / (float)playerSprite.getLocalBounds().height;
     num /= 15;
     playerSprite.setScale(num, num);
-   
-    playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));
-
+    
     sf::FloatRect temp;
     temp = playerSprite.getLocalBounds();
     playerSprite.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
+}
 
+void Player::newGame() {
+    rotation = score = 0;
+
+    playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));
+    playerSprite.setRotation(rotation);
+    //setting initial img for the player
+    
+    readHighScore();
+}
+
+void Player::update(float dt)
+{
+    if (jumpCLK.getElapsedTime().asSeconds() <= PLAYER_FLYING_DURATION)
+        jump(dt);
+    else
+        fall(dt);
+}
+
+void Player::draw(sf::RenderWindow* myWindow)
+{
+    myWindow->draw(playerSprite);
 }
 
 void Player::animate(float dt) {
@@ -53,31 +67,40 @@ void Player::animate(float dt) {
 
 }
 
-bool Player::moveUp(float dt, float rotationAngle) {
+void Player::jump(float dt) {
 
     // limits the up movement so bird doesnt get out of screen
-    if (playerSprite.getPosition().y <= getHeight() / 2) return false;
+    if (playerSprite.getPosition().y <= getHeight()) {
+        velocity.y = 0;
+        return;
+    }
 
-    playerSprite.move(0, -movementSpeed * dt);
-
-    // adjusting rotation
-    /*if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
-        playerSprite.rotate(-rotationAngle * dt);
-    }*/
-
-    return true;
+    velocity.y = 0;
+    velocity.y -= PLAYER_SPEED;
+    velocity.y += GRAVITY * dt;
+    playerSprite.move(velocity * dt);
 }
 
-bool Player::moveDown(float dt, float rotationAngle) {
+void Player::fall(float dt) {
 
-    playerSprite.move(0, movementSpeed * dt);
+    velocity.y += GRAVITY * dt;
+    playerSprite.move(velocity * dt);
+    if (velocity.y > 0) {
+        rotation += ROTATION_SPEED * dt;
 
-    //adjusting rotation
-    /*if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
-        playerSprite.rotate(rotationAngle * dt);
-    }*/
+        if (rotation > 25.0f)
+            rotation = 25.0f;
 
-    return true;
+        playerSprite.setRotation(rotation);
+    }
+    else {
+        rotation -= ROTATION_SPEED*3 * dt;
+
+        if (rotation < -25.0f)
+            rotation = -25.0f;
+
+        playerSprite.setRotation(rotation);
+    }
 }
 
 bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
@@ -86,23 +109,53 @@ bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
     quadTree.query(playerRect, spritesFound);
 
     // if collision with ground detected returns true as in fully died to display menu, retry buttons and other actions etc
-    if (spritesFound.size() > 0) return true;
-
+    if (spritesFound.size() > 0)
+        return true;
     //if no collision detected it continues the dying animation
-    playerSprite.move(movementSpeed / 2 * dt, movementSpeed * 1.2 * dt);
 
-    playerSprite.rotate(100 * dt);
+    fall(dt);
 
     return false;
 }
 
-void Player::draw(sf::RenderWindow* myWindow)
+void Player::tap()
 {
-    myWindow->draw(playerSprite);
+    jumpCLK.restart();
 }
 
+void Player::saveHighScore()
+{
+    if (score < highScore) return;
 
-//some getters
+    highScore = score;
+
+    //saves high Score into binary file
+    ofstream fileWrite(HIGH_SCORE_FILEPATH, ios::out | ios::binary);
+    fileWrite.write((char*)&highScore, sizeof(highScore));
+    fileWrite.close();
+
+}
+
+void Player::readHighScore()
+{
+    //reads high score from binary file and saves it into highScore variable
+    ifstream fileRead(HIGH_SCORE_FILEPATH, ios::in | ios::binary);
+    fileRead.read((char*)&highScore, sizeof(highScore));
+    fileRead.close();
+
+}
+
+//some setters & getters
+void Player::setVelocity(float x, float y)
+{
+    this->velocity = sf::Vector2f(x, y);
+}
+
+void Player::setVelocity(sf::Vector2f velocity)
+{
+    this->velocity = velocity;
+}
+
 float Player::getX()
 {
     return playerSprite.getPosition().x;
@@ -123,7 +176,4 @@ float Player::getWidth()
     return playerSprite.getGlobalBounds().width;
 }
 
-float Player::getRotation()
-{
-    return playerSprite.getRotation();
-}
+

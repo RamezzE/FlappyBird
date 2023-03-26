@@ -51,7 +51,7 @@ int main()
     //myWidth = 390; myHeight = 520;
     //myWidth = sf::VideoMode::getDesktopMode().width;
     //myHeight = sf::VideoMode::getDesktopMode().height;
-
+    
     sf::RenderWindow myWindow;
 
     myWindow.create(sf::VideoMode(myWidth, myHeight), "FlarKy Bird", sf::Style::Titlebar | sf::Style::Close);
