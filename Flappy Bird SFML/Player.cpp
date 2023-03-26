@@ -9,6 +9,7 @@ Player::Player()
 
     upRotationLimit = 340;
     downRotationLimit = 10;
+    rotation = 0;
 
     initializePlayer();
 }
@@ -51,7 +52,7 @@ void Player::animate(float dt) {
 
 }
 
-bool Player::jump(sf::Clock &clk,float dt, float rotationAngle) {
+bool Player::jump(sf::Clock &clk,float dt) {
 
     // limits the up movement so bird doesnt get out of screen
     if (playerSprite.getPosition().y <= getHeight()) {
@@ -68,23 +69,30 @@ bool Player::jump(sf::Clock &clk,float dt, float rotationAngle) {
     velocity.y += GRAVITY * dt;
     playerSprite.move(velocity * dt);
 
-    // adjusting rotation
-   /* if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
-        playerSprite.rotate(-rotationAngle * dt *4);
-    }*/
-
     return true;
 }
 
-bool Player::moveDown(float dt, float rotationAngle) {
+bool Player::fall(float dt) {
 
     velocity.y += GRAVITY * dt;
     playerSprite.move(velocity * dt);
-    
-    //adjusting rotation
-    /*if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
-        playerSprite.rotate(rotationAngle * dt);
-    }*/
+    if (velocity.y > 0) {
+        rotation += ROTATION_SPEED * dt;
+
+        if (rotation > 25.0f)
+            rotation = 25.0f;
+
+        playerSprite.setRotation(rotation);
+    }
+    else {
+        cout << rotation << endl;
+        rotation -= ROTATION_SPEED*3 * dt;
+
+        if (rotation < -25.0f)
+            rotation = -25.0f;
+
+        playerSprite.setRotation(rotation);
+    }
 
     return true;
 }
@@ -101,11 +109,7 @@ bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
 
     //if no collision detected it continues the dying animation
 
-    velocity.y += GRAVITY * dt;
-
-    playerSprite.move(velocity * dt);
-
-    playerSprite.rotate(100 * dt);
+    fall(dt);
 
     return false;
 }

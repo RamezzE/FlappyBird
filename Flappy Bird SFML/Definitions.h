@@ -28,6 +28,8 @@
 #define PLAYER_SPEED myHeight/1.5f
 #define GRAVITY PLAYER_SPEED * 3.5f
 
+#define ROTATION_SPEED 150.0f
+
 #define FLASH_TIME 0.1f
 
 extern unsigned short myWidth, myHeight;

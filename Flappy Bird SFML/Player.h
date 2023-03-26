@@ -12,8 +12,8 @@ public:
 	Player();
 	void animate(float dt);
 
-	bool jump(sf::Clock &clk, float dt, float rotationAngle = 100);
-	bool moveDown(float dt, float rotationAngle = 100);
+	bool jump(sf::Clock &clk, float dt);
+	bool fall(float dt);
 
 	void setVelocity(float x, float y);
 	void setVelocity(sf::Vector2f velocity);
@@ -28,14 +28,13 @@ public:
 	float getWidth();
 	float getRotation();
 
-
-
 private:
 	sf::Texture playerSpriteSheet[4];
 	sf::Sprite playerSprite;
 	
 	sf::Vector2f velocity;
 	unsigned short  upRotationLimit, downRotationLimit;
+	float rotation;
 	void initializePlayer();
 	
 };

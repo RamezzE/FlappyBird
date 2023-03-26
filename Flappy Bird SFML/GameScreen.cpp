@@ -172,37 +172,33 @@ void GameScreen::handleInput()
             }
         }
 
-        //if (event.type == sf::Event::KeyPressed) {
-        //    switch (event.key.code) {
-        //    case sf::Keyboard::Space:
+        if (event.type == sf::Event::KeyPressed) {
+            switch (event.key.code) {
+            case sf::Keyboard::Space:
 
-        //        // move up if space is pressed
-        //        moveUp = true;
-        //        pause = false;
-        //        if (died) {
-        //            replay();
-        //        }
-        //        break;
-        //    case sf::Keyboard::Escape:
+                // move up if space is pressed
+                moveUp = true;
+                pause = false;
+                if (died) {
+                    replay();
+                }
+                break;
+            case sf::Keyboard::Escape:
 
-        //        //toggle between pause and play states
-        //        if (pause) pause = false;
-        //        else pause = true;
-        //        break;
-        //    }
-        //}
-        //if (event.type == sf::Event::KeyReleased) {
-        //    switch (event.key.code) {
-        //    case sf::Keyboard::Space:
-        //        //starts falling if space is released
-        //        moveUp = false;
-        //        break;
-        //    case sf::Keyboard::Escape:
-        //        //returns to menu if pressed Escape after player died
-        //        if (died) backToMenu = true;
-        //        break;
-        //    }
-        //}
+                //toggle between pause and play states
+                if (pause) pause = false;
+                else pause = true;
+                break;
+            }
+        }
+        if (event.type == sf::Event::KeyReleased) {
+            switch (event.key.code) {
+            case sf::Keyboard::Escape:
+                //returns to menu if pressed Escape after player died
+                if (died) backToMenu = true;
+                break;
+            }
+        }
     }
 }
 
@@ -229,7 +225,7 @@ void GameScreen::update()
                 }
             }
             else {
-                myPlayer.moveDown(dt);
+                myPlayer.fall(dt);
             }
         }
     }
