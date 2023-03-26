@@ -9,31 +9,41 @@ using namespace std;
 class Obstacle
 {
 public:
-	Obstacle();
-
-	void spawnObstacle();
+	Obstacle(Player &myPlayer);
 
 	sf::Sprite spawnGround();
 
-	void drawObstacles(sf::RenderWindow* myWindow);
+	void update(float dt);
 
-	bool moveObstacles(QuadTree& quadTree, float dt, Player player, unsigned short& score);
+	void draw(sf::RenderWindow* myWindow);
+
+	deque<sf::Sprite> getSprites();
 
 	void setGap(unsigned short distanceBetweenObstacles, unsigned short verticalGap);
 
-	deque<sf::Sprite> ObstacleSprites;
+	void newGame();
+
 
 private:
+
+	Player* myPlayer;
 
 	sf::Texture upObstTexture;
 	sf::Texture downObstTexture;
 
 	sf::Sprite fakeObstacle;
 
+	deque<sf::Sprite> ObstacleSprites;
+
 	unsigned short verticalGap, distanceBetweenObstacles;
 
 	float movementSpeed;
 
+	void spawnObstacle();
+
 	void spawnFakeGround();
+
+	void moveObstacles(float dt);
+
 };
 

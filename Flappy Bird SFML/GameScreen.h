@@ -8,7 +8,6 @@
 #include "Obstacle.h"
 #include <string>
 #include <vector>
-#include <fstream>
 
 using namespace std;
 class GameScreen
@@ -16,7 +15,7 @@ class GameScreen
 public:
 	GameScreen(sf::RenderWindow& window);
 
-	void initialize();
+	void init();
 
 	void gameLoop();
 
@@ -24,24 +23,19 @@ public:
 
 	void draw();
 
-	void update();
+	void update(float dt);
 
 	void handleInput();
-
-
 
 private:
 	sf::RenderWindow* myWindow;
 
 	QuadTree myTree;
 	QuadTree::Rectangle boundary;
-
-	Obstacle myObstacle;
-
 	sf::RectangleShape sky;
 	sf::RectangleShape ground;
 
-	sf::Clock jumpCLK,flashCLK;
+	sf::Clock flashCLK;
 
 	sf::Texture skyIMG;
 	sf::Texture groundIMG;
@@ -60,23 +54,21 @@ private:
 	sf::Font font;
 
 	Player myPlayer;
+	Obstacle myObstacle;
 	QuadTree::Rectangle playerRect;
 	vector<sf::Sprite> obstaclesFound;
 
 	sf::Sprite currentObstacle;
 
-	bool moveUp, collision, focus, pause, died, backToMenu, newHighScore;
-
-	unsigned short score, highScore;
-
+	bool collision, focus, pause, died, backToMenu, newHighScore;
+	
 	float dt;
 
 	void initializeTree();
 
+	void newGame();
+
 	void flashScreen();
 
-	void saveHighScore();
-
-	void readHighScore();
 };
 

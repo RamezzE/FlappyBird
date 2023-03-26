@@ -1,12 +1,14 @@
 #include "Obstacle.h"
 #include <iostream>
 
-Obstacle::Obstacle() {
+Obstacle::Obstacle(Player &myPlayer) {
 
 	upObstTexture.loadFromFile(OBSTACLE_UP_FILEPATH);
 	downObstTexture.loadFromFile(OBSTACLE_DOWN_FILEPATH);
 
 	movementSpeed = (float)myHeight/4.0f;
+
+	this->myPlayer = &myPlayer;
 
 	spawnFakeGround();
 }
@@ -17,6 +19,11 @@ void Obstacle::setGap(unsigned short distanceBetweenObstacles, unsigned short ve
 
 	this->distanceBetweenObstacles = distanceBetweenObstacles;
 	this->verticalGap = verticalGap;
+}
+
+void Obstacle::newGame()
+{
+	ObstacleSprites.clear();
 }
 
 void Obstacle::spawnFakeGround() {
@@ -40,10 +47,6 @@ static bool addScore = true;
 
 void Obstacle::spawnObstacle()
 {
-	if (ObstacleSprites.size() != 0) { // checks when to insert next obstacle if the vector isn't empty
-		if (ObstacleSprites.back().getPosition().x > myWidth - distanceBetweenObstacles) return;
-	}
-
 	sf::Sprite upObstacle;
 	upObstacle.setTexture(upObstTexture);
 	float num = (float)myHeight / (float)upObstacle.getLocalBounds().height;
@@ -52,14 +55,10 @@ void Obstacle::spawnObstacle()
 
 	sf::Sprite downObstacle;
 	downObstacle.setTexture(downObstTexture);
-	num = (float)myHeight / (float)downObstacle.getLocalBounds().height;
-	num /= 1.75;
 	downObstacle.setScale(num, num);
 	
 	float x = myWidth + upObstacle.getGlobalBounds().width * 0.5f;
-
-	//sf::FloatRect bounds = upObstacle.getLocalBounds();
-
+	
 	float upLimit = myHeight*0.1f;
 	float downLimit = myHeight*0.5f;
 	//rand between upLimit and downLimit
@@ -77,7 +76,46 @@ void Obstacle::spawnObstacle()
 	addScore = true;
 }
 
-void Obstacle::drawObstacles(sf::RenderWindow* myWindow)
+void Obstacle::moveObstacles(float dt)
+{
+	//removing obstacles that totally passed the screen
+	if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < 0) {
+		ObstacleSprites.pop_front();
+	}
+
+	//adds score 
+	if (addScore) {
+		if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < myPlayer->startXpos && addScore) {
+			myPlayer->score++;
+			addScore = false;
+		}
+	}
+
+	//moving all obstacles to the left
+	for (int i = 0; i < ObstacleSprites.size(); i++) {
+		ObstacleSprites[i].move(-movementSpeed * dt, 0);
+	}
+}
+
+
+
+void Obstacle::update(float dt)
+{
+	if (ObstacleSprites.size() != 0) { // checks when to insert next obstacle if the vector isn't empty
+		if (ObstacleSprites.back().getPosition().x <= myWidth - distanceBetweenObstacles) {
+			spawnObstacle();
+		}
+	}
+	else {
+		spawnObstacle();
+	}
+
+	if (!ObstacleSprites.empty()) {
+		moveObstacles(dt);
+	}
+}
+
+void Obstacle::draw(sf::RenderWindow* myWindow)
 {
 	//sf::RectangleShape rect;
 
@@ -94,29 +132,8 @@ void Obstacle::drawObstacles(sf::RenderWindow* myWindow)
 	}
 }
 
-bool Obstacle::moveObstacles(QuadTree& quadTree, float dt, Player player, unsigned short& score)
+
+deque<sf::Sprite> Obstacle::getSprites()
 {
-	if (ObstacleSprites.empty()) return false; // no obstacles to move
-
-	//removing obstacles that totally passed the screen
-	if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < 0) {
-		ObstacleSprites.pop_front();
-	}
-
-	//adds score 
-	if (addScore) {
-		if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < player.startXpos && addScore) {
-			score++;
-			addScore = false;
-		}
-	}
-
-	//moving all obstacles to the left
-	for (int i = 0; i < ObstacleSprites.size(); i++) {
-		ObstacleSprites[i].move(-movementSpeed * dt, 0);
-	}
-
-	return true;
+	return ObstacleSprites;
 }
-
-
