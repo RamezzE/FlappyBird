@@ -1,10 +1,5 @@
 #pragma once	
 
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 800
-
-#define OBSTACLE_AREA SCREEN_HEIGHT*0.6875
-
 #define PLAYER_FRAME_1 "pics\\bird\\frame-1.png"
 #define PLAYER_FRAME_2 "pics\\bird\\frame-2.png"
 #define PLAYER_FRAME_3 "pics\\bird\\frame-3.png"
@@ -33,3 +28,6 @@
 //#define OBSTACLE_MOVEMENT_GAP 0.01f
 
 #define FLASH_TIME 0.1
+
+extern unsigned short myWidth, myHeight;
+

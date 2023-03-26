@@ -4,10 +4,10 @@ using namespace std;
 
 Player::Player()
 {
-    startXpos = SCREEN_WIDTH / 8; //starting x coordinate
-    startYpos = SCREEN_HEIGHT / 2; //starting y cooridinate 
+    startXpos = myWidth / 8; //starting x coordinate
+    startYpos = myHeight / 2; //starting y cooridinate 
 
-    movementSpeed = 200;
+    movementSpeed = (float)myHeight/4.0f;
 
     upRotationLimit = 340;
     downRotationLimit = 10;
@@ -27,7 +27,10 @@ void Player::initializePlayer()
     playerSprite.setTexture(playerSpriteSheet[0]);
 
     //setting scale and position
-    playerSprite.setScale(0.1, 0.1);
+    float num = (float)myHeight / (float)playerSprite.getLocalBounds().height;
+    num /= 15;
+    playerSprite.setScale(num, num);
+   
     playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));
 
     sf::FloatRect temp;
@@ -58,9 +61,9 @@ bool Player::moveUp(float dt, float rotationAngle) {
     playerSprite.move(0, -movementSpeed * dt);
 
     // adjusting rotation
-    if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
+    /*if (getRotation() < downRotationLimit + 5 || getRotation() > upRotationLimit) {
         playerSprite.rotate(-rotationAngle * dt);
-    }
+    }*/
 
     return true;
 }
@@ -70,9 +73,9 @@ bool Player::moveDown(float dt, float rotationAngle) {
     playerSprite.move(0, movementSpeed * dt);
 
     //adjusting rotation
-    if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
+    /*if (getRotation() > upRotationLimit - 5 || getRotation() < downRotationLimit) {
         playerSprite.rotate(rotationAngle * dt);
-    }
+    }*/
 
     return true;
 }
@@ -100,27 +103,27 @@ void Player::draw(sf::RenderWindow* myWindow)
 
 
 //some getters
-unsigned short Player::getX()
+float Player::getX()
 {
     return playerSprite.getPosition().x;
 }
 
-unsigned short Player::getY()
+float Player::getY()
 {
     return playerSprite.getPosition().y;
 }
 
-unsigned short Player::getHeight()
+float Player::getHeight()
 {
     return playerSprite.getGlobalBounds().height;
 }
 
-unsigned short Player::getWidth()
+float Player::getWidth()
 {
     return playerSprite.getGlobalBounds().width;
 }
 
-unsigned short Player::getRotation()
+float Player::getRotation()
 {
     return playerSprite.getRotation();
 }
