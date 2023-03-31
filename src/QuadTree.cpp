@@ -63,7 +63,7 @@ inline bool QuadTree::equals(sf::Sprite sprite1, sf::Sprite sprite2)
     return true;
 }
 
-void QuadTree::query(Rectangle range, vector<sf::Sprite>& objectsFound) {
+void QuadTree::query(Rectangle range, std::vector<sf::Sprite>& objectsFound) {
 
     if (!boundary.intersects(range)) { //range is not within the QuadTree boundary so returns
         return;

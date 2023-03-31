@@ -33,5 +33,6 @@ private:
 
 	bool startGame;
 
+	int x;
 };
 

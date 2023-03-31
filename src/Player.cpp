@@ -1,6 +1,6 @@
 #include "Player.h"
 #include <iostream>
-using namespace std;
+ 
 
 Player::Player()
 {
@@ -105,7 +105,7 @@ void Player::fall(float dt) {
 
 bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
 
-    vector<sf::Sprite> spritesFound;
+     std::vector<sf::Sprite> spritesFound;
     quadTree.query(playerRect, spritesFound);
 
     // if collision with ground detected returns true as in fully died to display menu, retry buttons and other actions etc
@@ -130,7 +130,7 @@ void Player::saveHighScore()
     highScore = score;
 
     //saves high Score into binary file
-    ofstream fileWrite(HIGH_SCORE_FILEPATH, ios::out | ios::binary);
+    std::ofstream fileWrite(HIGH_SCORE_FILEPATH, std::ios::out | std::ios::binary);
     fileWrite.write((char*)&highScore, sizeof(highScore));
     fileWrite.close();
 
@@ -139,7 +139,7 @@ void Player::saveHighScore()
 void Player::readHighScore()
 {
     //reads high score from binary file and saves it into highScore variable
-    ifstream fileRead(HIGH_SCORE_FILEPATH, ios::in | ios::binary);
+    std::ifstream fileRead(HIGH_SCORE_FILEPATH, std::ios::in | std::ios::binary);
     fileRead.read((char*)&highScore, sizeof(highScore));
     fileRead.close();
 

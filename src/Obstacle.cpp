@@ -6,18 +6,14 @@ Obstacle::Obstacle(Player &myPlayer) {
 	upObstTexture.loadFromFile(OBSTACLE_UP_FILEPATH);
 	downObstTexture.loadFromFile(OBSTACLE_DOWN_FILEPATH);
 
-	movementSpeed = (float)myHeight/4.0f;
-
 	this->myPlayer = &myPlayer;
 
 	spawnFakeGround();
 }
 
-void Obstacle::setGap(unsigned short distanceBetweenObstacles, unsigned short verticalGap) {
+void Obstacle::setGap(unsigned short verticalGap) {
 
 	//setting horizontal and vertical gap between obstacles
-
-	this->distanceBetweenObstacles = distanceBetweenObstacles;
 	this->verticalGap = verticalGap;
 }
 
@@ -93,7 +89,7 @@ void Obstacle::moveObstacles(float dt)
 
 	//moving all obstacles to the left
 	for (int i = 0; i < ObstacleSprites.size(); i++) {
-		ObstacleSprites[i].move(-movementSpeed * dt, 0);
+		ObstacleSprites[i].move(-OBSTACLE_SPEED * dt, 0);
 	}
 }
 
@@ -102,7 +98,7 @@ void Obstacle::moveObstacles(float dt)
 void Obstacle::update(float dt)
 {
 	if (ObstacleSprites.size() != 0) { // checks when to insert next obstacle if the vector isn't empty
-		if (ObstacleSprites.back().getPosition().x <= myWidth - distanceBetweenObstacles) {
+		if (ObstacleSprites.back().getPosition().x <= myWidth - DISTANCE_BETWEEN_OBSTACLES) {
 			spawnObstacle();
 		}
 	}
@@ -133,7 +129,7 @@ void Obstacle::draw(sf::RenderWindow* myWindow)
 }
 
 
-deque<sf::Sprite> Obstacle::getSprites()
+std::deque<sf::Sprite> Obstacle::getSprites()
 {
 	return ObstacleSprites;
 }

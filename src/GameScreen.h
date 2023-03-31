@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+ 
 class GameScreen
 {
 public:
@@ -56,7 +56,7 @@ private:
 	Player myPlayer;
 	Obstacle myObstacle;
 	QuadTree::Rectangle playerRect;
-	vector<sf::Sprite> obstaclesFound;
+	std::vector<sf::Sprite> obstaclesFound;
 
 	sf::Sprite currentObstacle;
 
@@ -69,6 +69,5 @@ private:
 	void newGame();
 
 	void flashScreen();
-
 };
 

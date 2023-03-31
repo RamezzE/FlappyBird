@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
 #include <iostream>
-#include <SFML/Graphics.hpp>
-using namespace std;
+#include <SFML/Graphics.hpp> 
 
-typedef string ObjectType;
+typedef std::string ObjectType;
 
 class QuadTree {
 
@@ -80,7 +79,7 @@ public:
 
     void insert(sf::Sprite object);
 
-    void query(Rectangle range, vector<sf::Sprite>& objectsFound);
+    void query(Rectangle range, std::vector<sf::Sprite>& objectsFound);
 
     void remove(sf::Sprite object);
 
@@ -92,7 +91,7 @@ private:
     Rectangle boundary; int capacity;
     bool divided;
 
-    vector<sf::Sprite> objects; //store points in the tree
+    std::vector<sf::Sprite> objects; //store points in the tree
 
     QuadTree* NE; QuadTree* NW; QuadTree* SE; QuadTree* SW;
 };

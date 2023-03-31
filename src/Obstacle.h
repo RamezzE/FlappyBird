@@ -5,7 +5,7 @@
 #include "Quadtree.h"
 #include "Player.h"
 
-using namespace std;
+ 
 class Obstacle
 {
 public:
@@ -17,9 +17,9 @@ public:
 
 	void draw(sf::RenderWindow* myWindow);
 
-	deque<sf::Sprite> getSprites();
+	std::deque<sf::Sprite> getSprites();
 
-	void setGap(unsigned short distanceBetweenObstacles, unsigned short verticalGap);
+	void setGap(unsigned short verticalGap);
 
 	void newGame();
 
@@ -33,11 +33,9 @@ private:
 
 	sf::Sprite fakeObstacle;
 
-	deque<sf::Sprite> ObstacleSprites;
+	std::deque<sf::Sprite> ObstacleSprites;
 
-	unsigned short verticalGap, distanceBetweenObstacles;
-
-	float movementSpeed;
+	unsigned short verticalGap;
 
 	void spawnObstacle();
 

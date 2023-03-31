@@ -1,13 +1,13 @@
 #include "GameScreen.h"
 #include <iostream>
 
-using namespace std;
+ 
 
 GameScreen::GameScreen(sf::RenderWindow& window)
     :myObstacle(Obstacle(myPlayer))
 {
     myWindow = &window;
-    myObstacle.setGap(myWidth / 3.0f, myPlayer.getHeight() * 2.7f);
+    myObstacle.setGap(myPlayer.getHeight() * 2.7f);
 
     //setting QuadTree boundary to the whole screen
     boundary.setData(0, 0, myWidth, myHeight);
@@ -65,7 +65,7 @@ void GameScreen::init()
     
     scoreText.setPosition(sf::Vector2f(myWidth-highScoreText.getGlobalBounds().width, myHeight-highScoreText.getGlobalBounds().height*3.5));
 
-    highScoreText.setString("High Score: " + to_string(myPlayer.highScore));
+    highScoreText.setString("High Score: " + std::to_string(myPlayer.highScore));
 }
 
 void GameScreen::newGame()
@@ -74,7 +74,7 @@ void GameScreen::newGame()
     focus = pause = true;
     obstaclesFound.clear();
 
-    scoreText.setString("Score: " + to_string(myPlayer.score));
+    scoreText.setString("Score: " + std::to_string(myPlayer.score));
 
     flashCLK.restart();
 }
@@ -111,6 +111,7 @@ void GameScreen::gameLoop()
         draw();
     }
 }
+
 
 void GameScreen::handleInput()
 {
@@ -164,7 +165,7 @@ void GameScreen::handleInput()
             }
         }
 
-        if (event.type == sf::Event::KeyPressed) {
+        if (event.type == sf::Event::KeyPressed) { ///////////////////////////BUG here
             switch (event.key.code) {
             case sf::Keyboard::Space:
                 // move up if space is pressed
@@ -250,10 +251,10 @@ void GameScreen::update(float dt)
     //display text if new high score is detected
     if (newHighScore) {
         scoreText.setString("Bravo!!");
-        highScoreText.setString("High Score: " + to_string(myPlayer.highScore));
+        highScoreText.setString("High Score: " + std::to_string(myPlayer.highScore));
     }
     else {
-        scoreText.setString("Score: " + to_string(myPlayer.score));
+        scoreText.setString("Score: " + std::to_string(myPlayer.score));
     }
 }
 
@@ -300,7 +301,7 @@ void GameScreen::initializeTree()
 
     if (collision) return; // if collision is detected, no obstacles are inserted into the tree
     
-    deque<sf::Sprite> obstacles = myObstacle.getSprites();
+    std::deque<sf::Sprite> obstacles = myObstacle.getSprites();
 
     for (int i = 0; i < obstacles.size(); i++) {
         //inserting objects in the tree
