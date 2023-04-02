@@ -1,9 +1,11 @@
 #pragma once
-#include "Definitions.h"
 #include <SFML/Graphics.hpp>
 #include <deque>
-#include "Quadtree.h"
-#include "Player.h"
+
+#include "Definitions.hpp"
+#include "Quadtree.hpp"
+#include "Player.hpp"
+#include "Collision.hpp"
 
  
 class Obstacle

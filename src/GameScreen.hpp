@@ -1,13 +1,15 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Definitions.h"
-#include "MenuScreen.h"
-#include "Player.h"
-#include "Quadtree.h"
-#include "Obstacle.h"
 #include <string>
 #include <vector>
+
+#include "Definitions.hpp"
+#include "MenuScreen.hpp"
+#include "Player.hpp"
+#include "Quadtree.hpp"
+#include "Obstacle.hpp"
+#include "Collision.hpp"
 
  
 class GameScreen

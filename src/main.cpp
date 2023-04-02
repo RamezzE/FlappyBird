@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <windows.h>
 
-#include "MenuScreen.h"
+#include "MenuScreen.hpp"
 
 //still need to create a button class
 unsigned short widthRatio, heightRatio, myWidth, myHeight;
@@ -45,15 +45,15 @@ int main()
     } while (!exitLoop);
 
     // myWidth = 390; myHeight = 520;
-    //myWidth = sf::VideoMode::getDesktopMode().width;
-    //myHeight = sf::VideoMode::getDesktopMode().height;
+    // myWidth = sf::VideoMode::getDesktopMode().width;
+    // myHeight = sf::VideoMode::getDesktopMode().height;
     
     sf::RenderWindow myWindow;
 
     myWindow.create(sf::VideoMode(myWidth, myHeight), "FlarKy Bird", sf::Style::Titlebar | sf::Style::Close);
 
     //setting framerate limit 
-    myWindow.setFramerateLimit(60);
+    // myWindow.setFramerateLimit(60);
 
     //starting with the menu screen
     MenuScreen menu(myWindow);

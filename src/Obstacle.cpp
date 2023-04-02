@@ -1,11 +1,11 @@
-#include "Obstacle.h"
+#include "Obstacle.hpp"
 #include <iostream>
 
 Obstacle::Obstacle(Player &myPlayer) {
 
-	upObstTexture.loadFromFile(OBSTACLE_UP_FILEPATH);
-	downObstTexture.loadFromFile(OBSTACLE_DOWN_FILEPATH);
-
+	Collision::CreateTextureAndBitmask(upObstTexture, OBSTACLE_UP_FILEPATH);
+	Collision::CreateTextureAndBitmask(downObstTexture, OBSTACLE_DOWN_FILEPATH);
+	
 	this->myPlayer = &myPlayer;
 
 	spawnFakeGround();

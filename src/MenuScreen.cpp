@@ -1,4 +1,4 @@
-#include "MenuScreen.h"
+#include "MenuScreen.hpp"
 
 MenuScreen::MenuScreen(sf::RenderWindow& window)
 {
@@ -10,10 +10,9 @@ void MenuScreen::initialize() {
 
     //initializing background imgs and buttons
 
-    //loading Textures aka images
-    backIMG.loadFromFile(MENU_BACKGROUND);
-    playButtonTexture.loadFromFile(PLAY_BUTTON);
-    closeButtonTexture.loadFromFile(CLOSE_BUTTON);
+    Collision::CreateTextureAndBitmask(backIMG, MENU_BACKGROUND);
+    Collision::CreateTextureAndBitmask(playButtonTexture, PLAY_BUTTON);
+    Collision::CreateTextureAndBitmask(closeButtonTexture, CLOSE_BUTTON);
 
     //setting images for background and buttons
     background.setTexture(&backIMG);

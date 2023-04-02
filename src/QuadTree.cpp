@@ -1,4 +1,4 @@
-#include "Quadtree.h"
+#include "Quadtree.hpp"
 QuadTree::QuadTree() {}
 
 QuadTree::QuadTree(Rectangle boundary, int capacity = 4) {
@@ -63,14 +63,14 @@ inline bool QuadTree::equals(sf::Sprite sprite1, sf::Sprite sprite2)
     return true;
 }
 
-void QuadTree::query(Rectangle range, std::vector<sf::Sprite>& objectsFound) {
+void QuadTree::query(sf::Sprite range, std::vector<sf::Sprite>& objectsFound) {
 
     if (!boundary.intersects(range)) { //range is not within the QuadTree boundary so returns
         return;
     }
     else {
         for (sf::Sprite r : objects) {
-            if (range.intersects(r)) { //adds object to vector if point exists within the range
+            if (Collision::BoundingBoxTest(range,r)) { //adds object to vector if point exists within the range
                 bool duplicate = false;
                 for (int i = 0; i < objectsFound.size(); i++) {
                     if (equals(r, objectsFound[i])) {
@@ -79,7 +79,14 @@ void QuadTree::query(Rectangle range, std::vector<sf::Sprite>& objectsFound) {
                     }
                 }
                 if (!duplicate) {
-                    objectsFound.push_back(r);
+                    //check here for pixel perfect collision
+                    if (Collision::PixelPerfectTest(range, r)) {
+                        std::cout << "Pixel Perfect Collision" << std::endl;
+                        objectsFound.push_back(r);
+                    }
+                    else {
+                        std::cout << "Bounding Box Collision" << std::endl;
+                    }
                 }
             }
 

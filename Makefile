@@ -7,7 +7,7 @@ MAIN_OBJ := $(MAIN_CPP:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 CPP_FILES       := $(filter-out $(MAIN_CPP), $(wildcard $(SRC_DIR)/*.cpp))
 OBJ_FILES     := $(CPP_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-DEFINITON_FILE := $(wildcard $(SRC_DIR)/Definitions.h)
+DEFINITON_FILE := $(wildcard $(SRC_DIR)/Definitions.hpp)
 
 COMPILED_FLAGS       := -DSFML_STATIC -std=c++14 -g
 
@@ -25,7 +25,7 @@ APP_NAME := "myApp"
 
 all: build run
 
-$(OBJ_FILES): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/%.h $(DEFINITON_FILE) 
+$(OBJ_FILES): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/%.hpp $(DEFINITON_FILE) 
 	 g++ -c $< -o $@ $(INCLUDE_DIRECTORIES) $(COMPILED_FLAGS)
 
 #handle main.cpp error (no .h file)

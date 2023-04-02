@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Definitions.h"
-#include "Quadtree.h"
 #include <fstream>
+
+#include "Definitions.hpp"
+#include "Quadtree.hpp"
+
 
 
 class Player
@@ -24,12 +26,13 @@ public:
 
 	void tap();
 
-	bool die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree);
+	bool die(float dt, QuadTree& quadTree);
 
 	float getX();
 	float getY();
 	float getHeight();
 	float getWidth();
+	sf::Sprite getSprite();
 	
 	void saveHighScore();
 	

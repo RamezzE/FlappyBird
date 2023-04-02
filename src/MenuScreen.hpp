@@ -1,8 +1,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Definitions.h"
-#include "GameScreen.h"
+
+#include "Definitions.hpp"
+#include "GameScreen.hpp"
+#include "Collision.hpp"
+
 class MenuScreen
 {
 public:
@@ -32,7 +35,5 @@ private:
 	sf::Font font;
 
 	bool startGame;
-
-	int x;
 };
 

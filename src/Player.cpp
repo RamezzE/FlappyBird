@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "Player.hpp"
 #include <iostream>
  
 
@@ -15,11 +15,13 @@ void Player::init()
     highScore = 0;
 
     //loading the 4 frame imgs of the bird
-    playerSpriteSheet[0].loadFromFile(PLAYER_FRAME_1);
-    playerSpriteSheet[1].loadFromFile(PLAYER_FRAME_2);
-    playerSpriteSheet[2].loadFromFile(PLAYER_FRAME_3);
-    playerSpriteSheet[3].loadFromFile(PLAYER_FRAME_4);
+    Collision::CreateTextureAndBitmask(playerSpriteSheet[0], PLAYER_FRAME_1);
+    Collision::CreateTextureAndBitmask(playerSpriteSheet[1], PLAYER_FRAME_2);
+    Collision::CreateTextureAndBitmask(playerSpriteSheet[2], PLAYER_FRAME_3);
+    Collision::CreateTextureAndBitmask(playerSpriteSheet[3], PLAYER_FRAME_4);
+
     playerSprite.setTexture(playerSpriteSheet[0]);
+
     //setting scale and position
     float num = (float)myHeight / (float)playerSprite.getLocalBounds().height;
     num /= 15;
@@ -103,10 +105,10 @@ void Player::fall(float dt) {
     }
 }
 
-bool Player::die(float dt, QuadTree::Rectangle playerRect, QuadTree& quadTree) {
+bool Player::die(float dt, QuadTree& quadTree) {
 
-     std::vector<sf::Sprite> spritesFound;
-    quadTree.query(playerRect, spritesFound);
+    std::vector<sf::Sprite> spritesFound;
+    quadTree.query(playerSprite, spritesFound);
 
     // if collision with ground detected returns true as in fully died to display menu, retry buttons and other actions etc
     if (spritesFound.size() > 0)
@@ -176,4 +178,8 @@ float Player::getWidth()
     return playerSprite.getGlobalBounds().width;
 }
 
+sf::Sprite Player::getSprite()
+{
+    return playerSprite;
+}
 

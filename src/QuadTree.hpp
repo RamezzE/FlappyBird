@@ -3,6 +3,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp> 
 
+#include "Collision.hpp"
+
 typedef std::string ObjectType;
 
 class QuadTree {
@@ -79,19 +81,19 @@ public:
 
     void insert(sf::Sprite object);
 
-    void query(Rectangle range, std::vector<sf::Sprite>& objectsFound);
+    void query(sf::Sprite range, std::vector<sf::Sprite>& objectsFound);
 
     void remove(sf::Sprite object);
 
     bool search(sf::Sprite object);
 
     bool equals(sf::Sprite sprite1, sf::Sprite sprite2);
-private:
 
+private:
     Rectangle boundary; int capacity;
     bool divided;
 
-    std::vector<sf::Sprite> objects; //store points in the tree
+    std::vector<sf::Sprite> objects; //store objects in the tree
 
     QuadTree* NE; QuadTree* NW; QuadTree* SE; QuadTree* SW;
 };

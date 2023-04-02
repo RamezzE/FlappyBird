@@ -1,7 +1,5 @@
-#include "GameScreen.h"
+#include "GameScreen.hpp"
 #include <iostream>
-
- 
 
 GameScreen::GameScreen(sf::RenderWindow& window)
     :myObstacle(Obstacle(myPlayer))
@@ -20,8 +18,8 @@ GameScreen::GameScreen(sf::RenderWindow& window)
 void GameScreen::init()
 {
     // setting up background imgs
-    skyIMG.loadFromFile(SKY_FILEPATH);
-    groundIMG.loadFromFile(GROUND_FILEPATH);
+    Collision::CreateTextureAndBitmask(skyIMG, SKY_FILEPATH);
+    Collision::CreateTextureAndBitmask(groundIMG, GROUND_FILEPATH);
 
     sky.setTexture(&skyIMG);
     ground.setTexture(&groundIMG);
@@ -31,10 +29,10 @@ void GameScreen::init()
     ground.setSize(sf::Vector2f(myWidth * 1.5, myHeight));
 
     //setting buttons textures aka imgs
-    retryIMG.loadFromFile(RETRY_BUTTON);
-    menuIMG.loadFromFile(MENU_BUTTON);
-    pauseIMG.loadFromFile(PAUSE_BUTTON);
-    playIMG.loadFromFile(PLAY_BUTTON);
+    Collision::CreateTextureAndBitmask(retryIMG, RETRY_BUTTON);
+    Collision::CreateTextureAndBitmask(menuIMG, MENU_BUTTON);
+    Collision::CreateTextureAndBitmask(pauseIMG, PAUSE_BUTTON);
+    Collision::CreateTextureAndBitmask(playIMG, PLAY_BUTTON);
 
     //setting buttons textures, size, scale, position etc
     retryButton.setTexture(retryIMG);
@@ -215,6 +213,8 @@ void GameScreen::update(float dt)
         }
     }
     
+    if (pause || !focus)
+        return;
     float x1, x2, y1, y2;
     x1 = myPlayer.getX();
     y1 = myPlayer.getY();
@@ -222,10 +222,9 @@ void GameScreen::update(float dt)
     y2 = y1 + myPlayer.getHeight();
 
     //sets rectangle around the player boundaries to detect for collisions
-    playerRect.setData(x1, y1 * 1.05, x2 * 0.6, y2 * 0.8);
 
     //queries the tree if any objects are found. If any are found they are stored in the obstaclesFound vector
-    myTree.query(playerRect, obstaclesFound);
+    myTree.query(myPlayer.getSprite(), obstaclesFound);
 
     //if obstaclesFound vector has size > 0, it means an object is detected so player loses
 
@@ -238,7 +237,7 @@ void GameScreen::update(float dt)
     }
 
     if (collision && !died) { //player dying animation
-        if (myPlayer.die(dt, playerRect, myTree)) 
+        if (myPlayer.die(dt, myTree)) 
             died = true; //died = true when player eventually hits the ground
     }
 
