@@ -6,44 +6,39 @@
 #include "Quadtree.hpp"
 #include "Player.hpp"
 #include "Collision.hpp"
-
  
 class Obstacle
 {
 public:
-	Obstacle(Player &myPlayer);
+	Obstacle(Player* myPlayer,  QuadTree* quadTree);
 
-	sf::Sprite spawnGround();
-
-	void update(float dt);
+	void update(const float dt);
 
 	void draw(sf::RenderWindow* myWindow);
 
-	std::deque<sf::Sprite> getSprites();
-
-	void setGap(unsigned short verticalGap);
+	void setGap(ushort verticalGap);
 
 	void newGame();
-
 
 private:
 
 	Player* myPlayer;
 
-	sf::Texture upObstTexture;
-	sf::Texture downObstTexture;
+	QuadTree* myTree;
 
-	sf::Sprite fakeObstacle;
+	sf::Texture upObstTexture, downObstTexture;
+	
+	sf::Sprite groundObstacle;
 
 	std::deque<sf::Sprite> ObstacleSprites;
 
-	unsigned short verticalGap;
+	ushort verticalGap;
 
 	void spawnObstacle();
 
-	void spawnFakeGround();
+	void spawnGroundObstacle();
 
-	void moveObstacles(float dt);
+	void moveObstacles(const float dt);
 
 };
 

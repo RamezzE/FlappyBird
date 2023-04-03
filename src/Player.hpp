@@ -5,35 +5,31 @@
 #include "Definitions.hpp"
 #include "Quadtree.hpp"
 
-
-
 class Player
 {
 public:
-	unsigned short startXpos, startYpos, score, highScore;
+	ushort startXpos, startYpos, score, highScore;
 
-	Player();
+	Player(QuadTree* quadTre);
+	
 	void newGame();
 
-	void animate(float dt);
-	
-	void setVelocity(float x, float y);
-	void setVelocity(sf::Vector2f velocity);
+	void animate(const float dt);
 
-	void update(float dt);
+	void update(const float dt);
 
 	void draw(sf::RenderWindow* myWindow);
 
 	void tap();
 
-	bool die(float dt, QuadTree& quadTree);
+	bool queryTree();
 
-	float getX();
-	float getY();
 	float getHeight();
-	float getWidth();
-	sf::Sprite getSprite();
-	
+
+	bool isCollided();
+	bool isDead();
+	bool isNewHighScore();
+
 	void saveHighScore();
 	
 private:
@@ -44,11 +40,17 @@ private:
 
 	sf::Clock jumpCLK;
 
+	QuadTree* myTree;
+	
+	bool collided, died, newHighScore;
+
 	float rotation;
 	void init();
 
-	void jump(float dt);
-	void fall(float dt);
+	void jump(const float dt);
+	void fall(const float dt);
+
+	bool die(const float dt);
 
 	void readHighScore();
 	

@@ -3,37 +3,37 @@
 #include <SFML/Graphics.hpp>
 
 #include "Definitions.hpp"
+#include "GameState.hpp"
+#include "Game.hpp"
 #include "GameScreen.hpp"
 #include "Collision.hpp"
 
-class MenuScreen
+class MenuScreen : public GameState
 {
 public:
-	MenuScreen(sf::RenderWindow& myWindow);
+	MenuScreen(Game* myGame);
 
-	void gameLoop();
 	void handleInput();
-	void update();
+	void update(const float dt);
 	void draw();
-
-	void initialize();
+	
 	static bool isSpritePressed(sf::Sprite sprite, sf::RenderWindow* myWindow);
 
 private:
-	sf::RenderWindow* myWindow;
+	void init();
+	Game* game;
+
+	bool startGame;
 
 	sf::RectangleShape background;
-	sf::Texture backIMG;
+	sf::Texture bgIMG;
 
-	sf::Sprite playButton;
-	sf::Sprite closeButton;
+	sf::Sprite playButton, closeButton;
 
-	sf::Texture playButtonTexture;
-	sf::Texture closeButtonTexture;
+	sf::Texture playButtonTexture, closeButtonTexture;
 
 	sf::Text title;
 	sf::Font font;
 
-	bool startGame;
 };
 

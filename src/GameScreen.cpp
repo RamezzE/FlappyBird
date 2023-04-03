@@ -1,18 +1,18 @@
 #include "GameScreen.hpp"
 #include <iostream>
 
-GameScreen::GameScreen(sf::RenderWindow& window)
-    :myObstacle(Obstacle(myPlayer))
+GameScreen::GameScreen(Game *myGame)
+    : ObstacleSpawner(Obstacle(&player, &myTree)),
+      player(Player(&myTree))
 {
-    myWindow = &window;
-    myObstacle.setGap(myPlayer.getHeight() * 2.7f);
+    this->game = myGame;
+    ObstacleSpawner.setGap(player.getHeight() * 2.7f);
 
-    //setting QuadTree boundary to the whole screen
-    boundary.setData(0, 0, myWidth, myHeight);
+    // setting QuadTree boundary to the whole screen
+    boundary.setData(0, 0, game->width, game->height);
 
     init();
     newGame();
-    
 }
 
 void GameScreen::init()
@@ -24,171 +24,143 @@ void GameScreen::init()
     sky.setTexture(&skyIMG);
     ground.setTexture(&groundIMG);
 
-    //setting background size
-    sky.setSize(sf::Vector2f(myWidth * 1.5, myHeight));
-    ground.setSize(sf::Vector2f(myWidth * 1.5, myHeight));
+    // setting background size
+    sky.setSize(sf::Vector2f(game->width * 1.5, game->height));
+    ground.setSize(sf::Vector2f(game->width * 1.5, game->height));
 
-    //setting buttons textures aka imgs
+    // setting buttons textures aka imgs
     Collision::CreateTextureAndBitmask(retryIMG, RETRY_BUTTON);
     Collision::CreateTextureAndBitmask(menuIMG, MENU_BUTTON);
     Collision::CreateTextureAndBitmask(pauseIMG, PAUSE_BUTTON);
     Collision::CreateTextureAndBitmask(playIMG, PLAY_BUTTON);
 
-    //setting buttons textures, size, scale, position etc
+    // setting buttons textures, size, scale, position etc
     retryButton.setTexture(retryIMG);
     menuButton.setTexture(menuIMG);
     pauseButton.setTexture(pauseIMG);
 
-    float num = (float)myHeight / (float)menuButton.getLocalBounds().height;
-    num /= 10;
-    retryButton.setScale(num, num);
-    menuButton.setScale(num, num);
-    pauseButton.setScale(num, num);
+    float scale = (float)game->height / (float)menuButton.getLocalBounds().height;
+    scale /= 10;
+    retryButton.setScale(scale, scale);
+    menuButton.setScale(scale, scale);
+    pauseButton.setScale(scale, scale);
 
-    menuButton.setPosition(sf::Vector2f(myWidth - (pauseButton.getGlobalBounds().width*3 + myWidth * 0.005f*3), myHeight * 0.005f));
-    retryButton.setPosition(sf::Vector2f(myWidth - (pauseButton.getGlobalBounds().width*2 + myWidth * 0.005f*2), myHeight * 0.005f));
-    pauseButton.setPosition(sf::Vector2f(myWidth - (pauseButton.getGlobalBounds().width + myWidth * 0.005f), myHeight * 0.005f));
+    menuButton.setPosition(sf::Vector2f(game->width - (pauseButton.getGlobalBounds().width * 3 + game->width * 0.005f * 3), game->height * 0.005f));
+    retryButton.setPosition(sf::Vector2f(game->width - (pauseButton.getGlobalBounds().width * 2 + game->width * 0.005f * 2), game->height * 0.005f));
+    pauseButton.setPosition(sf::Vector2f(game->width - (pauseButton.getGlobalBounds().width + game->width * 0.005f), game->height * 0.005f));
 
-    //loading font and setting up score and highscore text
+    // loading font and setting up score and highscore text
     font.loadFromFile(FONT_FILEPATH);
     scoreText.setString("Score: 000");
     scoreText.setFont(font);
-    scoreText.setCharacterSize(myHeight / 20);
+    scoreText.setCharacterSize(game->height / 20);
 
     sf::FloatRect temp = highScoreText.getGlobalBounds();
     highScoreText.setString("High Score: 000");
     highScoreText.setFont(font);
-    highScoreText.setCharacterSize(myHeight / 20);
-    highScoreText.setPosition(sf::Vector2f(myWidth-highScoreText.getGlobalBounds().width, myHeight-highScoreText.getGlobalBounds().height*2));
-    
-    scoreText.setPosition(sf::Vector2f(myWidth-highScoreText.getGlobalBounds().width, myHeight-highScoreText.getGlobalBounds().height*3.5));
+    highScoreText.setCharacterSize(game->height / 20);
+    highScoreText.setPosition(sf::Vector2f(game->width - highScoreText.getGlobalBounds().width, game->height - highScoreText.getGlobalBounds().height * 2));
 
-    highScoreText.setString("High Score: " + std::to_string(myPlayer.highScore));
+    scoreText.setPosition(sf::Vector2f(game->width - highScoreText.getGlobalBounds().width, game->height - highScoreText.getGlobalBounds().height * 3.5));
+
+    highScoreText.setString("High Score: " + std::to_string(player.highScore));
 }
 
 void GameScreen::newGame()
 {
-    collision = died = backToMenu = newHighScore = false;
-    focus = pause = true;
-    obstaclesFound.clear();
+    collision = backToMenu = spacePressed = false;
+    pause = true;
 
-    scoreText.setString("Score: " + std::to_string(myPlayer.score));
+    scoreText.setString("Score: " + std::to_string(player.score));
 
     flashCLK.restart();
 }
 
 void GameScreen::replay()
 {
-    //resetting everything to the initial values
     newGame();
-    myPlayer.newGame();
-    myObstacle.newGame();
-
+    player.newGame();
+    ObstacleSpawner.newGame();
 }
-
-void GameScreen::gameLoop()
-{
-    sf::Clock clk;
-    while (myWindow->isOpen())
-    {
-        //calculating delta time aka time for one frame. (To make frame rate independent gameplay) 
-        dt = clk.restart().asSeconds();
-
-        handleInput();
-
-        if (backToMenu) {
-            // breaks the loop to return back to Menu, resets the variable to false;
-            backToMenu = false;
-            break;
-        }
-
-        update(dt);
-
-        myWindow->clear();
-
-        draw();
-    }
-}
-
 
 void GameScreen::handleInput()
 {
-    // quad Tree is reconstructed every frame, so it is reinitialized every frame
-    initializeTree();
-
     sf::Event event;
 
-    while (myWindow->pollEvent(event))
+    while (game->window->pollEvent(event))
     {
-        // if screen is the one in focus
-        if (event.type == sf::Event::GainedFocus)  focus = true;
+        if (event.type == sf::Event::LostFocus)
+            pause = true;
 
-        // if screen is not in focus 
-        if (event.type == sf::Event::LostFocus)  focus = false;
-
-        //saves score before closing window
-        if (event.type == sf::Event::Closed) {
-            myPlayer.saveHighScore();
-            myWindow->close();
+        if (event.type == sf::Event::Closed)
+        {
+            player.saveHighScore();
+            game->window->close();
         }
 
-        if (event.type == sf::Event::MouseButtonPressed) {
-            switch (event.mouseButton.button) {
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            switch (event.mouseButton.button)
+            {
             case sf::Mouse::Left:
-                if (MenuScreen::isSpritePressed(pauseButton, myWindow)) {
-                    //toggle between play and pause states if pause button is pressed
-                    if (pause) pause = false;
-                    else {
-                        pause = true;
-                        break;
-                    }
+                if (MenuScreen::isSpritePressed(pauseButton, game->window))
+                {
+                    pause = !pause;
                     break;
                 }
-                if (died || pause) { // only detect clicks on restart and menu buttons if game is paused or player died
-                    if (MenuScreen::isSpritePressed(retryButton, myWindow)) {
+                if (player.isDead() || pause)
+                {
+                    if (MenuScreen::isSpritePressed(retryButton, game->window))
+                    {
                         replay();
                         break;
                     }
-                    else if (MenuScreen::isSpritePressed(menuButton, myWindow)) {
+                    else if (MenuScreen::isSpritePressed(menuButton, game->window))
+                    {
                         backToMenu = true;
-                        myPlayer.saveHighScore();
                         break;
                     }
                 }
 
-                // normal left click lets moveUp = true
-                myPlayer.tap();
                 pause = false;
+                player.tap();
                 break;
             }
         }
 
-        if (event.type == sf::Event::KeyPressed) { ///////////////////////////BUG here
-            switch (event.key.code) {
-            case sf::Keyboard::Space:
-                // move up if space is pressed
-                if (died)
+        if (event.type == sf::Event::KeyPressed)
+        {
+            switch (event.key.code)
+            {
+            case sf::Keyboard::R:
+                if (pause || player.isDead())
                     replay();
-                else {
-                    myPlayer.tap();
+                break;
+            case sf::Keyboard::Space:
+                if (!spacePressed)
+                {
+                    spacePressed = true;
+                    player.tap();
                     pause = false;
                 }
                 break;
             case sf::Keyboard::Escape:
-                //toggle between pause and play states
-                if (pause) 
-                    pause = false;
-                else 
-                    pause = true;
+                pause = !pause;
                 break;
             }
         }
-        if (event.type == sf::Event::KeyReleased) {
-            switch (event.key.code) {
+        if (event.type == sf::Event::KeyReleased)
+        {
+            switch (event.key.code)
+            {
             case sf::Keyboard::Escape:
-                //returns to menu if pressed Escape after player died
-                if (died) 
+                // returns to menu if pressed Escape after player died
+                if (player.isDead())
                     backToMenu = true;
+                break;
+            case sf::Keyboard::Space:
+                // space is released
+                spacePressed = false;
                 break;
             }
         }
@@ -196,137 +168,83 @@ void GameScreen::handleInput()
 }
 
 void GameScreen::update(float dt)
-{   
-    if (!pause || died || collision) {
-        //pause Button displays pauseIMG if game is running normally
-        pauseButton.setTexture(pauseIMG);
-        pause = false;
+{
+    // quad Tree is reconstructed every frame
+    myTree = QuadTree(boundary, 1);
+
+    if (backToMenu)
+    {
+        player.saveHighScore();
+        game->previousScreen();
+        return;
     }
-    else pauseButton.setTexture(playIMG);
+
+    if (!pause || player.isCollided())
+        pauseButton.setTexture(pauseIMG);
+    else
+        pauseButton.setTexture(playIMG);
 
     // moves player, object and background if no collisions && window is focused && game is not paused
-    if (!collision && focus) {   
-        myPlayer.animate(dt); //animating player and moves obstacles if game is not paused
-        if (!pause) {
-            myPlayer.update(dt);
-            myObstacle.update(dt);
+    if (!player.isCollided())
+        player.animate(dt);
+    if (!pause)
+    {
+        ObstacleSpawner.update(dt);
+        player.update(dt);
+    }
+
+    // collision detected
+    if (!collision)
+    {
+        if (player.isCollided())
+        {
+            flashCLK.restart(); // quick flash display when player loses
+            collision = true;
         }
     }
-    
-    if (pause || !focus)
-        return;
-    float x1, x2, y1, y2;
-    x1 = myPlayer.getX();
-    y1 = myPlayer.getY();
-    x2 = x1 + myPlayer.getWidth();
-    y2 = y1 + myPlayer.getHeight();
 
-    //sets rectangle around the player boundaries to detect for collisions
-
-    //queries the tree if any objects are found. If any are found they are stored in the obstaclesFound vector
-    myTree.query(myPlayer.getSprite(), obstaclesFound);
-
-    //if obstaclesFound vector has size > 0, it means an object is detected so player loses
-
-    if (obstaclesFound.size() > 0 && !collision) { //player lost
-        myPlayer.setVelocity(0, 0);
-        collision = true; //collision detected
-        initializeTree();
-        obstaclesFound.clear(); //reseting vector
-        flashCLK.restart(); // quick flash display when player loses
+    // display text if new high score is detected
+    if (player.isDead())
+    {
+        if (player.isNewHighScore())
+        {
+            scoreText.setString("Bravo!!");
+            highScoreText.setString("High Score: " + std::to_string(player.highScore));
+        }
     }
-
-    if (collision && !died) { //player dying animation
-        if (myPlayer.die(dt, myTree)) 
-            died = true; //died = true when player eventually hits the ground
-    }
-
-    //saves new high score when player dies if score > high score
-    if (myPlayer.score > myPlayer.highScore && died) {
-        newHighScore = true;
-        myPlayer.saveHighScore();
-    }
-
-    //display text if new high score is detected
-    if (newHighScore) {
-        scoreText.setString("Bravo!!");
-        highScoreText.setString("High Score: " + std::to_string(myPlayer.highScore));
-    }
-    else {
-        scoreText.setString("Score: " + std::to_string(myPlayer.score));
-    }
+    else
+        scoreText.setString("Score: " + std::to_string(player.score));
 }
 
 void GameScreen::draw()
 {
-    myWindow->draw(sky);
-    myObstacle.draw(myWindow);
+    game->window->draw(sky);
+    ObstacleSpawner.draw(game->window);
 
-    myWindow->draw(ground);
-    myWindow->draw(scoreText);
-    myWindow->draw(highScoreText);
-    myWindow->draw(pauseButton);
-    myPlayer.draw(myWindow);
+    game->window->draw(ground);
+    game->window->draw(scoreText);
+    game->window->draw(highScoreText);
+    game->window->draw(pauseButton);
+    player.draw(game->window);
 
-    flashScreen();
-
-    if (died || pause) { //display buttons if game is paused or player loses
-        myWindow->draw(retryButton);
-        myWindow->draw(menuButton);
+    if (player.isDead() || pause)
+    { // display buttons if game is paused or player loses
+        game->window->draw(retryButton);
+        game->window->draw(menuButton);
     }
-    
-    /*sf::RectangleShape myRectangle;
-    myRectangle.setFillColor(sf::Color(255, 255, 255,150));
-    myRectangle.setSize(sf::Vector2f(myWidth, myHeight*0.5f-myHeight*0.1f));
-    myRectangle.setPosition(0, myHeight*0.1f);
-    myWindow->draw(myRectangle);
 
-    sf::RectangleShape myRectangle2;
-    myRectangle2.setFillColor(sf::Color(24, 251, 255, 150));
-    myRectangle2.setSize(sf::Vector2f(myPlayer.getWidth(),myPlayer.getHeight()));
-    sf::FloatRect bounds = myRectangle2.getLocalBounds();
-    myRectangle2.setOrigin(bounds.left+bounds.width /2.0f, bounds.top + bounds.height /2.0f );
-    myRectangle2.setPosition(myPlayer.getX(),myPlayer.getY());
-
-    myWindow->draw(myRectangle2);*/
-    
-    myWindow->display();
+    flashScreen(flashCLK, game);
 }
 
-void GameScreen::initializeTree()
+void GameScreen::flashScreen(sf::Clock flashCLK, Game *game)
 {
-    myTree = QuadTree(boundary, 1);
-    myTree.insert(myObstacle.spawnGround()); //insert ground every frame
-
-    if (collision) return; // if collision is detected, no obstacles are inserted into the tree
-    
-    std::deque<sf::Sprite> obstacles = myObstacle.getSprites();
-
-    for (int i = 0; i < obstacles.size(); i++) {
-        //inserting objects in the tree
-        myTree.insert(obstacles[i]);
-    }
-}
-
-
-
-void GameScreen::flashScreen()
-{
-    //displays quick flash (white square) for a few milliseconds when dying or at restarting the game
-    if (flashCLK.getElapsedTime().asSeconds() < FLASH_TIME) {
-
-        sf::RectangleShape white(sf::Vector2f(myWidth, myHeight));
+    // displays quick flash (white square) for a few milliseconds when dying or at restarting the game
+    if (flashCLK.getElapsedTime().asSeconds() < FLASH_TIME)
+    {
+        sf::RectangleShape white(sf::Vector2f(game->width, game->height));
 
         white.setFillColor(sf::Color(255, 255, 255, 100));
 
-        myWindow->draw(white);
+        game->window->draw(white);
     }
 }
-
-
-
-
-
-
-
-

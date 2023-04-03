@@ -11,65 +11,47 @@
 #include "Obstacle.hpp"
 #include "Collision.hpp"
 
- 
-class GameScreen
+#include "Game.hpp"
+#include "GameState.hpp"
+
+class GameScreen : public GameState
 {
 public:
-	GameScreen(sf::RenderWindow& window);
+	GameScreen(Game *game);
 
+	void handleInput();
+	void update(float dt);
+	void draw();
+
+private:
 	void init();
-
-	void gameLoop();
 
 	void replay();
 
-	void draw();
+	Game *game;
 
-	void update(float dt);
-
-	void handleInput();
-
-private:
-	sf::RenderWindow* myWindow;
+	static void flashScreen(sf::Clock flashCLK, Game *game);
 
 	QuadTree myTree;
 	QuadTree::Rectangle boundary;
-	sf::RectangleShape sky;
-	sf::RectangleShape ground;
+	sf::RectangleShape sky, ground;
 
 	sf::Clock flashCLK;
 
-	sf::Texture skyIMG;
-	sf::Texture groundIMG;
+	sf::Texture skyIMG, groundIMG;
 
-	sf::Sprite retryButton;
-	sf::Sprite menuButton;
-	sf::Sprite pauseButton;
+	sf::Sprite retryButton, menuButton, pauseButton;
 
-	sf::Texture retryIMG;
-	sf::Texture menuIMG;
-	sf::Texture pauseIMG;
-	sf::Texture playIMG;
+	sf::Texture retryIMG, menuIMG, pauseIMG, playIMG;
 
-	sf::Text scoreText;
-	sf::Text highScoreText;
+	sf::Text scoreText, highScoreText;
 	sf::Font font;
 
-	Player myPlayer;
-	Obstacle myObstacle;
-	QuadTree::Rectangle playerRect;
-	std::vector<sf::Sprite> obstaclesFound;
+	Player player;
 
-	sf::Sprite currentObstacle;
-
-	bool collision, focus, pause, died, backToMenu, newHighScore;
+	Obstacle ObstacleSpawner;
 	
-	float dt;
-
-	void initializeTree();
+	bool collision, pause, backToMenu, spacePressed;
 
 	void newGame();
-
-	void flashScreen();
 };
-

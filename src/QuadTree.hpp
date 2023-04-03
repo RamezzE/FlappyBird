@@ -4,8 +4,7 @@
 #include <SFML/Graphics.hpp> 
 
 #include "Collision.hpp"
-
-typedef std::string ObjectType;
+#include "Definitions.hpp"
 
 class QuadTree {
 
@@ -66,16 +65,16 @@ public:
             X2 = object.getGlobalBounds().width + X1;
             Y1 = object.getGlobalBounds().top;
             Y2 = object.getGlobalBounds().height + Y1;
-
+            
             return  !(x1 > X2 || x2 < X1 || y1 > Y2 || y2 < Y1);
         }
     };
 
     QuadTree();
+    
+    QuadTree(Rectangle boundary, ushort capacity);
 
-    QuadTree(Rectangle boundary, int capacity);
-
-    void setData(Rectangle boundary, int capacity);
+    void setData(Rectangle boundary, ushort capacity);
 
     void subdivide();
 
@@ -90,7 +89,7 @@ public:
     bool equals(sf::Sprite sprite1, sf::Sprite sprite2);
 
 private:
-    Rectangle boundary; int capacity;
+    Rectangle boundary; ushort capacity;
     bool divided;
 
     std::vector<sf::Sprite> objects; //store objects in the tree

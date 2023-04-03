@@ -1,11 +1,11 @@
 #include "Quadtree.hpp"
 QuadTree::QuadTree() {}
 
-QuadTree::QuadTree(Rectangle boundary, int capacity = 4) {
+QuadTree::QuadTree(Rectangle boundary, ushort capacity = 4) {
     setData(boundary, capacity);
 }
 
-void QuadTree::setData(Rectangle boundary, int capacity)
+void QuadTree::setData(Rectangle boundary, ushort capacity)
 {
     this->boundary = boundary;
     this->capacity = capacity;
@@ -14,10 +14,10 @@ void QuadTree::setData(Rectangle boundary, int capacity)
 
 void QuadTree::subdivide() {
 
-    int x1 = this->boundary.x1;
-    int y1 = this->boundary.y1;
-    int x2 = this->boundary.x2;
-    int y2 = this->boundary.y2;
+    ushort x1 = this->boundary.x1;
+    ushort y1 = this->boundary.y1;
+    ushort x2 = this->boundary.x2;
+    ushort y2 = this->boundary.y2;
 
     //setting sides for each rectangle appropriately
     Rectangle ne((x1 + x2) / 2, ((y1 + y2) / 2), x2, y2);
@@ -72,7 +72,7 @@ void QuadTree::query(sf::Sprite range, std::vector<sf::Sprite>& objectsFound) {
         for (sf::Sprite r : objects) {
             if (Collision::BoundingBoxTest(range,r)) { //adds object to vector if point exists within the range
                 bool duplicate = false;
-                for (int i = 0; i < objectsFound.size(); i++) {
+                for (ushort i = 0; i < objectsFound.size(); i++) {
                     if (equals(r, objectsFound[i])) {
                         duplicate = true;
                         break;
@@ -81,11 +81,7 @@ void QuadTree::query(sf::Sprite range, std::vector<sf::Sprite>& objectsFound) {
                 if (!duplicate) {
                     //check here for pixel perfect collision
                     if (Collision::PixelPerfectTest(range, r)) {
-                        std::cout << "Pixel Perfect Collision" << std::endl;
                         objectsFound.push_back(r);
-                    }
-                    else {
-                        std::cout << "Bounding Box Collision" << std::endl;
                     }
                 }
             }
@@ -101,7 +97,7 @@ void QuadTree::query(sf::Sprite range, std::vector<sf::Sprite>& objectsFound) {
 }
 
 void QuadTree::remove(sf::Sprite object) {
-    for (int i = 0; i < objects.size(); i++) {
+    for (ushort i = 0; i < objects.size(); i++) {
         if (equals(object, objects[i])) {
             objects.erase(objects.begin() + i);
         }
@@ -115,7 +111,7 @@ void QuadTree::remove(sf::Sprite object) {
 }
 
 bool QuadTree::search(sf::Sprite object) {
-    for (int i = 0; i < objects.size(); i++) {
+    for (ushort i = 0; i < objects.size(); i++) {
         if (equals(object, objects[i])) {
             return true;
         }
