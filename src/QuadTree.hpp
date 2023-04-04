@@ -1,98 +1,247 @@
 #pragma once
 #include <vector>
 #include <iostream>
-#include <SFML/Graphics.hpp> 
+#include <SFML/Graphics.hpp>
 
 #include "Collision.hpp"
-#include "Definitions.hpp"
 
-class QuadTree {
+typedef unsigned short ushort;
+
+template <class DataType>
+class QuadTree
+{
 
 public:
-    class Point {
+    class Node
+    {
     public:
-        int x;
-        int y;
-        Point(int x, int y) {
-            this->x = x;
-            this->y = y;
+        Node(sf::FloatRect boundary, ushort capacity)
+        {
+            this->boundary = boundary;
+            this->capacity = capacity;
+            this->divided = false;
+        }
+        sf::FloatRect boundary;
+        ushort capacity;
+        bool divided;
+
+        std::vector<DataType *> objects;
+
+        Node *NE;
+        Node *NW;
+        Node *SE;
+        Node *SW;
+
+        // Subdivides the QuadTree into 4 smaller QuadTrees
+        void subdivide()
+        {
+            float x1 = boundary.left;
+            float y1 = boundary.top;
+            float x2 = boundary.width + x1;
+            float y2 = boundary.height + y1;
+
+            // setting sides for each rectangle appropriately
+            sf::Vector2f size(boundary.width / 2, boundary.height / 2);
+
+            sf::FloatRect ne(sf::Vector2f((x1 + x2) / 2, y1), size);
+            sf::FloatRect nw(sf::Vector2f(x1, y1), size);
+            sf::FloatRect se(sf::Vector2f((x1 + x2) / 2, (y1 + y2) / 2), size);
+            sf::FloatRect sw(sf::Vector2f(x1, (y1 + y2) / 2), size);
+
+            NE = new Node(ne, capacity); // north east
+            NW = new Node(nw, capacity); // north west
+            SE = new Node(se, capacity); // south east
+            SW = new Node(sw, capacity); // south west
+
+            this->divided = true;
         }
     };
 
-    class Rectangle {
-    public:
-        int x1, y1, x2, y2;
+    typedef Node *NodePtr;
 
-        Rectangle() {
-            setData(0, 0, 0, 0);
-        }
-        Rectangle(int x1, int y1, int x2, int y2) {
-            setData(x1, y1, x2, y2);
-        }
-
-        void setData(int x1, int y1, int x2, int y2) {
-            this->x1 = x1;
-            this->y1 = y1;
-            this->x2 = x2;
-            this->y2 = y2;
-
-            if (x1 > x2) {
-                int temp = this->x1;
-                this->x1 = this->x2;
-                this->x2 = temp;
-            }
-            if (y1 > y2) {
-                int temp = this->y1;
-                this->y1 = y2;
-                this->y2 = temp;
-            }
-        }
-
-        bool contains(Point point) {
-
-            return (point.x >= x1 && point.x <= x2 && point.y >= y1 && point.y <= y2);
-
-        }
-
-        bool intersects(Rectangle range) {
-
-            return !(x1 > range.x2 || x2 < range.x1 || y1 > range.y1 || y2 < range.y1);
-
-        }
-        bool intersects(sf::Sprite object) {
-            int X1, X2, Y1, Y2;
-            X1 = object.getGlobalBounds().left;
-            X2 = object.getGlobalBounds().width + X1;
-            Y1 = object.getGlobalBounds().top;
-            Y2 = object.getGlobalBounds().height + Y1;
-            
-            return  !(x1 > X2 || x2 < X1 || y1 > Y2 || y2 < Y1);
-        }
-    };
-
+    // No Argument Constructor
     QuadTree();
-    
-    QuadTree(Rectangle boundary, ushort capacity);
 
-    void setData(Rectangle boundary, ushort capacity);
+    // Constructor
+    QuadTree(sf::FloatRect boundary, ushort capacity);
 
-    void subdivide();
+    void setData(sf::FloatRect boundary, ushort capacity);
 
-    void insert(sf::Sprite object);
+    // Resets the QuadTree
+    void reset();
 
-    void query(sf::Sprite range, std::vector<sf::Sprite>& objectsFound);
+    // Inserts an object into the QuadTree
+    void insert(DataType *object);
 
-    void remove(sf::Sprite object);
+    // Returns all objects that are within a given range
+    void query(sf::FloatRect range, std::vector<DataType *> &objectsFound);
 
-    bool search(sf::Sprite object);
+    // Returns true if the object is in the
+    bool search(DataType *object);
 
-    bool equals(sf::Sprite sprite1, sf::Sprite sprite2);
+    // Returns true if the two objects are equal
+    bool equals(DataType *A, DataType *B);
 
 private:
-    Rectangle boundary; ushort capacity;
-    bool divided;
+    NodePtr root;
 
-    std::vector<sf::Sprite> objects; //store objects in the tree
+    // helper functions for the public recursive functions
 
-    QuadTree* NE; QuadTree* NW; QuadTree* SE; QuadTree* SW;
+    void insert_helper(DataType *object, NodePtr node);
+
+    void query_helper(sf::FloatRect range, std::vector<DataType *> &objectsFound, NodePtr node);
+
+    bool search_helper(DataType *object, NodePtr node);
+
+    void reset_helper(NodePtr node);
 };
+
+template <class DataType>
+QuadTree<DataType>::QuadTree() {}
+
+template <class DataType>
+QuadTree<DataType>::QuadTree(sf::FloatRect boundary, ushort capacity)
+{
+    setData(boundary, capacity);
+}
+
+template <class DataType>
+void QuadTree<DataType>::setData(sf::FloatRect boundary, ushort capacity)
+{
+    root = new Node(boundary, capacity);
+}
+
+template <class DataType>
+void QuadTree<DataType>::reset()
+{
+    reset_helper(root);
+}
+
+template <class DataType>
+void QuadTree<DataType>::reset_helper(NodePtr node)
+{
+    if (node->divided)
+    {
+        reset_helper(node->NE);
+        reset_helper(node->NW);
+        reset_helper(node->SE);
+        reset_helper(node->SW);
+
+        node->divided = false;
+
+        delete node->NE;
+        delete node->NW;
+        delete node->SE;
+        delete node->SW;
+    }
+    node->objects.clear();
+}
+
+template <class DataType>
+void QuadTree<DataType>::insert(DataType *object)
+{
+    insert_helper(object, root);
+}
+
+template <class DataType>
+void QuadTree<DataType>::insert_helper(DataType *object, NodePtr node)
+{
+    // if the object is already in the tree, it returns
+    if (search_helper(object, node))
+        return;
+
+    // if the object is not within the boundary, it returns
+    if (!node->boundary.intersects(object->getGlobalBounds()))
+        return;
+
+    // adds the object to the if capacity is not reached yet
+    if (node->objects.size() < node->capacity)
+        node->objects.push_back(object);
+    else
+    {
+        if (!node->divided)
+            node->subdivide();
+
+        insert_helper(object, node->NE);
+        insert_helper(object, node->NW);
+        insert_helper(object, node->SE);
+        insert_helper(object, node->SW);
+    }
+}
+
+template <class DataType>
+void QuadTree<DataType>::query(sf::FloatRect range, std::vector<DataType *> &objectsFound)
+{
+    query_helper(range, objectsFound, root);
+}
+
+template <class DataType>
+void QuadTree<DataType>::query_helper(sf::FloatRect range, std::vector<DataType *> &objectsFound, NodePtr node)
+{
+    if (!node->boundary.intersects(range))
+        return;
+    else
+    {
+        for (ushort i = 0; i < node->objects.size(); i++)
+        {
+            if (range.intersects(node->objects[i]->getGlobalBounds()))
+            {
+                if (range == node->objects[i]->getGlobalBounds())
+                    continue;
+
+                bool duplicate = false;
+                for (ushort j = 0; j < objectsFound.size(); j++)
+                {
+                    if (equals(node->objects[i], objectsFound[j]))
+                    {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if (!duplicate)
+                    objectsFound.push_back(node->objects[i]);
+            }
+        }
+        if (node->divided)
+        { // gets all objects in the sub trees that exist
+            query_helper(range, objectsFound, node->NE);
+            query_helper(range, objectsFound, node->NW);
+            query_helper(range, objectsFound, node->SE);
+            query_helper(range, objectsFound, node->SW);
+        }
+    }
+}
+
+template <class DataType>
+bool QuadTree<DataType>::search(DataType *object)
+{
+    return search_helper(object, root);
+}
+
+template <class DataType>
+bool QuadTree<DataType>::search_helper(DataType *object, NodePtr node)
+{
+    for (ushort i = 0; i < node->objects.size(); i++)
+    {
+        if (equals(object, node->objects[i]))
+            return true;
+    }
+    if (node->divided)
+    {
+        if (search_helper(object, node->NE))
+            return true;
+        if (search_helper(object, node->NW))
+            return true;
+        if (search_helper(object, node->SE))
+            return true;
+        if (search_helper(object, node->SW))
+            return true;
+    }
+    return false;
+}
+
+template <class DataType>
+bool QuadTree<DataType>::equals(DataType *A, DataType *B)
+{
+    return A->getGlobalBounds() == B->getGlobalBounds() && A->getPosition() == B->getPosition();
+}

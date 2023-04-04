@@ -4,13 +4,13 @@
 
 #include "Definitions.hpp"
 #include "Quadtree.hpp"
-
+#include "Collision.hpp"
 class Player
 {
 public:
 	ushort startXpos, startYpos, score, highScore;
 
-	Player(QuadTree* quadTre);
+	Player(QuadTree<sf::Sprite>* quadTree);
 	
 	void newGame();
 
@@ -40,7 +40,7 @@ private:
 
 	sf::Clock jumpCLK;
 
-	QuadTree* myTree;
+	QuadTree<sf::Sprite>* myTree;
 	
 	bool collided, died, newHighScore;
 

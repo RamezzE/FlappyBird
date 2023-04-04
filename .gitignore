@@ -1,9 +1,10 @@
 /.vs/
 /.vscode/
 x64
-highScore.dat
 src/assets
 *.exe
 SFML-2.5.1 (mingw)
 obj
 *.o
+highScore.dat
+assets/files/highScore.dat

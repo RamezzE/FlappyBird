@@ -1,7 +1,7 @@
 #include "Player.hpp"
 #include <iostream>
 
-Player::Player(QuadTree* quadTree)
+Player::Player(QuadTree<sf::Sprite> *quadTree)
 {
     myTree = quadTree;
     init();
@@ -47,7 +47,8 @@ void Player::update(const float dt)
 {
     if (collided)
     {
-        if (die(dt)) {
+        if (die(dt))
+        {
             died = true;
             saveHighScore();
         }
@@ -124,13 +125,8 @@ void Player::fall(const float dt)
 
 bool Player::die(const float dt)
 {
-    std::vector<sf::Sprite> spritesFound;
-    myTree->query(playerSprite, spritesFound);
-
-    // if collision with ground
-    if (!spritesFound.empty())
+    if (queryTree())
         return true;
-    // if no collision detected it continues the dying animation
 
     fall(dt);
 
@@ -165,12 +161,14 @@ void Player::readHighScore()
 
 bool Player::queryTree()
 {
-    std::vector<sf::Sprite> spritesFound;
-    myTree->query(playerSprite, spritesFound);
+    std::vector<sf::Sprite*> spritesFound;
+    myTree->query(playerSprite.getGlobalBounds(), spritesFound);
 
-    if (!spritesFound.empty())
-        return true;
-
+    for (ushort i = 0; i < spritesFound.size(); ++i)
+    {
+        if (Collision::PixelPerfectTest(playerSprite, *spritesFound[i]))
+            return true;
+    }
     return false;
 }
 

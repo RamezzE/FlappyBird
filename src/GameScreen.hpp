@@ -32,8 +32,8 @@ private:
 
 	static void flashScreen(sf::Clock flashCLK, Game *game);
 
-	QuadTree myTree;
-	QuadTree::Rectangle boundary;
+	QuadTree<sf::Sprite> myTree;
+	sf::FloatRect boundary;
 	sf::RectangleShape sky, ground;
 
 	sf::Clock flashCLK;

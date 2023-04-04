@@ -10,7 +10,7 @@
 class Obstacle
 {
 public:
-	Obstacle(Player* myPlayer,  QuadTree* quadTree);
+	Obstacle(Player* myPlayer,  QuadTree<sf::Sprite>* quadTree);
 
 	void update(const float dt);
 
@@ -24,8 +24,8 @@ private:
 
 	Player* myPlayer;
 
-	QuadTree* myTree;
-
+	QuadTree<sf::Sprite>* myTree;
+	
 	sf::Texture upObstTexture, downObstTexture;
 	
 	sf::Sprite groundObstacle;

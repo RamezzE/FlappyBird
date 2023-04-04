@@ -9,8 +9,8 @@ GameScreen::GameScreen(Game *myGame)
     ObstacleSpawner.setGap(player.getHeight() * 2.7f);
 
     // setting QuadTree boundary to the whole screen
-    boundary.setData(0, 0, game->width, game->height);
-
+    boundary = sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(game->width, game->height));
+    myTree = QuadTree<sf::Sprite>(boundary,1);
     init();
     newGame();
 }
@@ -170,7 +170,7 @@ void GameScreen::handleInput()
 void GameScreen::update(float dt)
 {
     // quad Tree is reconstructed every frame
-    myTree = QuadTree(boundary, 1);
+    myTree.reset();
 
     if (backToMenu)
     {

@@ -1,7 +1,7 @@
 #include "Obstacle.hpp"
 #include <iostream>
 
-Obstacle::Obstacle(Player* myPlayer, QuadTree* quadTree)
+Obstacle::Obstacle(Player* myPlayer, QuadTree<sf::Sprite>* quadTree)
 {
 	Collision::CreateTextureAndBitmask(upObstTexture, OBSTACLE_UP_FILEPATH);
 	Collision::CreateTextureAndBitmask(downObstTexture, OBSTACLE_DOWN_FILEPATH);
@@ -100,9 +100,9 @@ void Obstacle::update(const float dt)
 
 	if (!myPlayer->isCollided()) {
 		for (ushort i = 0;i<ObstacleSprites.size();i++)
-			myTree->insert(ObstacleSprites[i]);
+			myTree->insert(&ObstacleSprites[i]);
 	}
-	myTree->insert(groundObstacle);
+	myTree->insert(&groundObstacle);
 }
 
 void Obstacle::draw(sf::RenderWindow *myWindow)
