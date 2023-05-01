@@ -37,10 +37,37 @@ void Player::init()
 void Player::newGame()
 {
     rotation = score = 0;
-    collided = died = newHighScore = false;
+    collided = died = newHighScore = spacePressed = false;
 
     playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));
     playerSprite.setRotation(rotation);
+}
+
+void Player::handleInput(sf::Event event)
+{
+    if (event.type == sf::Event::Closed)
+        saveHighScore();
+    else if (event.type == sf::Event::KeyPressed)
+    {
+        if (event.key.code == sf::Keyboard::Space)
+        {
+            if (!spacePressed)
+            {
+                tap();
+                spacePressed = true;
+            }
+        }
+    }
+    else if (event.type == sf::Event::KeyReleased)
+    {
+        if (event.key.code == sf::Keyboard::Space)
+            spacePressed = false;
+    }
+    else if (event.type == sf::Event::MouseButtonPressed)
+    {
+        if (event.mouseButton.button == sf::Mouse::Left)
+            tap();
+    }
 }
 
 void Player::update(const float dt)
@@ -111,16 +138,15 @@ void Player::fall(const float dt)
             rotation = 25.0f;
 
         playerSprite.setRotation(rotation);
+        return;
     }
-    else
-    {
-        rotation -= ROTATION_SPEED * 3 * dt;
+    
+    rotation -= ROTATION_SPEED * 3 * dt;
 
-        if (rotation < -25.0f)
-            rotation = -25.0f;
+    if (rotation < -25.0f)
+        rotation = -25.0f;
 
-        playerSprite.setRotation(rotation);
-    }
+    playerSprite.setRotation(rotation);
 }
 
 bool Player::die(const float dt)
@@ -161,7 +187,7 @@ void Player::readHighScore()
 
 bool Player::queryTree()
 {
-    std::vector<sf::Sprite*> spritesFound;
+    std::vector<sf::Sprite *> spritesFound;
     myTree->query(playerSprite.getGlobalBounds(), spritesFound);
 
     for (ushort i = 0; i < spritesFound.size(); ++i)

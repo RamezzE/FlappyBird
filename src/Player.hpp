@@ -16,6 +16,8 @@ public:
 
 	void animate(const float dt);
 
+	void handleInput(sf::Event event);
+
 	void update(const float dt);
 
 	void draw(sf::RenderWindow* myWindow);
@@ -35,6 +37,8 @@ public:
 private:
 	sf::Texture playerSpriteSheet[4];
 	sf::Sprite playerSprite;
+
+	Game* game;
 	
 	sf::Vector2f velocity;
 
@@ -42,7 +46,7 @@ private:
 
 	QuadTree<sf::Sprite>* myTree;
 	
-	bool collided, died, newHighScore;
+	bool collided, died, newHighScore, spacePressed;
 
 	float rotation;
 	void init();
@@ -51,7 +55,6 @@ private:
 	void fall(const float dt);
 
 	bool die(const float dt);
-
 	void readHighScore();
 	
 };

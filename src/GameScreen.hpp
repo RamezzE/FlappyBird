@@ -51,7 +51,7 @@ private:
 
 	Obstacle ObstacleSpawner;
 	
-	bool collision, pause, backToMenu, spacePressed;
+	bool collision, pause, backToMenu;
 
 	void newGame();
 };
