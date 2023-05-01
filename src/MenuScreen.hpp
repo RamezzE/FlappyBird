@@ -28,9 +28,9 @@ private:
 	sf::RectangleShape background;
 	sf::Texture bgIMG;
 
-	sf::Sprite playButton, closeButton;
+	sf::Sprite buttons[3]; // [0] = playButton, [1] = closeButton
 
-	sf::Texture playButtonTexture, closeButtonTexture;
+	sf::Texture buttonTextures[3]; // [0] = playButton, [1] = closeButton
 
 	sf::Text title;
 	sf::Font font;

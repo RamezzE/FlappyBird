@@ -18,6 +18,7 @@
 #define RETRY_BUTTON "assets\\pics\\menu\\restart.png"
 #define MENU_BUTTON "assets\\pics\\menu\\menu.png"
 #define PAUSE_BUTTON "assets\\pics\\menu\\pause.png"
+#define SETTINGS_BUTTON "assets\\pics\\menu\\setting.png"
 
 #define FONT_FILEPATH "assets\\fonts\\soup_of_justice\\soupofjustice.ttf"
 

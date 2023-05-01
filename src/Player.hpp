@@ -53,7 +53,7 @@ private:
 
 	void jump(const float dt);
 	void fall(const float dt);
-
+	
 	bool die(const float dt);
 	void readHighScore();
 	
