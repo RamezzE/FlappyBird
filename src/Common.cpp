@@ -1,10 +1,18 @@
+#include "Common.hpp"
+#include <map>
+
+namespace Input
+{
+    bool isMouseOver(sf::Sprite sprite, sf::RenderWindow *myWindow)
+    {
+        return sprite.getGlobalBounds().contains(sf::Mouse::getPosition(*myWindow).x, sf::Mouse::getPosition(*myWindow).y);
+    }
+}
+
 /*
  * File:   collision.cpp
  * Author: Nick (original version), ahnonay (SFML2 compatibility)
  */
-#include <SFML/Graphics.hpp>
-#include <map>
-#include "Collision.hpp"
 
 namespace Collision
 {

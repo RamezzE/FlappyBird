@@ -1,3 +1,14 @@
+#pragma once
+
+#include <SFML/Graphics.hpp>
+#include <cmath>
+
+namespace Input
+{
+    bool isMouseOver(sf::Sprite sprite, sf::RenderWindow *window);
+}
+
+
 /*
  * File:   collision.hpp
  * Authors: Nick Koirala (original version), ahnonay (SFML2 compatibility)
@@ -32,9 +43,6 @@
  *
  * Created on 30 January 2009, 11:02
  */
-
-#ifndef COLLISION_H
-#define COLLISION_H
 
 namespace Collision {
     //////
@@ -71,5 +79,3 @@ namespace Collision {
     //////
     bool BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
 }
-
-#endif	/* COLLISION_H */

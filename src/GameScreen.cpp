@@ -103,19 +103,19 @@ void GameScreen::handleInput()
             switch (event.mouseButton.button)
             {
             case sf::Mouse::Left:
-                if (MenuScreen::isSpritePressed(pauseButton, game->window))
+                if (Input::isMouseOver(pauseButton, game->window))
                 {
                     pause = !pause;
                     break;
                 }
                 if (player.isDead() || pause)
                 {
-                    if (MenuScreen::isSpritePressed(retryButton, game->window))
+                    if (Input::isMouseOver(retryButton, game->window))
                     {
                         replay();
                         break;
                     }
-                    else if (MenuScreen::isSpritePressed(menuButton, game->window))
+                    else if (Input::isMouseOver(menuButton, game->window))
                     {
                         backToMenu = true;
                         break;

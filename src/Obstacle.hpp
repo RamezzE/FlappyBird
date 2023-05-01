@@ -5,7 +5,7 @@
 #include "Definitions.hpp"
 #include "Quadtree.hpp"
 #include "Player.hpp"
-#include "Collision.hpp"
+#include "Common.hpp"
  
 class Obstacle
 {

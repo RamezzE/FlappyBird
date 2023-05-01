@@ -67,10 +67,7 @@ void MenuScreen::init()
     buttons[2].setPosition(sf::Vector2f(game->width - (buttons[2].getGlobalBounds().width + +buttons[1].getGlobalBounds().width + game->width * 2 * 0.005f), game->height * 0.005f));
 }
 
-bool MenuScreen::isSpritePressed(sf::Sprite sprite, sf::RenderWindow *myWindow)
-{
-    return sprite.getGlobalBounds().contains(sf::Mouse::getPosition(*myWindow).x, sf::Mouse::getPosition(*myWindow).y);
-}
+
 
 void MenuScreen::handleInput()
 {
@@ -87,9 +84,9 @@ void MenuScreen::handleInput()
             switch (event.mouseButton.button)
             {
             case sf::Mouse::Left:
-                if (isSpritePressed(buttons[0], game->window))
+                if (Input::isMouseOver(buttons[0], game->window))
                     startGame = true;
-                else if (isSpritePressed(buttons[1], game->window))
+                else if (Input::isMouseOver(buttons[1], game->window))
                     game->window->close();       
 
                 break;

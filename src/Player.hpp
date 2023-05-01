@@ -4,7 +4,7 @@
 
 #include "Definitions.hpp"
 #include "Quadtree.hpp"
-#include "Collision.hpp"
+#include "Common.hpp"
 class Player
 {
 public:
@@ -53,7 +53,7 @@ private:
 
 	void jump(const float dt);
 	void fall(const float dt);
-	
+
 	bool die(const float dt);
 	void readHighScore();
 	

@@ -9,7 +9,7 @@
 #include "Player.hpp"
 #include "Quadtree.hpp"
 #include "Obstacle.hpp"
-#include "Collision.hpp"
+#include "Common.hpp"
 
 #include "Game.hpp"
 #include "GameState.hpp"
@@ -41,7 +41,7 @@ private:
 	sf::Texture skyIMG, groundIMG;
 
 	sf::Sprite retryButton, menuButton, pauseButton;
-
+	
 	sf::Texture retryIMG, menuIMG, pauseIMG, playIMG;
 
 	sf::Text scoreText, highScoreText;

@@ -6,7 +6,7 @@
 #include "GameState.hpp"
 #include "Game.hpp"
 #include "GameScreen.hpp"
-#include "Collision.hpp"
+#include "Common.hpp"
 
 class MenuScreen : public GameState
 {
@@ -17,8 +17,6 @@ public:
 	void update(const float dt);
 	void draw();
 	
-	static bool isSpritePressed(sf::Sprite sprite, sf::RenderWindow* myWindow);
-
 private:
 	void init();
 	Game* game;
@@ -28,9 +26,9 @@ private:
 	sf::RectangleShape background;
 	sf::Texture bgIMG;
 
-	sf::Sprite buttons[3]; // [0] = playButton, [1] = closeButton
+	sf::Sprite buttons[3]; // [0] = playButton, [1] = closeButton, [2] = settingsButton
 
-	sf::Texture buttonTextures[3]; // [0] = playButton, [1] = closeButton
+	sf::Texture buttonTextures[3];
 
 	sf::Text title;
 	sf::Font font;
