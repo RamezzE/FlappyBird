@@ -169,6 +169,7 @@ void Player::saveHighScore()
     if (score < highScore)
         return;
 
+    newHighScore = true;
     highScore = score;
 
     // saves high Score into binary file
