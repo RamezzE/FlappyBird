@@ -29,25 +29,24 @@ void GameScreen::init()
     ground.setSize(sf::Vector2f(game->width * 1.5, game->height));
 
     // setting buttons textures aka imgs
-    Collision::CreateTextureAndBitmask(retryIMG, RETRY_BUTTON);
-    Collision::CreateTextureAndBitmask(menuIMG, MENU_BUTTON);
-    Collision::CreateTextureAndBitmask(pauseIMG, PAUSE_BUTTON);
-    Collision::CreateTextureAndBitmask(playIMG, PLAY_BUTTON);
+    Collision::CreateTextureAndBitmask(buttonTextures[0], MENU_BUTTON);
+    Collision::CreateTextureAndBitmask(buttonTextures[1], RETRY_BUTTON);
+    Collision::CreateTextureAndBitmask(buttonTextures[2], PAUSE_BUTTON);
+    Collision::CreateTextureAndBitmask(buttonTextures[3], PLAY_BUTTON);
 
     // setting buttons textures, size, scale, position etc
-    retryButton.setTexture(retryIMG);
-    menuButton.setTexture(menuIMG);
-    pauseButton.setTexture(pauseIMG);
 
-    float scale = (float)game->height / (float)menuButton.getLocalBounds().height;
+    for (ushort i = 0; i < 3; i++)
+        buttons[i].setTexture(buttonTextures[i]);
+
+    float scale = (float)game->height / (float)buttons[0].getLocalBounds().height;
     scale /= 10;
-    retryButton.setScale(scale, scale);
-    menuButton.setScale(scale, scale);
-    pauseButton.setScale(scale, scale);
 
-    menuButton.setPosition(sf::Vector2f(game->width - (pauseButton.getGlobalBounds().width * 3 + game->width * 0.005f * 3), game->height * 0.005f));
-    retryButton.setPosition(sf::Vector2f(game->width - (pauseButton.getGlobalBounds().width * 2 + game->width * 0.005f * 2), game->height * 0.005f));
-    pauseButton.setPosition(sf::Vector2f(game->width - (pauseButton.getGlobalBounds().width + game->width * 0.005f), game->height * 0.005f));
+    for (ushort i = 0, j = 3; i < 3; i++, j--)
+    {
+        buttons[i].setScale(sf::Vector2f(scale, scale));
+        buttons[i].setPosition(sf::Vector2f(game->width - (buttons[i].getGlobalBounds().width * (j) + game->width * 0.005f * (j)), game->height * 0.005f));
+    }
 
     // loading font and setting up score and highscore text
     font.loadFromFile(FONT_FILEPATH);
@@ -88,7 +87,7 @@ void GameScreen::handleInput()
     sf::Event event;
 
     while (game->window->pollEvent(event))
-    {   
+    {
         if (!pause)
             player.handleInput(event);
 
@@ -98,33 +97,57 @@ void GameScreen::handleInput()
         else if (event.type == sf::Event::Closed)
             game->window->close();
 
-        else if (event.type == sf::Event::MouseButtonPressed)
+        else if (event.type == sf::Event::MouseButtonReleased)
         {
+            for (ushort i = 0; i < 3; i++)
+                buttons[i].setColor(sf::Color::White);
+            
             switch (event.mouseButton.button)
             {
             case sf::Mouse::Left:
-                if (Input::isMouseOver(pauseButton, game->window))
+                if (Input::isMouseOver(buttons[2], game->window))
                 {
                     pause = !pause;
                     break;
                 }
                 if (player.isDead() || pause)
                 {
-                    if (Input::isMouseOver(retryButton, game->window))
-                    {
-                        replay();
-                        break;
-                    }
-                    else if (Input::isMouseOver(menuButton, game->window))
+                    if (Input::isMouseOver(buttons[0], game->window))
                     {
                         backToMenu = true;
                         break;
                     }
+                    else if (Input::isMouseOver(buttons[1], game->window))
+                    {
+                        replay();
+                        break;
+                    }
                 }
-                pause = false;
-                player.handleInput(event);
+            }
+        }
+
+        else if (event.type == sf::Event::MouseButtonPressed)
+        {
+            bool exit = false;
+            switch (event.mouseButton.button)
+            {
+            case sf::Mouse::Left:
+                for (ushort i = 0; i < 3; i++)
+                    if (Input::isMouseOver(buttons[i], game->window)) {
+                        buttons[i].setColor(sf::Color(178, 178, 178, 255));
+                        exit = true;
+                    }
+                    else
+                        buttons[i].setColor(sf::Color::White);
                 break;
             }
+
+            if (exit)
+                break;
+
+            pause = false;
+            player.handleInput(event);
+            break;
         }
 
         else if (event.type == sf::Event::KeyPressed)
@@ -171,14 +194,14 @@ void GameScreen::update(float dt)
     }
 
     if (!pause || player.isCollided())
-        pauseButton.setTexture(pauseIMG);
+        buttons[2].setTexture(buttonTextures[2]);
     else
-        pauseButton.setTexture(playIMG);
+        buttons[2].setTexture(buttonTextures[3]);
 
     // moves player, object and background if no collisions && window is focused && game is not paused
     if (!player.isCollided())
         player.animate(dt);
-    
+
     if (!pause)
     {
         ObstacleSpawner.update(dt);
@@ -216,13 +239,13 @@ void GameScreen::draw()
     game->window->draw(ground);
     game->window->draw(scoreText);
     game->window->draw(highScoreText);
-    game->window->draw(pauseButton);
+    game->window->draw(buttons[2]);
     player.draw(game->window);
 
     if (player.isDead() || pause)
     { // display buttons if game is paused or player loses
-        game->window->draw(retryButton);
-        game->window->draw(menuButton);
+        for (ushort i = 0; i < 2; i++)
+            game->window->draw(buttons[i]);
     }
 
     flashScreen(flashCLK, game);

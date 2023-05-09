@@ -67,8 +67,6 @@ void MenuScreen::init()
     buttons[2].setPosition(sf::Vector2f(game->width - (buttons[2].getGlobalBounds().width + +buttons[1].getGlobalBounds().width + game->width * 2 * 0.005f), game->height * 0.005f));
 }
 
-
-
 void MenuScreen::handleInput()
 {
     sf::Event event;
@@ -79,6 +77,20 @@ void MenuScreen::handleInput()
         if (event.type == sf::Event::Closed)
             game->window->close();
 
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            switch (event.mouseButton.button)
+            {
+            case sf::Mouse::Left:
+                for (int i = 0; i < 3; i++)
+                    if (Input::isMouseOver(buttons[i], game->window))
+                        buttons[i].setColor(sf::Color(178, 178, 178, 250));
+                    else
+                        buttons[i].setColor(sf::Color::White);
+                break;
+            }
+        }
+
         if (event.type == sf::Event::MouseButtonReleased)
         {
             switch (event.mouseButton.button)
@@ -87,10 +99,12 @@ void MenuScreen::handleInput()
                 if (Input::isMouseOver(buttons[0], game->window))
                     startGame = true;
                 else if (Input::isMouseOver(buttons[1], game->window))
-                    game->window->close();       
-
+                    game->window->close();
                 break;
             }
+
+            for (int i = 0; i < 3; i++)
+                buttons[i].setColor(sf::Color::White);
         }
         if (event.type == sf::Event::KeyPressed)
         {
@@ -125,6 +139,8 @@ void MenuScreen::draw()
 
     for (int i = 0; i < 3; i++)
         game->window->draw(buttons[i]);
+
+    // game->window->draw(buttonOverlay);
 
     game->window->draw(title);
 }

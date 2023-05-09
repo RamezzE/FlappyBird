@@ -40,9 +40,9 @@ private:
 
 	sf::Texture skyIMG, groundIMG;
 
-	sf::Sprite retryButton, menuButton, pauseButton;
-	
-	sf::Texture retryIMG, menuIMG, pauseIMG, playIMG;
+	sf::Sprite buttons[3]; // 0 = menu, 1 = retry, 2 = pause
+		
+	sf::Texture buttonTextures[4]; // 0 = menu, 1 = retry, 2 = pause, 3 = play
 
 	sf::Text scoreText, highScoreText;
 	sf::Font font;
