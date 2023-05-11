@@ -17,7 +17,7 @@ void Button::init()
     mouseOver = false;
     pressed = false;
     doAction = false;
-    pressedColor = sf::Color::White;
+    pressedColor = sf::Color(178, 178, 178);
 }
 
 void Button::setPressedColor(sf::Color color)
@@ -71,8 +71,6 @@ void Button::update(sf::RenderWindow *window)
         mouseOver = true;
     else
         mouseOver = false;
-
-    
 }
 
 void Button::render(sf::RenderWindow *window)
@@ -108,4 +106,9 @@ bool Button::isDoAction()
 void Button::didAction()
 {
     doAction = false;
+}
+
+bool Button::isMouseOver()
+{
+    return mouseOver;
 }

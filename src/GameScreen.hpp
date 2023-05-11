@@ -10,6 +10,7 @@
 #include "Quadtree.hpp"
 #include "Obstacle.hpp"
 #include "Common.hpp"
+#include "Button.hpp"
 
 #include "Game.hpp"
 #include "GameState.hpp"
@@ -39,8 +40,8 @@ private:
 	sf::Clock flashCLK;
 
 	sf::Texture skyIMG, groundIMG;
-
-	sf::Sprite buttons[3]; // 0 = menu, 1 = retry, 2 = pause
+	
+	Button buttons[3]; // 0 = menu, 1 = retry, 2 = pause
 
 	sf::Texture buttonTextures[4]; // 0 = menu, 1 = retry, 2 = pause, 3 = play
 

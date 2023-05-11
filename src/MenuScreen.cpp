@@ -28,10 +28,7 @@ void MenuScreen::init()
     scale /= 10;
 
     for (int i = 0; i < 3; i++)
-    {
-        buttons[i].setPressedColor(sf::Color(178, 178, 178, 250));
         buttons[i].setScale(sf::Vector2f(scale, scale));
-    }
 
     // setting background size and position
     background.setSize(sf::Vector2f(game->width, game->height));

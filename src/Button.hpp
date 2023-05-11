@@ -21,6 +21,7 @@ public:
 
     bool isDoAction();
     void didAction();
+    bool isMouseOver();
 
     sf::FloatRect getGlobalBounds();
     sf::FloatRect getLocalBounds();

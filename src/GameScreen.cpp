@@ -7,15 +7,16 @@ GameScreen::GameScreen(Game *myGame)
 {
     this->game = myGame;
     ObstacleSpawner.setGap(player.getHeight() * 2.7f);
-
+    
     // setting QuadTree boundary to the whole screen
     boundary = sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(game->width, game->height));
     myTree = QuadTree<sf::Sprite>(boundary, 1);
+
     init();
     newGame();
 }
 void GameScreen::init()
-{ 
+{
     // setting up background imgs
 
     skyIMG.loadFromFile(SKY_FILEPATH);
@@ -24,7 +25,6 @@ void GameScreen::init()
     buttonTextures[1].loadFromFile(RETRY_BUTTON);
     buttonTextures[2].loadFromFile(PAUSE_BUTTON);
     buttonTextures[3].loadFromFile(PLAY_BUTTON);
-
 
     sky.setTexture(&skyIMG);
     ground.setTexture(&groundIMG);
@@ -86,6 +86,9 @@ void GameScreen::handleInput()
 
     while (game->window->pollEvent(event))
     {
+        for (ushort i = 0; i < 3; i++)
+            buttons[i].handleInput(event);
+
         if (!pause)
             player.handleInput(event);
 
@@ -95,57 +98,15 @@ void GameScreen::handleInput()
         else if (event.type == sf::Event::Closed)
             game->window->close();
 
-        else if (event.type == sf::Event::MouseButtonReleased)
-        {
-            for (ushort i = 0; i < 3; i++)
-                buttons[i].setColor(sf::Color::White);
-
-            switch (event.mouseButton.button)
-            {
-            case sf::Mouse::Left:
-                if (Input::isMouseOver(buttons[2], game->window))
-                {
-                    pause = !pause;
-                    break;
-                }
-                if (player.isDead() || pause)
-                {
-                    if (Input::isMouseOver(buttons[0], game->window))
-                    {
-                        backToMenu = true;
-                        break;
-                    }
-                    else if (Input::isMouseOver(buttons[1], game->window))
-                    {
-                        replay();
-                        break;
-                    }
-                }
-            }
-        }
-
         else if (event.type == sf::Event::MouseButtonPressed)
         {
-            bool exit = false;
-            switch (event.mouseButton.button)
+            if (event.mouseButton.button == sf::Mouse::Left)
             {
-            case sf::Mouse::Left:
                 for (ushort i = 0; i < 3; i++)
-                    if (Input::isMouseOver(buttons[i], game->window))
-                    {
-                        buttons[i].setColor(sf::Color(178, 178, 178, 255));
-                        exit = true;
-                    }
-                    else
-                        buttons[i].setColor(sf::Color::White);
-                break;
+                    if (buttons[i].isMouseOver())
+                        return;
             }
-
-            if (exit)
-                break;
-
             pause = false;
-            player.handleInput(event);
             break;
         }
 
@@ -184,6 +145,25 @@ void GameScreen::update(float dt)
 {
     // quad Tree is reconstructed every frame
     myTree.reset();
+
+    for (ushort i = 0; i < 3; i++)
+        buttons[i].update(game->window);
+
+    if (buttons[0].isDoAction())
+    {
+        backToMenu = true;
+        buttons[0].didAction();
+    }
+    else if (buttons[1].isDoAction())
+    {
+        replay();
+        buttons[1].didAction();
+    }
+    else if (buttons[2].isDoAction())
+    {
+        pause = !pause;
+        buttons[2].didAction();
+    }
 
     if (backToMenu)
     {
@@ -238,13 +218,14 @@ void GameScreen::draw()
     game->window->draw(ground);
     game->window->draw(scoreText);
     game->window->draw(highScoreText);
-    game->window->draw(buttons[2]);
+    buttons[2].render(game->window);
     player.draw(game->window);
 
     if (player.isDead() || pause)
-    { // display buttons if game is paused or player loses
+    { 
+        // display buttons if game is paused or player loses
         for (ushort i = 0; i < 2; i++)
-            game->window->draw(buttons[i]);
+            buttons[i].render(game->window);
     }
 
     flashScreen(flashCLK, game);

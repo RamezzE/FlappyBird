@@ -10,9 +10,7 @@ Game::Game() {
     window = new sf::RenderWindow();
 	width = myWidth;
 	height = myHeight;
-
-
-
+	
 	window->create(sf::VideoMode(width, height), "FlarKy Bird", sf::Style::Titlebar | sf::Style::Close);
 	window->setFramerateLimit(60);
 }
