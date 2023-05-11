@@ -15,10 +15,11 @@ void Player::init()
     highScore = 0;
 
     // loading the 4 frame imgs of the bird
-    Collision::CreateTextureAndBitmask(playerSpriteSheet[0], PLAYER_FRAME_1);
-    Collision::CreateTextureAndBitmask(playerSpriteSheet[1], PLAYER_FRAME_2);
-    Collision::CreateTextureAndBitmask(playerSpriteSheet[2], PLAYER_FRAME_3);
-    Collision::CreateTextureAndBitmask(playerSpriteSheet[3], PLAYER_FRAME_4);
+    playerSpriteSheet[0].loadFromFile(PLAYER_FRAME_1);
+    playerSpriteSheet[1].loadFromFile(PLAYER_FRAME_2);
+    playerSpriteSheet[2].loadFromFile(PLAYER_FRAME_3);
+    playerSpriteSheet[3].loadFromFile(PLAYER_FRAME_4);
+
 
     playerSprite.setTexture(playerSpriteSheet[0]);
 

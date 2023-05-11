@@ -14,12 +14,17 @@ GameScreen::GameScreen(Game *myGame)
     init();
     newGame();
 }
-
 void GameScreen::init()
-{
+{ 
     // setting up background imgs
-    Collision::CreateTextureAndBitmask(skyIMG, SKY_FILEPATH);
-    Collision::CreateTextureAndBitmask(groundIMG, GROUND_FILEPATH);
+
+    skyIMG.loadFromFile(SKY_FILEPATH);
+    groundIMG.loadFromFile(GROUND_FILEPATH);
+    buttonTextures[0].loadFromFile(MENU_BUTTON);
+    buttonTextures[1].loadFromFile(RETRY_BUTTON);
+    buttonTextures[2].loadFromFile(PAUSE_BUTTON);
+    buttonTextures[3].loadFromFile(PLAY_BUTTON);
+
 
     sky.setTexture(&skyIMG);
     ground.setTexture(&groundIMG);
@@ -28,14 +33,7 @@ void GameScreen::init()
     sky.setSize(sf::Vector2f(game->width * 1.5, game->height));
     ground.setSize(sf::Vector2f(game->width * 1.5, game->height));
 
-    // setting buttons textures aka imgs
-    Collision::CreateTextureAndBitmask(buttonTextures[0], MENU_BUTTON);
-    Collision::CreateTextureAndBitmask(buttonTextures[1], RETRY_BUTTON);
-    Collision::CreateTextureAndBitmask(buttonTextures[2], PAUSE_BUTTON);
-    Collision::CreateTextureAndBitmask(buttonTextures[3], PLAY_BUTTON);
-
     // setting buttons textures, size, scale, position etc
-
     for (ushort i = 0; i < 3; i++)
         buttons[i].setTexture(buttonTextures[i]);
 
@@ -101,7 +99,7 @@ void GameScreen::handleInput()
         {
             for (ushort i = 0; i < 3; i++)
                 buttons[i].setColor(sf::Color::White);
-            
+
             switch (event.mouseButton.button)
             {
             case sf::Mouse::Left:
@@ -133,7 +131,8 @@ void GameScreen::handleInput()
             {
             case sf::Mouse::Left:
                 for (ushort i = 0; i < 3; i++)
-                    if (Input::isMouseOver(buttons[i], game->window)) {
+                    if (Input::isMouseOver(buttons[i], game->window))
+                    {
                         buttons[i].setColor(sf::Color(178, 178, 178, 255));
                         exit = true;
                     }

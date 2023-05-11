@@ -1,5 +1,7 @@
 #include "MenuScreen.hpp"
 
+
+
 MenuScreen::MenuScreen(Game *myGame)
 {
     this->game = myGame;
@@ -13,10 +15,10 @@ void MenuScreen::init()
 
     // initializing background imgs and buttons
 
-    Collision::CreateTextureAndBitmask(bgIMG, MENU_BACKGROUND);
-    Collision::CreateTextureAndBitmask(buttonTextures[0], PLAY_BUTTON);
-    Collision::CreateTextureAndBitmask(buttonTextures[1], CLOSE_BUTTON);
-    Collision::CreateTextureAndBitmask(buttonTextures[2], SETTINGS_BUTTON);
+    bgIMG.loadFromFile(MENU_BACKGROUND);
+    buttonTextures[0].loadFromFile(PLAY_BUTTON);
+    buttonTextures[1].loadFromFile(CLOSE_BUTTON);
+    buttonTextures[2].loadFromFile(SETTINGS_BUTTON);
 
     // setting images for background and buttons
     background.setTexture(&bgIMG);
@@ -93,6 +95,9 @@ void MenuScreen::handleInput()
 
         if (event.type == sf::Event::MouseButtonReleased)
         {
+            for (int i = 0; i < 3; i++)
+                buttons[i].setColor(sf::Color::White);
+
             switch (event.mouseButton.button)
             {
             case sf::Mouse::Left:
@@ -102,9 +107,6 @@ void MenuScreen::handleInput()
                     game->window->close();
                 break;
             }
-
-            for (int i = 0; i < 3; i++)
-                buttons[i].setColor(sf::Color::White);
         }
         if (event.type == sf::Event::KeyPressed)
         {
@@ -139,8 +141,6 @@ void MenuScreen::draw()
 
     for (int i = 0; i < 3; i++)
         game->window->draw(buttons[i]);
-
-    // game->window->draw(buttonOverlay);
 
     game->window->draw(title);
 }
