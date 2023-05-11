@@ -5,7 +5,7 @@ Obstacle::Obstacle(Player* myPlayer, QuadTree<sf::Sprite>* quadTree)
 {
 	Collision::CreateTextureAndBitmask(upObstTexture, OBSTACLE_UP_FILEPATH);
 	Collision::CreateTextureAndBitmask(downObstTexture, OBSTACLE_DOWN_FILEPATH);
-
+	
 	this->myPlayer = myPlayer;
 	myTree = quadTree;
 
