@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include "GameScreen.hpp"
 #include "Common.hpp"
+#include "Button.hpp"
 
 class MenuScreen : public GameState
 {
@@ -26,7 +27,7 @@ private:
 	sf::RectangleShape background;
 	sf::Texture bgIMG;
 
-	sf::Sprite buttons[3]; // [0] = playButton, [1] = closeButton, [2] = settingsButton
+	Button buttons[3]; // [0] = playButton, [1] = closeButton, [2] = settingsButton
 
 	sf::Texture buttonTextures[3];
 

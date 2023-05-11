@@ -1,26 +1,37 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Definitions.hpp"
 #include "Common.hpp"
-
 
 class Button
 {
 public:
-    Button(sf::Texture &texture, sf::RenderWindow *window);
+    Button();
+    Button(sf::Texture &texture);
 
     void handleInput(sf::Event event);
-    void update();
-    void draw();
+    void update(sf::RenderWindow *window);
+    void render(sf::RenderWindow *window);
 
-    bool isPressed() const;
+    void setOrigin(sf::Vector2f origin);
+    void setTexture(sf::Texture &texture);
+    void setScale(sf::Vector2f scale);
+    void setPosition(sf::Vector2f position);
+    void setPressedColor(sf::Color color);
 
-    sf::Vector2f getGlobalBounds() const;
+    bool isDoAction();
+    void didAction();
+
+    sf::FloatRect getGlobalBounds();
+    sf::FloatRect getLocalBounds();
 
 private:
+    void init();
     sf::Sprite sprite;
-    sf::Texture &texture;
-    bool mouseOver, pressed;
 
-    sf::RenderWindow *window;
+    bool mouseOver, pressed, doAction;
+
+
+    sf::Color pressedColor;
 
 };

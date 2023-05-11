@@ -1,7 +1,5 @@
 #include "MenuScreen.hpp"
 
-
-
 MenuScreen::MenuScreen(Game *myGame)
 {
     this->game = myGame;
@@ -25,6 +23,15 @@ void MenuScreen::init()
 
     for (int i = 0; i < 3; i++)
         buttons[i].setTexture(buttonTextures[i]);
+
+    float scale = (float)game->height / (float)buttons[0].getLocalBounds().height;
+    scale /= 10;
+
+    for (int i = 0; i < 3; i++)
+    {
+        buttons[i].setPressedColor(sf::Color(178, 178, 178, 250));
+        buttons[i].setScale(sf::Vector2f(scale, scale));
+    }
 
     // setting background size and position
     background.setSize(sf::Vector2f(game->width, game->height));
@@ -53,19 +60,13 @@ void MenuScreen::init()
 
     // play button
     temp = buttons[0].getLocalBounds();
-    buttons[0].setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
+    buttons[0].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
     buttons[0].setPosition(sf::Vector2f(game->width / 2.0f, title.getPosition().y + title.getGlobalBounds().height * 2.0f));
 
-    float scale = (float)game->height / (float)buttons[0].getLocalBounds().height;
-    scale /= 10;
-    buttons[0].setScale(scale, scale);
-
     // close button
-    buttons[1].setScale(scale, scale);
     buttons[1].setPosition(sf::Vector2f(game->width - (buttons[1].getGlobalBounds().width + game->width * 0.005f), game->height * 0.005f));
 
     // settings button
-    buttons[2].setScale(scale, scale);
     buttons[2].setPosition(sf::Vector2f(game->width - (buttons[2].getGlobalBounds().width + +buttons[1].getGlobalBounds().width + game->width * 2 * 0.005f), game->height * 0.005f));
 }
 
@@ -75,39 +76,13 @@ void MenuScreen::handleInput()
 
     while (game->window->pollEvent(event))
     {
+        for (ushort i = 0; i < 3; i++)
+            buttons[i].handleInput(event);
+
         // window closes if close button pressed
         if (event.type == sf::Event::Closed)
             game->window->close();
 
-        if (event.type == sf::Event::MouseButtonPressed)
-        {
-            switch (event.mouseButton.button)
-            {
-            case sf::Mouse::Left:
-                for (int i = 0; i < 3; i++)
-                    if (Input::isMouseOver(buttons[i], game->window))
-                        buttons[i].setColor(sf::Color(178, 178, 178, 250));
-                    else
-                        buttons[i].setColor(sf::Color::White);
-                break;
-            }
-        }
-
-        if (event.type == sf::Event::MouseButtonReleased)
-        {
-            for (int i = 0; i < 3; i++)
-                buttons[i].setColor(sf::Color::White);
-
-            switch (event.mouseButton.button)
-            {
-            case sf::Mouse::Left:
-                if (Input::isMouseOver(buttons[0], game->window))
-                    startGame = true;
-                else if (Input::isMouseOver(buttons[1], game->window))
-                    game->window->close();
-                break;
-            }
-        }
         if (event.type == sf::Event::KeyPressed)
         {
             switch (event.key.code)
@@ -128,6 +103,23 @@ void MenuScreen::handleInput()
 
 void MenuScreen::update(const float dt)
 {
+    for (ushort i = 0; i < 3; i++)
+        buttons[i].update(game->window);
+
+    if (buttons[0].isDoAction())
+    {
+        startGame = true;
+        buttons[0].didAction();
+    }
+    else if (buttons[1].isDoAction())
+    {
+        game->window->close();
+        buttons[1].didAction();
+    }
+    else if (buttons[2].isDoAction())
+    {
+    }
+
     if (startGame)
     {
         game->changeScreen(new GameScreen(game));
@@ -140,7 +132,7 @@ void MenuScreen::draw()
     game->window->draw(background);
 
     for (int i = 0; i < 3; i++)
-        game->window->draw(buttons[i]);
+        buttons[i].render(game->window);
 
     game->window->draw(title);
 }
