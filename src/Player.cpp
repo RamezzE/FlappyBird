@@ -37,7 +37,8 @@ void Player::init()
 
 void Player::newGame()
 {
-    rotation = score = 0;
+    rotation = score  = 0;
+    velocity = sf::Vector2f(0, 0);
     collided = died = newHighScore = spacePressed = false;
 
     playerSprite.setPosition(sf::Vector2f(startXpos, startYpos));

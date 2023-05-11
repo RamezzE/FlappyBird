@@ -57,7 +57,7 @@ void Button::handleInput(sf::Event event)
         switch (event.mouseButton.button)
         {
         case sf::Mouse::Left:
-            if (pressed)
+            if (mouseOver)
                 doAction = true;
             break;
         }

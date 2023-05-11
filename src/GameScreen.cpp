@@ -107,6 +107,7 @@ void GameScreen::handleInput()
                         return;
             }
             pause = false;
+            player.handleInput(event);
             break;
         }
 
@@ -222,7 +223,7 @@ void GameScreen::draw()
     player.draw(game->window);
 
     if (player.isDead() || pause)
-    { 
+    {
         // display buttons if game is paused or player loses
         for (ushort i = 0; i < 2; i++)
             buttons[i].render(game->window);
