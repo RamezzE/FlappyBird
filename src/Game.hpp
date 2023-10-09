@@ -28,6 +28,5 @@ private:
 	
 	void pushState(GameState* state);
 	void popState();
-
-	
+	sf::Image icon;
 };

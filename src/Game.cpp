@@ -5,59 +5,75 @@
 #include "Game.hpp"
 #include "GameState.hpp"
 
-Game::Game() {
+Game::Game()
+{
 
-    window = new sf::RenderWindow();
+	window = new sf::RenderWindow();
 	width = myWidth;
 	height = myHeight;
-	
+
 	window->create(sf::VideoMode(width, height), "FlarKy Bird", sf::Style::Titlebar | sf::Style::Close);
 	window->setFramerateLimit(60);
+	window->setPosition(sf::Vector2i(window->getPosition().x, 10));
+
+	icon.loadFromFile(PLAYER_FRAME_1);
+	window->setIcon(icon.getSize().x,icon.getSize().y,icon.getPixelsPtr());
 }
 
-void Game::changeScreen(GameState* state) {
+void Game::changeScreen(GameState *state)
+{
 	pushState(state);
 }
 
-void Game::previousScreen() {
+void Game::previousScreen()
+{
 	popState();
 }
 
-//let it loop back to the saved menu state
-void Game::pushState(GameState* state) {
+// let it loop back to the saved menu state
+void Game::pushState(GameState *state)
+{
 	states.push_back(state);
 }
 
-void Game::popState() {
+void Game::popState()
+{
 	delete states.back();
 	states.pop_back();
 }
 
-
-Game:: ~Game() {
-	while (!states.empty()) {
+Game::~Game()
+{
+	while (!states.empty())
+	{
 		popState();
 	}
 }
 
-GameState* Game::CurrentState() {
-	if (states.empty()) {
+GameState *Game::CurrentState()
+{
+	if (states.empty())
+	{
 		return nullptr;
 	}
-	else {
+	else
+	{
 		return states.back();
 	}
 }
 
-void Game::gameLoop() {
+void Game::gameLoop()
+{
 
 	sf::Clock clk;
-    float dt;
-	while (window->isOpen()) {
+	float dt;
+	while (window->isOpen())
+	{
 
-        dt = clk.restart().asSeconds();
+		dt = clk.restart().asSeconds();
 
-		if (CurrentState() == nullptr) {
+		if (CurrentState() == nullptr)
+		{
 			continue;
 		}
 
@@ -72,6 +88,5 @@ void Game::gameLoop() {
 		CurrentState()->draw();
 
 		window->display();
-
 	}
 }
