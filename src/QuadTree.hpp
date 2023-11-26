@@ -3,7 +3,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-
 typedef unsigned short ushort;
 template <class DataType>
 class QuadTree

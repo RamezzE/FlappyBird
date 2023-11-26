@@ -5,10 +5,6 @@
 #include <windows.h>
 
 #include "Game.hpp"
-#include "MenuScreen.hpp"
-#include "GameScreen.hpp"
-
-// still need to create a button class
 
 unsigned short widthRatio, heightRatio, myWidth, myHeight;
 
@@ -58,6 +54,6 @@ int main()
     // myHeight = sf::VideoMode::getDesktopMode().height;
 
     Game myGame;
-    myGame.changeScreen(new MenuScreen(&myGame));
+    myGame.changeScreen(ScreenType::MainMenu);
     myGame.gameLoop();
 }

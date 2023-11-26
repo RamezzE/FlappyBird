@@ -2,9 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <deque>
 
-#include "Definitions.hpp"
-#include "Quadtree.hpp"
 #include "Player.hpp"
+#include "QuadTree.hpp"
+#include "Definitions.hpp"
 #include "Common.hpp"
  
 class Obstacle

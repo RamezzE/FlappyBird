@@ -49,6 +49,7 @@ void Player::handleInput(sf::Event event)
 {
     if (event.type == sf::Event::Closed)
         saveHighScore();
+    
     else if (event.type == sf::Event::KeyPressed)
     {
         if (event.key.code == sf::Keyboard::Space)
@@ -60,11 +61,13 @@ void Player::handleInput(sf::Event event)
             }
         }
     }
+
     else if (event.type == sf::Event::KeyReleased)
     {
         if (event.key.code == sf::Keyboard::Space)
             spacePressed = false;
     }
+    
     else if (event.type == sf::Event::MouseButtonPressed)
     {
         if (event.mouseButton.button == sf::Mouse::Left)

@@ -1,13 +1,13 @@
 
 #include <iostream>
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 #include "Game.hpp"
-#include "GameState.hpp"
+#include "MenuScreen.hpp"
+#include "GameScreen.hpp"
 
 Game::Game()
 {
-
 	window = new sf::RenderWindow();
 	width = myWidth;
 	height = myHeight;
@@ -17,27 +17,59 @@ Game::Game()
 	window->setPosition(sf::Vector2i(window->getPosition().x, 10));
 
 	icon.loadFromFile(PLAYER_FRAME_1);
-	window->setIcon(icon.getSize().x,icon.getSize().y,icon.getPixelsPtr());
+	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 }
 
-void Game::changeScreen(GameState *state)
+void Game::changeScreen(ScreenType newScreen)
 {
-	pushState(state);
+	// Switch to the requested screen type
+	switch (newScreen)
+	{
+	case ScreenType::MainMenu:
+		// If the screen is not already stored, store it
+		if (std::find(StoredScreens.begin(), StoredScreens.end(), newScreen) == StoredScreens.end())
+			pushState(new MenuScreen(this), newScreen);
+		else // If the screen is already stored, cycle through the stored screens until the requested screen is reached
+			while (StoredScreens.back() != newScreen)
+				cycleStates();
+		break;
+
+	case ScreenType::Gameplay:
+		// If the screen is not already stored, store it
+		if (std::find(StoredScreens.begin(), StoredScreens.end(), newScreen) == StoredScreens.end())
+			pushState(new GameScreen(this), newScreen);
+		else // If the screen is already stored, cycle through the stored screens until the requested screen is reached
+			while (StoredScreens.back() != newScreen)
+				cycleStates();
+		break;
+	}
 }
 
-void Game::previousScreen()
+void Game::cycleStates()
 {
-	popState();
+	if (StoredScreens.size() == 1)
+		return;
+
+	// keeping record of the states
+	StoredScreens.push_back(StoredScreens.front());
+	StoredScreens.erase(StoredScreens.begin());
+
+	// Move the front state to the back
+	states.push_back(states.front());
+	states.erase(states.begin());
 }
 
-// let it loop back to the saved menu state
-void Game::pushState(GameState *state)
+void Game::pushState(GameState *state, ScreenType screen)
 {
 	states.push_back(state);
+	StoredScreens.push_back(screen);
 }
 
 void Game::popState()
 {
+	if (states.empty())
+		return;
+
 	delete states.back();
 	states.pop_back();
 }
@@ -45,39 +77,29 @@ void Game::popState()
 Game::~Game()
 {
 	while (!states.empty())
-	{
 		popState();
-	}
 }
 
 GameState *Game::CurrentState()
 {
 	if (states.empty())
-	{
 		return nullptr;
-	}
 	else
-	{
 		return states.back();
-	}
 }
 
 void Game::gameLoop()
 {
-
 	sf::Clock clk;
 	float dt;
+
 	while (window->isOpen())
 	{
 
 		dt = clk.restart().asSeconds();
 
 		if (CurrentState() == nullptr)
-		{
 			continue;
-		}
-
-		window->clear();
 
 		CurrentState()->handleInput();
 

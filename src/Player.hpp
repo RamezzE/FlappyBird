@@ -2,9 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
 
-#include "Definitions.hpp"
-#include "Quadtree.hpp"
+#include "Game.hpp"
+#include "QuadTree.hpp"
 #include "Common.hpp"
+
 class Player
 {
 public:

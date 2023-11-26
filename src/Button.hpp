@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Definitions.hpp"
+#include <functional>
+
 #include "Common.hpp"
 
 class Button
@@ -19,8 +20,9 @@ public:
     void setPosition(sf::Vector2f position);
     void setPressedColor(sf::Color color);
 
-    bool isDoAction();
-    void didAction();
+    void setOnAction(const std::function<void()>& callback);
+    std::function<void()> getOnAction();
+
     bool isMouseOver();
 
     sf::FloatRect getGlobalBounds();
@@ -29,10 +31,10 @@ public:
 private:
     void init();
     sf::Sprite sprite;
+    std::function<void()> onAction;
+    bool mouseOver, pressed;
 
-    bool mouseOver, pressed, doAction;
 
-
-    sf::Color pressedColor;
+    sf::Color pressedColor, hoverColor;
 
 };

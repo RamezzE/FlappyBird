@@ -65,6 +65,17 @@ void MenuScreen::init()
 
     // settings button
     buttons[2].setPosition(sf::Vector2f(game->width - (buttons[2].getGlobalBounds().width + +buttons[1].getGlobalBounds().width + game->width * 2 * 0.005f), game->height * 0.005f));
+
+
+    // setting up onAction for buttons
+    buttons[0].setOnAction([game = this->game]() {
+        game->changeScreen(ScreenType::Gameplay);
+    });
+
+    buttons[1].setOnAction([game = this->game]() {
+        game->window->close();
+    });
+
 }
 
 void MenuScreen::handleInput()
@@ -102,26 +113,6 @@ void MenuScreen::update(const float dt)
 {
     for (ushort i = 0; i < 3; i++)
         buttons[i].update(game->window);
-
-    if (buttons[0].isDoAction())
-    {
-        startGame = true;
-        buttons[0].didAction();
-    }
-    else if (buttons[1].isDoAction())
-    {
-        game->window->close();
-        buttons[1].didAction();
-    }
-    else if (buttons[2].isDoAction())
-    {
-    }
-
-    if (startGame)
-    {
-        game->changeScreen(new GameScreen(game));
-        startGame = false;
-    }
 }
 
 void MenuScreen::draw()

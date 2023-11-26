@@ -4,16 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "Definitions.hpp"
-#include "MenuScreen.hpp"
-#include "Player.hpp"
-#include "Quadtree.hpp"
-#include "Obstacle.hpp"
-#include "Common.hpp"
-#include "Button.hpp"
-
 #include "Game.hpp"
-#include "GameState.hpp"
+#include "Button.hpp"
+#include "Player.hpp"
+#include "Obstacle.hpp"
+#include "QuadTree.hpp"
+
 
 class GameScreen : public GameState
 {
@@ -51,8 +47,8 @@ private:
 	Player player;
 
 	Obstacle ObstacleSpawner;
-
-	bool collision, pause, backToMenu;
+	
+	bool collision, pause;
 
 	void newGame();
 };

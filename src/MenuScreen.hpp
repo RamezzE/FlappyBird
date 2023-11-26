@@ -2,11 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Definitions.hpp"
-#include "GameState.hpp"
 #include "Game.hpp"
-#include "GameScreen.hpp"
-#include "Common.hpp"
 #include "Button.hpp"
 
 class MenuScreen : public GameState

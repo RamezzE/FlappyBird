@@ -7,7 +7,7 @@ GameScreen::GameScreen(Game *myGame)
 {
     this->game = myGame;
     ObstacleSpawner.setGap(player.getHeight() * 2.7f);
-    
+
     // setting QuadTree boundary to the whole screen
     boundary = sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(game->width, game->height));
     myTree = QuadTree<sf::Sprite>(boundary, 1);
@@ -61,11 +61,25 @@ void GameScreen::init()
     scoreText.setPosition(sf::Vector2f(game->width - highScoreText.getGlobalBounds().width, game->height - highScoreText.getGlobalBounds().height * 3.5));
 
     highScoreText.setString("High Score: " + std::to_string(player.highScore));
+
+    // setting up buttons onAction functions
+    buttons[0].setOnAction([this]()
+    { 
+        player.saveHighScore();
+        game->changeScreen(ScreenType::MainMenu);
+        replay();
+    });
+
+    buttons[1].setOnAction([this]()
+                           { replay(); });
+
+    buttons[2].setOnAction([this]()
+                           { pause = !pause; });
 }
 
 void GameScreen::newGame()
 {
-    collision = backToMenu = false;
+    collision = false;
     pause = true;
 
     scoreText.setString("Score: " + std::to_string(player.score));
@@ -88,9 +102,8 @@ void GameScreen::handleInput()
     {
         for (ushort i = 0; i < 3; i++)
             buttons[i].handleInput(event);
-
-        if (!pause)
-            player.handleInput(event);
+        
+        player.handleInput(event);
 
         if (event.type == sf::Event::LostFocus)
             pause = true;
@@ -100,14 +113,7 @@ void GameScreen::handleInput()
 
         else if (event.type == sf::Event::MouseButtonPressed)
         {
-            if (event.mouseButton.button == sf::Mouse::Left)
-            {
-                for (ushort i = 0; i < 3; i++)
-                    if (buttons[i].isMouseOver())
-                        return;
-            }
             pause = false;
-            player.handleInput(event);
             break;
         }
 
@@ -121,7 +127,6 @@ void GameScreen::handleInput()
                 break;
             case sf::Keyboard::Space:
                 pause = false;
-                player.handleInput(event);
                 break;
             case sf::Keyboard::Escape:
                 pause = !pause;
@@ -135,7 +140,7 @@ void GameScreen::handleInput()
             case sf::Keyboard::Escape:
                 // returns to menu if pressed Escape after player died
                 if (player.isDead())
-                    backToMenu = true;
+                    buttons[0].getOnAction()();
                 break;
             }
         }
@@ -149,29 +154,6 @@ void GameScreen::update(float dt)
 
     for (ushort i = 0; i < 3; i++)
         buttons[i].update(game->window);
-
-    if (buttons[0].isDoAction())
-    {
-        backToMenu = true;
-        buttons[0].didAction();
-    }
-    else if (buttons[1].isDoAction())
-    {
-        replay();
-        buttons[1].didAction();
-    }
-    else if (buttons[2].isDoAction())
-    {
-        pause = !pause;
-        buttons[2].didAction();
-    }
-
-    if (backToMenu)
-    {
-        player.saveHighScore();
-        game->previousScreen();
-        return;
-    }
 
     if (!pause || player.isCollided())
         buttons[2].setTexture(buttonTextures[2]);

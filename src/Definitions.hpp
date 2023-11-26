@@ -1,5 +1,4 @@
 #pragma once	
-#include "Game.hpp"
 
 #define PLAYER_FRAME_1 "assets\\pics\\bird\\frame-1.png"
 #define PLAYER_FRAME_2 "assets\\pics\\bird\\frame-2.png"

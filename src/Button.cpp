@@ -1,12 +1,13 @@
 #include "Button.hpp"
 
 #include <iostream>
+
 Button::Button()
 {
     init();
 }
 
-Button::Button(sf::Texture& texture)
+Button::Button(sf::Texture &texture)
 {
     sprite.setTexture(texture);
     init();
@@ -16,8 +17,10 @@ void Button::init()
 {
     mouseOver = false;
     pressed = false;
-    doAction = false;
     pressedColor = sf::Color(178, 178, 178);
+    hoverColor = sf::Color(220, 220, 220);
+
+    onAction = []() {};
 }
 
 void Button::setPressedColor(sf::Color color)
@@ -57,8 +60,8 @@ void Button::handleInput(sf::Event event)
         switch (event.mouseButton.button)
         {
         case sf::Mouse::Left:
-            if (mouseOver)
-                doAction = true;
+            if (mouseOver) 
+                onAction();
             break;
         }
         pressed = false;
@@ -75,11 +78,14 @@ void Button::update(sf::RenderWindow *window)
 
 void Button::render(sf::RenderWindow *window)
 {
+    
     if (pressed)
         sprite.setColor(pressedColor);
+    else if (mouseOver)
+        sprite.setColor(hoverColor);
     else
         sprite.setColor(sf::Color::White);
-    
+
     window->draw(sprite);
 }
 
@@ -98,14 +104,14 @@ sf::FloatRect Button::getLocalBounds()
     return sprite.getLocalBounds();
 }
 
-bool Button::isDoAction()
+void Button::setOnAction(const std::function<void()> &callback)
 {
-    return doAction;
+    onAction = callback;
 }
 
-void Button::didAction()
+std::function<void()> Button::getOnAction()
 {
-    doAction = false;
+    return onAction;
 }
 
 bool Button::isMouseOver()
