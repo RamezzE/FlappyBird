@@ -1,4 +1,4 @@
-#include "Player.hpp"
+#include "../hpp/Player.hpp"
 #include <iostream>
 
 Player::Player(QuadTree<sf::Sprite> *quadTree)

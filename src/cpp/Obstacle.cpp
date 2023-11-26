@@ -1,4 +1,4 @@
-#include "Obstacle.hpp"
+#include "../hpp/Obstacle.hpp"
 #include <iostream>
 
 Obstacle::Obstacle(Player* myPlayer, QuadTree<sf::Sprite>* quadTree)

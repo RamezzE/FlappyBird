@@ -1,25 +1,27 @@
 SRC_DIR := src
+CPP_DIR := $(SRC_DIR)/cpp
+HPP_DIR := $(SRC_DIR)/hpp
 OBJ_DIR := obj
 
-MAIN_CPP 	  := $(wildcard $(SRC_DIR)/main.cpp)
-MAIN_OBJ := $(MAIN_CPP:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+MAIN_CPP 	  := $(wildcard $(CPP_DIR)/main.cpp)
+MAIN_OBJ := $(MAIN_CPP:$(CPP_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-CPP_FILES       := $(filter-out $(MAIN_CPP), $(wildcard $(SRC_DIR)/*.cpp))
-OBJ_FILES     := $(CPP_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+CPP_FILES       := $(filter-out $(MAIN_CPP), $(wildcard $(CPP_DIR)/*.cpp))
+OBJ_FILES     := $(CPP_FILES:$(CPP_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-DEFINITON_FILE := $(wildcard $(SRC_DIR)/Definitions.hpp)
+DEFINITON_FILE := $(wildcard $(HPP_DIR)/Definitions.hpp)
 
 CC = g++
 
-# CFLAGS       := -std=c++14 -g -gdwarf-2 -fno-omit-frame-pointer
-CFLAGS       := -std=c++14
+CFLAGS       := -std=c++14 -g -gdwarf-2 -fno-omit-frame-pointer
+# CFLAGS       := -std=c++14
 
 CPPFLAGS  := -I"SFML-2.5.1 (mingw)\include" -DSFML_STATIC
 
 LDFLAGS := -L"SFML-2.5.1 (mingw)\lib"
 
-# LDLIBS := -lsfml-graphics-s-d -lsfml-window-s-d -lsfml-system-s-d -lopengl32 -lwinmm -lgdi32 -lsfml-main-d -lfreetype
-LDLIBS := -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lwinmm -lgdi32 -lsfml-main -lfreetype -mwindows
+LDLIBS := -lsfml-graphics-s-d -lsfml-window-s-d -lsfml-system-s-d -lopengl32 -lwinmm -lgdi32 -lsfml-main-d -lfreetype
+# LDLIBS := -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lwinmm -lgdi32 -lsfml-main -lfreetype -mwindows
 
 # APP_NAME := "FlarkyBird"
 TARGET := "myApp.exe"
@@ -28,7 +30,7 @@ TARGET := "myApp.exe"
 
 all: build run
 
-$(OBJ_FILES): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/%.hpp $(DEFINITON_FILE) 
+$(OBJ_FILES): $(OBJ_DIR)/%.o: $(CPP_DIR)/%.cpp $(HPP_DIR)/%.hpp $(DEFINITON_FILE) 
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 #handle main.cpp error (no .h file)

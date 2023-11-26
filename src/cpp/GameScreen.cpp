@@ -1,4 +1,4 @@
-#include "GameScreen.hpp"
+#include "../hpp/GameScreen.hpp"
 #include <iostream>
 
 GameScreen::GameScreen(Game *myGame)

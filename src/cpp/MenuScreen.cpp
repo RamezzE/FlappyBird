@@ -1,4 +1,4 @@
-#include "MenuScreen.hpp"
+#include "../hpp/MenuScreen.hpp"
 
 MenuScreen::MenuScreen(Game *myGame)
 {

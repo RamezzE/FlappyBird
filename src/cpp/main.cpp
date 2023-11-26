@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <windows.h>
 
-#include "Game.hpp"
+#include "../hpp/Game.hpp"
 
 unsigned short widthRatio, heightRatio, myWidth, myHeight;
 

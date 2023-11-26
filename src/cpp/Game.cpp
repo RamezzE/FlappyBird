@@ -2,9 +2,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "Game.hpp"
-#include "MenuScreen.hpp"
-#include "GameScreen.hpp"
+#include "../hpp/Game.hpp"
+#include "../hpp/MenuScreen.hpp"
+#include "../hpp/GameScreen.hpp"
 
 Game::Game()
 {

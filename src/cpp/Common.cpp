@@ -1,4 +1,4 @@
-#include "Common.hpp"
+#include "../hpp/Common.hpp"
 #include <map>
 
 namespace Input
