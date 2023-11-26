@@ -71,16 +71,20 @@ void GameScreen::init()
     });
 
     buttons[1].setOnAction([this]()
-                           { replay(); });
+    {
+        replay(); 
+    });
 
     buttons[2].setOnAction([this]()
-                           { pause = !pause; });
+    {
+        game->togglePause();
+    });
 }
 
 void GameScreen::newGame()
 {
     collision = false;
-    pause = true;
+    game->pause();
 
     scoreText.setString("Score: " + std::to_string(player.score));
 
@@ -100,36 +104,22 @@ void GameScreen::handleInput()
 
     while (game->window->pollEvent(event))
     {
-        for (ushort i = 0; i < 3; i++)
-            buttons[i].handleInput(event);
-        
-        player.handleInput(event);
-
         if (event.type == sf::Event::LostFocus)
-            pause = true;
+            game->pause();
 
         else if (event.type == sf::Event::Closed)
             game->window->close();
-
-        else if (event.type == sf::Event::MouseButtonPressed)
-        {
-            pause = false;
-            break;
-        }
 
         else if (event.type == sf::Event::KeyPressed)
         {
             switch (event.key.code)
             {
             case sf::Keyboard::R:
-                if (pause || player.isDead())
+                if (game->isPaused() || player.isDead())
                     replay();
                 break;
-            case sf::Keyboard::Space:
-                pause = false;
-                break;
             case sf::Keyboard::Escape:
-                pause = !pause;
+                game->pause();
                 break;
             }
         }
@@ -144,6 +134,19 @@ void GameScreen::handleInput()
                 break;
             }
         }
+
+        for (ushort i = 0; i < 3; i++)
+            buttons[i].handleInput(event);
+
+        bool mouseOver = false;
+        for (ushort i = 0; i < 3; i++)
+            if (buttons[i].isMouseOver()) {
+                mouseOver = true;
+                break;
+            }
+        
+        if (!mouseOver)
+            player.handleInput(event, game);
     }
 }
 
@@ -152,23 +155,17 @@ void GameScreen::update(float dt)
     // quad Tree is reconstructed every frame
     myTree.reset();
 
+    // You have to update ObstacleSpawner before player
+    ObstacleSpawner.update(dt, game);
+    player.update(dt, game);
+
     for (ushort i = 0; i < 3; i++)
         buttons[i].update(game->window);
 
-    if (!pause || player.isCollided())
+    if (!game->isPaused() || player.isCollided())
         buttons[2].setTexture(buttonTextures[2]);
     else
         buttons[2].setTexture(buttonTextures[3]);
-
-    // moves player, object and background if no collisions && window is focused && game is not paused
-    if (!player.isCollided())
-        player.animate(dt);
-
-    if (!pause)
-    {
-        ObstacleSpawner.update(dt);
-        player.update(dt);
-    }
 
     // collision detected
     if (!collision)
@@ -179,6 +176,13 @@ void GameScreen::update(float dt)
             collision = true;
         }
     }
+
+    if (player.isDead() || game->isPaused())
+        for (ushort i = 0; i < 2; i++)
+            buttons[i].setDisabled(false);
+    else 
+        for (ushort i = 0; i < 2; i++)
+            buttons[i].setDisabled(true);
 
     // display text if new high score is detected
     if (player.isDead())
@@ -201,16 +205,11 @@ void GameScreen::draw()
     game->window->draw(ground);
     game->window->draw(scoreText);
     game->window->draw(highScoreText);
-    buttons[2].render(game->window);
+
+    for (ushort i = 0; i < 3; i++)  
+        buttons[i].render(game->window);
+    
     player.draw(game->window);
-
-    if (player.isDead() || pause)
-    {
-        // display buttons if game is paused or player loses
-        for (ushort i = 0; i < 2; i++)
-            buttons[i].render(game->window);
-    }
-
     flashScreen(flashCLK, game);
 }
 
@@ -220,9 +219,7 @@ void GameScreen::flashScreen(sf::Clock flashCLK, Game *game)
     if (flashCLK.getElapsedTime().asSeconds() < FLASH_TIME)
     {
         sf::RectangleShape white(sf::Vector2f(game->width, game->height));
-
         white.setFillColor(sf::Color(255, 255, 255, 100));
-
         game->window->draw(white);
     }
 }

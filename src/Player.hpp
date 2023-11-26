@@ -17,9 +17,9 @@ public:
 
 	void animate(const float dt);
 
-	void handleInput(sf::Event event);
+	void handleInput(sf::Event event, Game *myGame);
 
-	void update(const float dt);
+	void update(const float dt, Game *myGame);
 
 	void draw(sf::RenderWindow* myWindow);
 
@@ -38,8 +38,6 @@ public:
 private:
 	sf::Texture playerSpriteSheet[4];
 	sf::Sprite playerSprite;
-
-	Game* game;
 	
 	sf::Vector2f velocity;
 

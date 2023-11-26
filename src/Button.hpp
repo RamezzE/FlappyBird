@@ -21,6 +21,8 @@ public:
     void setPressedColor(sf::Color color);
 
     void setOnAction(const std::function<void()>& callback);
+
+    void setDisabled(bool disabled);
     std::function<void()> getOnAction();
 
     bool isMouseOver();
@@ -32,9 +34,7 @@ private:
     void init();
     sf::Sprite sprite;
     std::function<void()> onAction;
-    bool mouseOver, pressed;
+    bool mouseOver, pressed, disabled;
 
-
-    sf::Color pressedColor, hoverColor;
-
+    sf::Color pressedColor, hoverColor, disabledColor;
 };

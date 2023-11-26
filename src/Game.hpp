@@ -20,6 +20,12 @@ public:
 	void changeScreen(ScreenType screen);
 	void gameLoop();
 
+	void pause();
+	void resume();
+	void togglePause();
+
+	bool isPaused();
+
 	sf::RenderWindow *window;
 
 	ushort width, height;
@@ -33,6 +39,7 @@ private:
 	void pushState(GameState *state, ScreenType screen);
 	void cycleStates();
 	void popState();
-	
+
+	bool pauseGame;
 	sf::Image icon;
 };

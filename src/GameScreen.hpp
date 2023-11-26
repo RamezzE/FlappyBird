@@ -48,7 +48,7 @@ private:
 
 	Obstacle ObstacleSpawner;
 	
-	bool collision, pause;
+	bool collision;
 
 	void newGame();
 };

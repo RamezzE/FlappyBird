@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <deque>
+#include <functional>
 
 #include "Player.hpp"
 #include "QuadTree.hpp"
@@ -12,7 +13,7 @@ class Obstacle
 public:
 	Obstacle(Player* myPlayer,  QuadTree<sf::Sprite>* quadTree);
 
-	void update(const float dt);
+	void update(const float dt, Game *myGame);
 
 	void draw(sf::RenderWindow* myWindow);
 
@@ -33,6 +34,8 @@ private:
 	std::deque<sf::Sprite> ObstacleSprites;
 
 	ushort verticalGap;
+
+	Game* game;
 
 	void spawnObstacle();
 

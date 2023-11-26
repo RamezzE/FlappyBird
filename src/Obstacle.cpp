@@ -88,12 +88,17 @@ void Obstacle::moveObstacles(const float dt)
 		ObstacleSprites[i].move(-OBSTACLE_SPEED * dt, 0);
 }
 
-void Obstacle::update(const float dt)
+void Obstacle::update(const float dt, Game* game)
 {
+	if (game->isPaused())
+		return;
+
 	if (ObstacleSprites.empty())
 		spawnObstacle();
+	
 	else if (!myPlayer->isCollided()){
 		moveObstacles(dt);
+		
 		if (ObstacleSprites.back().getPosition().x <= myWidth - DISTANCE_BETWEEN_OBSTACLES)
 			spawnObstacle();
 	}

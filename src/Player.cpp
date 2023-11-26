@@ -45,10 +45,13 @@ void Player::newGame()
     playerSprite.setRotation(rotation);
 }
 
-void Player::handleInput(sf::Event event)
-{
+void Player::handleInput(sf::Event event, Game *myGame)
+{   
     if (event.type == sf::Event::Closed)
         saveHighScore();
+
+    if (collided || died)
+        return;
     
     else if (event.type == sf::Event::KeyPressed)
     {
@@ -58,6 +61,7 @@ void Player::handleInput(sf::Event event)
             {
                 tap();
                 spacePressed = true;
+                myGame->resume();
             }
         }
     }
@@ -70,13 +74,21 @@ void Player::handleInput(sf::Event event)
     
     else if (event.type == sf::Event::MouseButtonPressed)
     {
-        if (event.mouseButton.button == sf::Mouse::Left)
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            myGame->resume();
             tap();
+        }
     }
 }
 
-void Player::update(const float dt)
+void Player::update(const float dt, Game *myGame)
 {
+    if (!collided && !died)
+        animate(dt);
+    
+    if (myGame->isPaused())
+        return;
+    
     if (collided)
     {
         if (die(dt))

@@ -15,8 +15,9 @@ Button::Button(sf::Texture &texture)
 
 void Button::init()
 {
-    mouseOver = false;
-    pressed = false;
+    mouseOver = pressed = disabled = false;
+
+    disabledColor = sf::Color(128, 128, 128);
     pressedColor = sf::Color(178, 178, 178);
     hoverColor = sf::Color(220, 220, 220);
 
@@ -45,6 +46,9 @@ void Button::setOrigin(sf::Vector2f origin)
 
 void Button::handleInput(sf::Event event)
 {
+    if (disabled)
+        return;
+
     if (event.type == sf::Event::MouseButtonPressed)
     {
         switch (event.mouseButton.button)
@@ -70,6 +74,11 @@ void Button::handleInput(sf::Event event)
 
 void Button::update(sf::RenderWindow *window)
 {
+    if (disabled) {
+        mouseOver = pressed = false;
+        return;
+    }
+        
     if (Input::isMouseOver(sprite, window))
         mouseOver = true;
     else
@@ -78,8 +87,9 @@ void Button::update(sf::RenderWindow *window)
 
 void Button::render(sf::RenderWindow *window)
 {
-    
-    if (pressed)
+    if (disabled)
+        sprite.setColor(disabledColor);
+    else if (pressed)
         sprite.setColor(pressedColor);
     else if (mouseOver)
         sprite.setColor(hoverColor);
@@ -92,6 +102,11 @@ void Button::render(sf::RenderWindow *window)
 void Button::setPosition(sf::Vector2f position)
 {
     sprite.setPosition(position);
+}
+
+void Button::setDisabled(bool disabled)
+{
+    this->disabled = disabled;
 }
 
 sf::FloatRect Button::getGlobalBounds()

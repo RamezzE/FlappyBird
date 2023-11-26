@@ -18,10 +18,13 @@ Game::Game()
 
 	icon.loadFromFile(PLAYER_FRAME_1);
 	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+	pauseGame = true;
 }
 
 void Game::changeScreen(ScreenType newScreen)
 {
+	pauseGame = true;
 	// Switch to the requested screen type
 	switch (newScreen)
 	{
@@ -111,4 +114,24 @@ void Game::gameLoop()
 
 		window->display();
 	}
+}
+
+void Game::pause()
+{
+	pauseGame = true;
+}
+
+void Game::resume()
+{
+	pauseGame = false;
+}
+
+void Game::togglePause()
+{
+	pauseGame = !pauseGame;
+}
+
+bool Game::isPaused()
+{
+	return pauseGame;
 }
