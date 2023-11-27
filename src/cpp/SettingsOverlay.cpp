@@ -39,6 +39,9 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
     bgIMG.loadFromFile(SETTINGS_BACKGROUND);
     background.setTexture(&bgIMG);
 
+    tableIMG.loadFromFile(SETTINGS_TABLE);
+    table.setTexture(&tableIMG);
+
     sf::FloatRect temp = buttons[0].getLocalBounds();
     buttons[0].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
 
@@ -58,6 +61,9 @@ void SettingsOverlay::init()
     background.setSize(sf::Vector2f(game->width * 0.9, game->height * 0.9));
     background.setPosition(game->width * 0.1 / 2, game->height * 0.1 / 2);
 
+    table.setSize(sf::Vector2f(game->width * 0.8, game->height * 0.5));
+    table.setPosition(game->width * 0.115, game->height * 0.2);
+    
     // initializing buttons
 
     buttonTextures[0].loadFromFile(SETTINGS_CLOSE_BUTTON);
@@ -80,14 +86,14 @@ void SettingsOverlay::init()
     // Close button
 
     sf::FloatRect temp = background.getLocalBounds();
-    buttons[0].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[0].getGlobalBounds().width / 2.0f, temp.top + buttons[0].getGlobalBounds().height * 1.5));
+    buttons[0].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[0].getGlobalBounds().width / 2.0f, temp.top + buttons[0].getGlobalBounds().height * 1.75));
 
     // Sound button
 
     temp = background.getLocalBounds();
-    buttons[1].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[1].getGlobalBounds().width / 2.0f, temp.top + buttons[1].getGlobalBounds().height * 3.5));
+    buttons[1].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[1].getGlobalBounds().width*1.25, temp.top + buttons[1].getGlobalBounds().height * 3.5));
 
-    buttons[2].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[2].getGlobalBounds().width / 2.0f, temp.top + buttons[2].getGlobalBounds().height * 5));
+    buttons[2].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[2].getGlobalBounds().width*1.25, temp.top + buttons[2].getGlobalBounds().height * 5));
 
     font.loadFromFile(FONT_FILEPATH);
 
@@ -97,20 +103,21 @@ void SettingsOverlay::init()
         buttonTexts[i].setCharacterSize(game->width / 20);
         sf::FloatRect temp = buttonTexts[i].getLocalBounds();
         buttonTexts[i].setOrigin(temp.left, temp.top + temp.height / 2.0f);
+        buttonTexts[i].setFillColor(sf::Color::Black);
     }
 
     sf::FloatRect temp2 = buttonTexts[2].getLocalBounds();
     buttonTexts[2].setOrigin(temp2.left + temp2.width / 2.0f, temp2.top + temp2.height / 2.0f);
 
-    buttonTexts[0].setString("Sound On/Off");
-    buttonTexts[0].setPosition(temp.left + temp.width / 6, buttons[1].getPosition().y);
+    buttonTexts[0].setString("Sound");
+    buttonTexts[0].setPosition(temp.left + temp.width / 4.5, buttons[1].getPosition().y);
 
     buttonTexts[1].setString("Dimensions");
-    buttonTexts[1].setPosition(temp.left + temp.width / 6, buttons[2].getPosition().y);
+    buttonTexts[1].setPosition(temp.left + temp.width / 4.5, buttons[2].getPosition().y);
 
     buttonTexts[2].setString(std::to_string(game->width) + "x" + std::to_string(game->height));
-    buttonTexts[2].setPosition(temp.left + temp.width / 1.45, buttons[2].getPosition().y);
-
+    buttonTexts[2].setPosition(temp.left + temp.width / 1.5, buttons[2].getPosition().y);
+    
     // Close Button Action
     buttons[0].setOnAction([this]()
                            { 
@@ -176,6 +183,7 @@ void SettingsOverlay::draw()
     game->window->draw(darkOverlay);
 
     game->window->draw(background);
+    game->window->draw(table);
 
     for (int i = 0; i < 3; i++)
         game->window->draw(buttonTexts[i]);

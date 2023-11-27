@@ -13,6 +13,7 @@
 
 #define MENU_BACKGROUND "assets\\pics\\background\\gamebg2.jpg"
 #define SETTINGS_BACKGROUND "assets\\pics\\settings\\bg.png"
+#define SETTINGS_TABLE "assets\\pics\\settings\\table.png"
 
 #define PLAY_BUTTON "assets\\pics\\menu\\play.png"
 #define CLOSE_BUTTON "assets\\pics\\menu\\close.png"

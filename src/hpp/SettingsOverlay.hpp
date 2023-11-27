@@ -27,8 +27,8 @@ private:
 
 	bool disabled;
 
-	sf::RectangleShape background;
-	sf::Texture bgIMG;
+	sf::RectangleShape background, table;
+	sf::Texture bgIMG, tableIMG;
 
 	Button buttons[3];
 
