@@ -5,10 +5,9 @@
 #include <SFML/Audio.hpp>
 
 #include "Screens.hpp"
+#include "Difficulty.hpp"
 #include "Definitions.hpp"
 #include "GameState.hpp"
-
-
 
 typedef unsigned short ushort;
 
@@ -26,6 +25,9 @@ public:
 	void togglePause();
 
 	bool isPaused();
+
+	void setDifficulty(Difficulty difficulty);
+	Difficulty getDifficulty();
 
 	sf::RenderWindow *window;
 
@@ -45,4 +47,6 @@ private:
 	sf::Image icon;
 
 	sf::Music music;
+
+	Difficulty difficulty;
 };

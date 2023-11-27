@@ -1,13 +1,14 @@
 #include "../hpp/Obstacle.hpp"
 #include <iostream>
 
-Obstacle::Obstacle(Player* myPlayer, QuadTree<sf::Sprite>* quadTree)
+Obstacle::Obstacle(Player *myPlayer, QuadTree<sf::Sprite> *quadTree)
 {
 	Collision::CreateTextureAndBitmask(upObstTexture, OBSTACLE_UP_FILEPATH);
 	Collision::CreateTextureAndBitmask(downObstTexture, OBSTACLE_DOWN_FILEPATH);
-	
+
 	this->myPlayer = myPlayer;
 	myTree = quadTree;
+	obstacleSpeed = OBSTACLE_SPEED;
 	spawnGroundObstacle();
 }
 
@@ -84,28 +85,51 @@ void Obstacle::moveObstacles(const float dt)
 
 	// moving all obstacles to the left
 	for (int i = 0; i < ObstacleSprites.size(); i++)
-		ObstacleSprites[i].move(-OBSTACLE_SPEED * dt, 0);
+		ObstacleSprites[i].move(-obstacleSpeed * dt, 0);
 }
 
-void Obstacle::update(const float dt, Game* game)
+void Obstacle::update(const float dt, Game *game)
 {
-	
+
 	if (game->isPaused())
 		return;
 
 	if (ObstacleSprites.empty())
 		spawnObstacle();
-	
-	
-	else if (!myPlayer->isCollided()){
+
+	else if (!myPlayer->isCollided())
+	{
+		float distanceBetweenObstacles;
+
+		switch (game->getDifficulty())
+		{
+		case Difficulty::Normal:
+			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES * 1.35;
+			obstacleSpeed = OBSTACLE_SPEED;
+			break;
+		case Difficulty::Hard:
+			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES * 0.875;
+			obstacleSpeed = OBSTACLE_SPEED;
+			break;
+		case Difficulty::Extreme:
+			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES*1.2;
+			obstacleSpeed = OBSTACLE_SPEED * 1.5;
+			break;
+		default:
+			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES;
+			obstacleSpeed = OBSTACLE_SPEED;
+			break;
+		}
+
 		moveObstacles(dt);
-		
-		if (ObstacleSprites.back().getPosition().x <= myWidth - DISTANCE_BETWEEN_OBSTACLES)
+
+		if (ObstacleSprites.back().getPosition().x <= myWidth - distanceBetweenObstacles)
 			spawnObstacle();
 	}
 
-	if (!myPlayer->isCollided()) {
-		for (ushort i = 0;i<ObstacleSprites.size();i++)
+	if (!myPlayer->isCollided())
+	{
+		for (ushort i = 0; i < ObstacleSprites.size(); i++)
 			myTree->insert(&ObstacleSprites[i]);
 	}
 

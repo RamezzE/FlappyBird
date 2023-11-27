@@ -20,6 +20,7 @@ Game::Game()
 	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 	pauseGame = true;
+	difficulty = Difficulty::Normal;
 	
 	// loading music
 	music.openFromFile(MUSIC_FILEPATH);
@@ -86,6 +87,11 @@ Game::~Game()
 {
 	while (!states.empty())
 		popState();
+
+
+	music.stop();
+
+	delete window;
 }
 
 GameState *Game::CurrentState()
@@ -139,4 +145,14 @@ void Game::togglePause()
 bool Game::isPaused()
 {
 	return pauseGame;
+}
+
+void Game::setDifficulty(Difficulty difficulty)
+{
+	this->difficulty = difficulty;
+}
+
+Difficulty Game::getDifficulty()
+{
+	return difficulty;
 }

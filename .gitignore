@@ -2,6 +2,7 @@
 /.vscode/
 x64
 src/assets
+src/cpp/assets
 *.exe
 SFML-2.5.1 (mingw)
 SFML

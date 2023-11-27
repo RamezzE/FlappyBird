@@ -41,7 +41,7 @@ private:
 
 	sf::Texture buttonTextures[4]; // 0 = menu, 1 = retry, 2 = pause, 3 = play
 
-	sf::Text scoreText, highScoreText;
+	sf::Text scoreText, highScoreText, difficulty;
 	sf::Font font;
 
 	Player player;

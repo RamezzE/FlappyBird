@@ -108,7 +108,7 @@ void MenuScreen::handleInput()
                 break;
             case sf::Keyboard::Enter:
             case sf::Keyboard::Space:
-                buttons[0].getOnAction();
+                game->changeScreen(ScreenType::Gameplay);
                 break;
             }
         }

@@ -63,6 +63,13 @@ void GameScreen::init()
 
     highScoreText.setString("High Score: " + std::to_string(player.highScore));
 
+    difficulty.setString("Normal Difficulty");
+    difficulty.setFont(font);
+    difficulty.setCharacterSize(game->height / 30);
+
+    difficulty.setPosition(sf::Vector2f(game->width*0.05f, game->height * 0.005f));
+    difficulty.setFillColor(sf::Color::Red);
+
     // setting up buttons onAction functions
     buttons[0].setOnAction([this]()
     { 
@@ -200,6 +207,19 @@ void GameScreen::update(float dt)
     // if window size is changed, resize everything
     if (sky.getSize().y != game->height)
         init();
+
+    switch (game->getDifficulty())
+    {
+    case Difficulty::Normal:
+        difficulty.setString("Normal Difficulty");
+        break;
+    case Difficulty::Hard:
+        difficulty.setString("Hard Difficulty");
+        break;
+    case Difficulty::Extreme:
+        difficulty.setString("Extreme Difficulty");
+        break;
+    }
 }
 
 void GameScreen::draw()
@@ -210,6 +230,9 @@ void GameScreen::draw()
     game->window->draw(ground);
     game->window->draw(scoreText);
     game->window->draw(highScoreText);
+
+    if (game->isPaused() || player.isDead())
+        game->window->draw(difficulty);
 
     for (ushort i = 0; i < 3; i++)  
         buttons[i].render(game->window);

@@ -37,6 +37,8 @@ private:
 
 	Game* game;
 
+	float obstacleSpeed;
+
 	void spawnObstacle();
 
 	void spawnGroundObstacle();
