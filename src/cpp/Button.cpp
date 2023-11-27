@@ -119,6 +119,11 @@ sf::FloatRect Button::getLocalBounds()
     return sprite.getLocalBounds();
 }
 
+sf::Vector2f Button::getPosition()
+{
+    return sprite.getPosition();
+}
+
 void Button::setOnAction(const std::function<void()> &callback)
 {
     onAction = callback;

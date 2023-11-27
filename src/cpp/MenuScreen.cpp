@@ -1,10 +1,9 @@
 #include "../hpp/MenuScreen.hpp"
 
 MenuScreen::MenuScreen(Game *myGame)
+: settings(myGame)
 {
     this->game = myGame;
-    startGame = false;
-
     init();
 }
 
@@ -76,6 +75,10 @@ void MenuScreen::init()
         game->window->close();
     });
 
+    buttons[2].setOnAction([this]() {
+        settings.enable();
+    });
+
 }
 
 void MenuScreen::handleInput()
@@ -87,6 +90,8 @@ void MenuScreen::handleInput()
         for (ushort i = 0; i < 3; i++)
             buttons[i].handleInput(event);
 
+        settings.handleInput(event);
+        
         // window closes if close button pressed
         if (event.type == sf::Event::Closed)
             game->window->close();
@@ -96,13 +101,14 @@ void MenuScreen::handleInput()
             switch (event.key.code)
             {
             case sf::Keyboard::Escape:
-                game->window->close();
+                if (settings.isOn())
+                    settings.disable();
+                else
+                    game->window->close();
                 break;
             case sf::Keyboard::Enter:
-                startGame = true;
-                break;
             case sf::Keyboard::Space:
-                startGame = true;
+                buttons[0].getOnAction();
                 break;
             }
         }
@@ -111,6 +117,16 @@ void MenuScreen::handleInput()
 
 void MenuScreen::update(const float dt)
 {
+    settings.update(dt);
+    if (settings.isOn()) 
+        for (ushort i = 0; i < 3; i++)
+            buttons[i].setDisabled(true);
+
+    else 
+        for (ushort i = 0; i < 3; i++)
+            buttons[i].setDisabled(false);
+    
+    
     for (ushort i = 0; i < 3; i++)
         buttons[i].update(game->window);
 }
@@ -123,4 +139,6 @@ void MenuScreen::draw()
         buttons[i].render(game->window);
 
     game->window->draw(title);
+
+    settings.draw();
 }

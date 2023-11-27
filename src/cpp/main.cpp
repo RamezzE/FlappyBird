@@ -28,23 +28,16 @@ int main()
     do
     {
         if (myWidth < screenWidth)
-        {
             myWidth += widthRatio;
-        }
         else
-        {
             exitLoop = true;
-        }
+
         if (!exitLoop)
         {
             if (myHeight < screenHeight)
-            {
                 myHeight += heightRatio;
-            }
             else
-            {
                 exitLoop = true;
-            }
         }
 
     } while (!exitLoop);

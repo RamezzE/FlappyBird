@@ -12,12 +12,18 @@
 #define OBSTACLE_DOWN_FILEPATH "assets\\pics\\obstacles\\wood_log_down.png"
 
 #define MENU_BACKGROUND "assets\\pics\\background\\gamebg2.jpg"
+#define SETTINGS_BACKGROUND "assets\\pics\\settings\\bg.png"
+
 #define PLAY_BUTTON "assets\\pics\\menu\\play.png"
 #define CLOSE_BUTTON "assets\\pics\\menu\\close.png"
 #define RETRY_BUTTON "assets\\pics\\menu\\restart.png"
 #define MENU_BUTTON "assets\\pics\\menu\\menu.png"
 #define PAUSE_BUTTON "assets\\pics\\menu\\pause.png"
 #define SETTINGS_BUTTON "assets\\pics\\menu\\setting.png"
+
+#define SETTINGS_CLOSE_BUTTON "assets\\pics\\settings\\close_2.png"
+#define SOUND_ON_BUTTON "assets\\pics\\settings\\music.png"
+#define SOUND_OFF_BUTTON "assets\\pics\\settings\\music_off.png"
 
 #define FONT_FILEPATH "assets\\fonts\\soup_of_justice\\soupofjustice.ttf"
 

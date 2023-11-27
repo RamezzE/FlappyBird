@@ -4,31 +4,36 @@
 
 #include "Game.hpp"
 #include "Button.hpp"
-#include "SettingsOverlay.hpp"
 
-class MenuScreen : public GameState
+class SettingsOverlay
 {
 public:
-	MenuScreen(Game* myGame);
+	SettingsOverlay(Game* myGame);
 
-	void handleInput();
+	void handleInput(sf::Event event);
 	void update(const float dt);
 	void draw();
+
+	bool isOn();
+
+	void enable();
+	void disable();
 	
 private:
 	void init();
 	Game* game;
-	SettingsOverlay settings;
+
+	bool disabled;
 
 	sf::RectangleShape background;
 	sf::Texture bgIMG;
 
-	Button buttons[3]; // [0] = playButton, [1] = closeButton, [2] = settingsButton
+	Button buttons[3];
 
 	sf::Texture buttonTextures[3];
 
-	sf::Text title;
+	sf::Text buttonTexts[3];
+	
 	sf::Font font;
-
 };
 

@@ -164,7 +164,7 @@ void QuadTree<DataType>::insert_helper(DataType *object, NodePtr node)
     //// as it recursively checks the whole quad tree for the object
     //// everytime insert is called, so it is better to not use it
     //// and make sure not to reinsert the object into the tree
-
+    
     //// if the object is already in the tree, it returns
     // if (search_helper(object, node))
     //     return;

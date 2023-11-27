@@ -30,6 +30,8 @@ public:
     sf::FloatRect getGlobalBounds();
     sf::FloatRect getLocalBounds();
 
+    sf::Vector2f getPosition();
+
 private:
     void init();
     sf::Sprite sprite;
