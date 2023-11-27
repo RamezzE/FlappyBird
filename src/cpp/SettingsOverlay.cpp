@@ -11,7 +11,6 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
 
 void SettingsOverlay::init()
 {
-
     // initializing background
 
     bgIMG.loadFromFile(SETTINGS_BACKGROUND);
@@ -69,12 +68,18 @@ void SettingsOverlay::init()
     {
         disabled = true;
     });
-
+    
     // Sound Button Action
     buttons[1].setOnAction([this]()
     {
-
-        
+        if (sf::Listener::getGlobalVolume() == 0) {
+            sf::Listener::setGlobalVolume(50);
+            buttons[1].setTexture(buttonTextures[1]);
+        }
+        else {
+            sf::Listener::setGlobalVolume(0);
+            buttons[1].setTexture(buttonTextures[2]);
+        }
     });
 }
 
@@ -106,7 +111,7 @@ void SettingsOverlay::draw()
 {
     if (disabled)
         return;
-    
+
     sf::RectangleShape darkOverlay;
     darkOverlay.setSize(sf::Vector2f(game->width, game->height));
     darkOverlay.setPosition(0, 0);

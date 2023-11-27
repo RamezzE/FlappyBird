@@ -20,6 +20,11 @@ Game::Game()
 	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 	pauseGame = true;
+
+	// loading music
+	music.openFromFile(MUSIC_FILEPATH);
+	music.setLoop(true);
+	music.play();
 }
 
 void Game::changeScreen(ScreenType newScreen)

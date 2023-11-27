@@ -41,7 +41,7 @@ int main()
         }
 
     } while (!exitLoop);
-
+    
     // myWidth = 390; myHeight = 520;
     // myWidth = sf::VideoMode::getDesktopMode().width;
     // myHeight = sf::VideoMode::getDesktopMode().height;

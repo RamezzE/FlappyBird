@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <fstream>
 
 #include "Game.hpp"
@@ -55,6 +56,8 @@ private:
 
 	bool die(const float dt);
 	void readHighScore();
-	
+
+	sf::SoundBuffer jumpBuffer, dieBuffer, collideBuffer;
+	sf::Sound jumpSound, dieSound, collideSound;
 };
 

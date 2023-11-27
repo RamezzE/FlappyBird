@@ -25,6 +25,12 @@
 #define SOUND_ON_BUTTON "assets\\pics\\settings\\music.png"
 #define SOUND_OFF_BUTTON "assets\\pics\\settings\\music_off.png"
 
+#define BIRD_JUMP_SOUND "assets\\sounds\\bird_jump2.wav"
+#define BIRD_COLLIDE_SOUND "assets\\sounds\\bird_collide.wav"
+#define BIRD_DIE_SOUND "assets\\sounds\\bird_die.wav"
+
+#define MUSIC_FILEPATH "assets\\music\\music.wav"
+
 #define FONT_FILEPATH "assets\\fonts\\soup_of_justice\\soupofjustice.ttf"
 
 #define HIGH_SCORE_FILEPATH "assets\\files\\highScore.dat"

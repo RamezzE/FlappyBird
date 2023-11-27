@@ -20,7 +20,6 @@ void Player::init()
     playerSpriteSheet[2].loadFromFile(PLAYER_FRAME_3);
     playerSpriteSheet[3].loadFromFile(PLAYER_FRAME_4);
 
-
     playerSprite.setTexture(playerSpriteSheet[0]);
 
     // setting scale and position
@@ -33,6 +32,19 @@ void Player::init()
     playerSprite.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
 
     readHighScore();
+
+    // loading jump sound
+    jumpBuffer.loadFromFile(BIRD_JUMP_SOUND);
+    jumpSound.setBuffer(jumpBuffer);
+    jumpSound.setPitch(2.0f);
+
+    // loading die sound
+    dieBuffer.loadFromFile(BIRD_DIE_SOUND);
+    dieSound.setBuffer(dieBuffer);
+
+    // loading collide sound
+    collideBuffer.loadFromFile(BIRD_COLLIDE_SOUND);
+    collideSound.setBuffer(collideBuffer);
 }
 
 void Player::newGame()
@@ -83,14 +95,20 @@ void Player::handleInput(sf::Event event, Game *myGame)
 
 void Player::update(const float dt, Game *myGame)
 {
+    
     if (!collided && !died)
         animate(dt);
     
+    if (died)
+        return;
+
     if (myGame->isPaused())
         return;
-    
+
     if (collided)
     {
+        if (collideSound.getStatus() != sf::Sound::Playing)
+            collideSound.play();
         if (die(dt))
         {
             died = true;
@@ -141,6 +159,8 @@ void Player::jump(const float dt)
     velocity.y -= PLAYER_SPEED;
     velocity.y += GRAVITY * dt;
     playerSprite.move(velocity * dt);
+
+    jumpSound.play();
 }
 
 void Player::fall(const float dt)
@@ -168,8 +188,11 @@ void Player::fall(const float dt)
 
 bool Player::die(const float dt)
 {
-    if (queryTree())
+    if (queryTree()) {
+        dieSound.play();
+        collideSound.stop();
         return true;
+    }
 
     fall(dt);
 

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Screens.hpp"
 #include "Definitions.hpp"
@@ -42,4 +43,6 @@ private:
 
 	bool pauseGame;
 	sf::Image icon;
+
+	sf::Music music;
 };
