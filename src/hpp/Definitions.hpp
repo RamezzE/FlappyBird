@@ -24,6 +24,7 @@
 #define SETTINGS_CLOSE_BUTTON "assets\\pics\\settings\\close_2.png"
 #define SOUND_ON_BUTTON "assets\\pics\\settings\\music.png"
 #define SOUND_OFF_BUTTON "assets\\pics\\settings\\music_off.png"
+#define NEXT_BUTTON "assets\\pics\\settings\\next.png"
 
 #define BIRD_JUMP_SOUND "assets\\sounds\\bird_jump2.wav"
 #define BIRD_COLLIDE_SOUND "assets\\sounds\\bird_collide.wav"

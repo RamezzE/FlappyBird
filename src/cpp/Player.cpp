@@ -4,14 +4,6 @@
 Player::Player(QuadTree<sf::Sprite> *quadTree)
 {
     myTree = quadTree;
-    init();
-    newGame();
-}
-
-void Player::init()
-{
-    startXpos = myWidth / 8;  // starting x coordinate
-    startYpos = myHeight / 2; // starting y cooridinate
     highScore = 0;
 
     // loading the 4 frame imgs of the bird
@@ -21,17 +13,6 @@ void Player::init()
     playerSpriteSheet[3].loadFromFile(PLAYER_FRAME_4);
 
     playerSprite.setTexture(playerSpriteSheet[0]);
-
-    // setting scale and position
-    float scale = (float)myHeight / (float)playerSprite.getLocalBounds().height;
-    scale /= 15;
-    playerSprite.setScale(scale, scale);
-
-    sf::FloatRect temp;
-    temp = playerSprite.getLocalBounds();
-    playerSprite.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
-
-    readHighScore();
 
     // loading jump sound
     jumpBuffer.loadFromFile(BIRD_JUMP_SOUND);
@@ -45,6 +26,27 @@ void Player::init()
     // loading collide sound
     collideBuffer.loadFromFile(BIRD_COLLIDE_SOUND);
     collideSound.setBuffer(collideBuffer);
+
+    init();
+}
+
+void Player::init()
+{
+    // setting scale and position
+    float scale = (float)myHeight / (float)playerSprite.getLocalBounds().height;
+    startXpos = myWidth / 8;  // starting x coordinate
+    startYpos = myHeight / 2; // starting y cooridinate
+
+    scale /= 15;
+    playerSprite.setScale(scale, scale);
+
+    sf::FloatRect temp;
+    temp = playerSprite.getLocalBounds();
+    playerSprite.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
+
+    readHighScore();
+
+    newGame();
 }
 
 void Player::newGame()
@@ -95,7 +97,12 @@ void Player::handleInput(sf::Event event, Game *myGame)
 
 void Player::update(const float dt, Game *myGame)
 {
-    
+    if (myWidth != myGame->width) {
+        myWidth = myGame->width;
+        myHeight = myGame->height;
+        init();
+    }
+
     if (!collided && !died)
         animate(dt);
     

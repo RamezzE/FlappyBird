@@ -16,6 +16,8 @@ public:
 
 	bool isOn();
 
+	void resize();
+
 	void enable();
 	void disable();
 	
@@ -30,10 +32,13 @@ private:
 
 	Button buttons[3];
 
-	sf::Texture buttonTextures[3];
+	sf::Texture buttonTextures[4];
 
 	sf::Text buttonTexts[3];
 	
 	sf::Font font;
+
+	int screenWidths[4];
+	int screenHeights[4];
 };
 

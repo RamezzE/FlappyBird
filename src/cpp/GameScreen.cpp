@@ -6,18 +6,10 @@ GameScreen::GameScreen(Game *myGame)
       player(Player(&myTree))
 {
     this->game = myGame;
-    ObstacleSpawner.setGap(player.getHeight() * 2.7f);
 
     // setting QuadTree boundary to the whole screen
     boundary = sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(game->width, game->height));
     myTree = QuadTree<sf::Sprite>(boundary, 1);
-
-    init();
-    newGame();
-}
-void GameScreen::init()
-{
-    // setting up background imgs
 
     skyIMG.loadFromFile(SKY_FILEPATH);
     groundIMG.loadFromFile(GROUND_FILEPATH);
@@ -29,14 +21,23 @@ void GameScreen::init()
     sky.setTexture(&skyIMG);
     ground.setTexture(&groundIMG);
 
+    for (ushort i = 0; i < 3; i++)
+        buttons[i].setTexture(buttonTextures[i]);
+
+    init();
+    newGame();
+}
+void GameScreen::init()
+{
     // setting background size
     sky.setSize(sf::Vector2f(game->width * 1.5, game->height));
     ground.setSize(sf::Vector2f(game->width * 1.5, game->height));
 
-    // setting buttons textures, size, scale, position etc
-    for (ushort i = 0; i < 3; i++)
-        buttons[i].setTexture(buttonTextures[i]);
+    ObstacleSpawner.setGap(player.getHeight() * 2.7f);
 
+    // std::cout << (float)(player.getHeight() * 2.7f)/game->height << std::endl;
+    // setting buttons textures, size, scale, position etc
+    
     float scale = (float)game->height / (float)buttons[0].getLocalBounds().height;
     scale /= 10;
 
@@ -195,6 +196,10 @@ void GameScreen::update(float dt)
     }
     else
         scoreText.setString("Score: " + std::to_string(player.score));
+
+    // if window size is changed, resize everything
+    if (sky.getSize().y != game->height)
+        init();
 }
 
 void GameScreen::draw()

@@ -8,7 +8,6 @@ Obstacle::Obstacle(Player* myPlayer, QuadTree<sf::Sprite>* quadTree)
 	
 	this->myPlayer = myPlayer;
 	myTree = quadTree;
-
 	spawnGroundObstacle();
 }
 
@@ -32,7 +31,7 @@ void Obstacle::spawnGroundObstacle()
 	groundObstacle.setOrigin(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f);
 
 	groundObstacle.setRotation(90);
-	groundObstacle.setPosition(sf::Vector2f(0, myHeight * 0.6875 * 1.2 + 10));
+	groundObstacle.setPosition(sf::Vector2f(0, myHeight * 0.6875 * 1.22));
 	groundObstacle.setScale(1, 2.5);
 }
 
@@ -90,11 +89,13 @@ void Obstacle::moveObstacles(const float dt)
 
 void Obstacle::update(const float dt, Game* game)
 {
+	
 	if (game->isPaused())
 		return;
 
 	if (ObstacleSprites.empty())
 		spawnObstacle();
+	
 	
 	else if (!myPlayer->isCollided()){
 		moveObstacles(dt);
@@ -107,6 +108,8 @@ void Obstacle::update(const float dt, Game* game)
 		for (ushort i = 0;i<ObstacleSprites.size();i++)
 			myTree->insert(&ObstacleSprites[i]);
 	}
+
+	spawnGroundObstacle();
 	myTree->insert(&groundObstacle);
 }
 

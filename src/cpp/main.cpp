@@ -17,7 +17,7 @@ int main()
     srand(time(NULL));
 
     unsigned short screenWidth = sf::VideoMode::getDesktopMode().width;
-    unsigned short screenHeight = sf::VideoMode::getDesktopMode().height * 0.9;
+    unsigned short screenHeight = sf::VideoMode::getDesktopMode().height;
 
     widthRatio = 3;
     heightRatio = 4;
@@ -41,7 +41,10 @@ int main()
         }
 
     } while (!exitLoop);
+
+
     
+
     // myWidth = 390; myHeight = 520;
     // myWidth = sf::VideoMode::getDesktopMode().width;
     // myHeight = sf::VideoMode::getDesktopMode().height;

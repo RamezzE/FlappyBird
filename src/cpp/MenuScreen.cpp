@@ -117,6 +117,9 @@ void MenuScreen::handleInput()
 
 void MenuScreen::update(const float dt)
 {
+    if (background.getSize().x != game->width || background.getSize().y != game->height)
+        init();
+        
     settings.update(dt);
     if (settings.isOn()) 
         for (ushort i = 0; i < 3; i++)
