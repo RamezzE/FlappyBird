@@ -6,6 +6,8 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
     this->game = myGame;
     disabled = true;
 
+    // have to be done twice because of a bug
+    init();
     init();
 
     int minWidth = 390;
@@ -45,8 +47,6 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
 
     temp = buttons[2].getLocalBounds();
     buttons[2].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
-
-    init();
 }
 
 static int i = 3;
@@ -113,12 +113,11 @@ void SettingsOverlay::init()
 
     // Close Button Action
     buttons[0].setOnAction([this]()
-    { 
+                           { 
         if (screenWidths[i] != game->width || screenHeights[i] != game->height)
             resize();
         
-        disabled = true; 
-    });
+        disabled = true; });
 
     // Sound Button Action
     buttons[1].setOnAction([this]()
