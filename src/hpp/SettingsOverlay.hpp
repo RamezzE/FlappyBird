@@ -35,6 +35,7 @@ private:
 	sf::Texture buttonTextures[4];
 
 	sf::Text buttonTexts[5];
+	sf::Text controlsText[6];
 	
 	sf::Font font;
 

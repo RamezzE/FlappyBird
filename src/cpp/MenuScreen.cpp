@@ -9,9 +9,8 @@ MenuScreen::MenuScreen(Game *myGame)
 
 void MenuScreen::init()
 {
-
     // initializing background imgs and buttons
-
+    
     bgIMG.loadFromFile(MENU_BACKGROUND);
     buttonTextures[0].loadFromFile(PLAY_BUTTON);
     buttonTextures[1].loadFromFile(CLOSE_BUTTON);

@@ -133,11 +133,11 @@ void SettingsOverlay::initScreenDimensions()
 void SettingsOverlay::init()
 {
     // initializing background
-    
+
     background.setSize(sf::Vector2f(game->width * 0.9, game->height * 0.9));
     background.setPosition(game->width * 0.1 / 2, game->height * 0.1 / 2);
 
-    table.setSize(sf::Vector2f(game->width * 0.8, game->height * 0.5));
+    table.setSize(sf::Vector2f(game->width * 0.8, game->height * 0.65));
     table.setPosition(game->width * 0.115, game->height * 0.2);
 
     // scaling buttons
@@ -195,6 +195,33 @@ void SettingsOverlay::init()
 
     buttonTexts[4].setString(difficulties[difficultyIndex]);
     buttonTexts[4].setPosition(buttonTexts[3].getPosition().x + buttonTexts[3].getGlobalBounds().width + game->width * 0.05, buttons[3].getPosition().y);
+
+    for (int i = 0; i < 6; i++)
+    {
+        sf::FloatRect temp = controlsText[i].getLocalBounds();
+        controlsText[i].setOrigin(sf::Vector2f(temp.left, temp.top + temp.height / 2.0f));
+        controlsText[i].setFont(font);
+        controlsText[i].setCharacterSize(game->width / 30);
+        controlsText[i].setFillColor(sf::Color::Black);
+    }
+
+    controlsText[0].setString("Space or Left Click");
+    controlsText[1].setString("Jump");
+
+    controlsText[2].setString("R");
+    controlsText[3].setString("Restart");
+
+    controlsText[4].setString("Esc");
+    controlsText[5].setString("Pause or Exit");
+
+    controlsText[0].setPosition(buttonTexts[0].getPosition().x, temp.top + buttons[3].getGlobalBounds().height * 8);
+    controlsText[1].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 8);
+
+    controlsText[2].setPosition(buttonTexts[0].getPosition().x, temp.top + buttons[3].getGlobalBounds().height * 8.5);
+    controlsText[3].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 8.5);
+
+    controlsText[4].setPosition(buttonTexts[0].getPosition().x, temp.top + buttons[3].getGlobalBounds().height * 9);
+    controlsText[5].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 9);
 }
 
 void SettingsOverlay::handleInput(sf::Event event)
@@ -240,6 +267,9 @@ void SettingsOverlay::draw()
 
     for (int i = 0; i < 4; i++)
         buttons[i].render(game->window);
+
+    for (int i = 0; i < 6; i++)
+        game->window->draw(controlsText[i]);
 }
 
 void SettingsOverlay::resize()
