@@ -8,6 +8,3 @@ SFML-2.5.1 (mingw)
 SFML
 obj
 *.o
-highScore.dat
-assets/files
-*.dat

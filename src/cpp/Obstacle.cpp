@@ -115,8 +115,8 @@ void Obstacle::update(const float dt, Game *game)
 			obstacleSpeed = OBSTACLE_SPEED;
 			break;
 		case Difficulty::Extreme:
-			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES;
-			obstacleSpeed = OBSTACLE_SPEED * 1.5;
+			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES * 0.9;
+			obstacleSpeed = OBSTACLE_SPEED * 1.75;
 			break;
 		default:
 			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES;
