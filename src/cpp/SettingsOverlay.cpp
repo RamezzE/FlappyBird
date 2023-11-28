@@ -53,7 +53,7 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
     temp = buttons[4].getLocalBounds();
     buttons[4].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
 
-    // Close Button Action
+    // Close SpriteButton Action
     buttons[0].setOnAction([this]()
                            { 
         if (screenWidths[screenIndex] != game->width || screenHeights[screenIndex] != game->height)
@@ -61,7 +61,7 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
         
         disabled = true; });
 
-    // Sound Button Action
+    // Sound SpriteButton Action
     buttons[1].setOnAction([this]()
     {
         if (sf::Listener::getGlobalVolume() == 0)
@@ -82,7 +82,7 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
         } 
     });
 
-    // Dimensions Button Action
+    // Dimensions SpriteButton Action
     buttons[2].setOnAction([this]
                            {
         // toggle between 4 screen sizes
@@ -91,7 +91,7 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
         screenIndex %= 4;
         buttonTexts[2].setString(std::to_string(screenWidths[screenIndex]) + "x" + std::to_string(screenHeights[screenIndex])); });
 
-    // Difficulty Button Action
+    // Difficulty SpriteButton Action
     buttons[3].setOnAction([this]
                            {
         // toggle between 3 difficulties
@@ -116,7 +116,7 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
 
         game->setDifficulty(difficulty); });
 
-    // Music Button Action
+    // Music SpriteButton Action
     buttons[4].setOnAction([this]()
                            {
         if (game->getMusicVolume() == 0) {

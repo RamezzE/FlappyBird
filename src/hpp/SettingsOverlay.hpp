@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Game.hpp"
-#include "Button.hpp"
+#include "SpriteButton.hpp"
 class SettingsOverlay
 {
 public:
@@ -30,7 +30,7 @@ private:
 	sf::RectangleShape background, table;
 	sf::Texture bgIMG, tableIMG;
 
-	Button buttons[5];
+	SpriteButton buttons[5];
 
 	sf::Texture buttonTextures[6];
 

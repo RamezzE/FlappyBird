@@ -1,19 +1,19 @@
-#include "../hpp/Button.hpp"
+#include "../hpp/SpriteButton.hpp"
 
 #include <iostream>
 
-Button::Button()
+SpriteButton::SpriteButton()
 {
     init();
 }
 
-Button::Button(sf::Texture &texture)
+SpriteButton::SpriteButton(sf::Texture &texture)
 {
     sprite.setTexture(texture);
     init();
 }
 
-void Button::init()
+void SpriteButton::init()
 {
     mouseOver = pressed = disabled = false;
 
@@ -27,27 +27,27 @@ void Button::init()
     buttonClickSound.setVolume(50);
 }
 
-void Button::setPressedColor(sf::Color color)
+void SpriteButton::setPressedColor(sf::Color color)
 {
     pressedColor = color;
 }
 
-void Button::setScale(sf::Vector2f scale)
+void SpriteButton::setScale(sf::Vector2f scale)
 {
     sprite.setScale(scale);
 }
 
-void Button::setTexture(sf::Texture &texture)
+void SpriteButton::setTexture(sf::Texture &texture)
 {
     sprite.setTexture(texture);
 }
 
-void Button::setOrigin(sf::Vector2f origin)
+void SpriteButton::setOrigin(sf::Vector2f origin)
 {
     sprite.setOrigin(origin);
 }
 
-void Button::handleInput(sf::Event event)
+void SpriteButton::handleInput(sf::Event event)
 {
     if (disabled)
         return;
@@ -77,7 +77,7 @@ void Button::handleInput(sf::Event event)
     }
 }
 
-void Button::update(sf::RenderWindow *window)
+void SpriteButton::update(sf::RenderWindow *window)
 {
     if (disabled) {
         mouseOver = pressed = false;
@@ -90,7 +90,7 @@ void Button::update(sf::RenderWindow *window)
         mouseOver = false;
 }
 
-void Button::render(sf::RenderWindow *window)
+void SpriteButton::render(sf::RenderWindow *window)
 {
     if (disabled)
         sprite.setColor(disabledColor);
@@ -104,42 +104,42 @@ void Button::render(sf::RenderWindow *window)
     window->draw(sprite);
 }
 
-void Button::setPosition(sf::Vector2f position)
+void SpriteButton::setPosition(sf::Vector2f position)
 {
     sprite.setPosition(position);
 }
 
-void Button::setDisabled(bool disabled)
+void SpriteButton::setDisabled(bool disabled)
 {
     this->disabled = disabled;
 }
 
-sf::FloatRect Button::getGlobalBounds()
+sf::FloatRect SpriteButton::getGlobalBounds()
 {
     return sprite.getGlobalBounds();
 }
 
-sf::FloatRect Button::getLocalBounds()
+sf::FloatRect SpriteButton::getLocalBounds()
 {
     return sprite.getLocalBounds();
 }
 
-sf::Vector2f Button::getPosition()
+sf::Vector2f SpriteButton::getPosition()
 {
     return sprite.getPosition();
 }
 
-void Button::setOnAction(const std::function<void()> &callback)
+void SpriteButton::setOnAction(const std::function<void()> &callback)
 {
     onAction = callback;
 }
 
-std::function<void()> Button::getOnAction()
+std::function<void()> SpriteButton::getOnAction()
 {
     return onAction;
 }
 
-bool Button::isMouseOver()
+bool SpriteButton::isMouseOver()
 {
     return mouseOver;
 }

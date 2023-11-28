@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Game.hpp"
-#include "Button.hpp"
+#include "SpriteButton.hpp"
 #include "Player.hpp"
 #include "Obstacle.hpp"
 #include "QuadTree.hpp"
@@ -39,7 +39,7 @@ private:
 
 	sf::Texture skyIMG, groundIMG, ground2IMG;
 	
-	Button buttons[3]; // 0 = menu, 1 = retry, 2 = pause
+	SpriteButton buttons[3]; // 0 = menu, 1 = retry, 2 = pause
 
 	sf::Texture buttonTextures[4]; // 0 = menu, 1 = retry, 2 = pause, 3 = play
 

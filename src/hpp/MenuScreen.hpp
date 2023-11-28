@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Game.hpp"
-#include "Button.hpp"
+#include "SpriteButton.hpp"
 #include "SettingsOverlay.hpp"
 
 class MenuScreen : public GameState
@@ -23,7 +23,7 @@ private:
 	sf::RectangleShape background;
 	sf::Texture bgIMG;
 
-	Button buttons[4]; // [0] = playButton, [1] = closeButton, [2] = settingsButton, [3] = aboutButton
+	SpriteButton buttons[4]; // [0] = playButton, [1] = closeButton, [2] = settingsButton, [3] = aboutButton
 
 	sf::Texture buttonTextures[4];
 

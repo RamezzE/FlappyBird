@@ -6,11 +6,11 @@
 #include "Definitions.hpp"
 #include "Common.hpp"
 
-class Button
+class SpriteButton
 {
 public:
-    Button();
-    Button(sf::Texture &texture);
+    SpriteButton();
+    SpriteButton(sf::Texture &texture);
 
     void handleInput(sf::Event event);
     void update(sf::RenderWindow *window);
