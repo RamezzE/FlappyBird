@@ -23,8 +23,11 @@
 #define SETTINGS_BUTTON "assets\\pics\\menu\\setting.png"
 
 #define SETTINGS_CLOSE_BUTTON "assets\\pics\\settings\\close_2.png"
-#define SOUND_ON_BUTTON "assets\\pics\\settings\\music.png"
-#define SOUND_OFF_BUTTON "assets\\pics\\settings\\music_off.png"
+#define SOUND_ON_BUTTON "assets\\pics\\settings\\sound_on.png"
+#define SOUND_OFF_BUTTON "assets\\pics\\settings\\sound_off.png"
+#define MUSIC_ON_BUTTON "assets\\pics\\settings\\music_on.png"
+#define MUSIC_OFF_BUTTON "assets\\pics\\settings\\music_off.png"
+
 #define NEXT_BUTTON "assets\\pics\\settings\\next.png"
 
 #define BIRD_JUMP_SOUND "assets\\sounds\\bird_jump2.wav"

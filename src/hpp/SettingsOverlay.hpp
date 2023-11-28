@@ -30,11 +30,11 @@ private:
 	sf::RectangleShape background, table;
 	sf::Texture bgIMG, tableIMG;
 
-	Button buttons[4];
+	Button buttons[5];
 
-	sf::Texture buttonTextures[4];
+	sf::Texture buttonTextures[6];
 
-	sf::Text buttonTexts[5];
+	sf::Text buttonTexts[6];
 	sf::Text controlsText[6];
 	
 	sf::Font font;

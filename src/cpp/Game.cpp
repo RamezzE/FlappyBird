@@ -147,6 +147,16 @@ bool Game::isPaused()
 	return pauseGame;
 }
 
+void Game::setMusicVolume(float volume)
+{
+	music.setVolume(volume);
+}
+
+float Game::getMusicVolume()
+{
+	return music.getVolume();
+}
+
 void Game::setDifficulty(Difficulty difficulty)
 {
 	this->difficulty = difficulty;

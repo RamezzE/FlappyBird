@@ -26,6 +26,10 @@ public:
 
 	bool isPaused();
 
+	void setMusicVolume(float volume);
+	// void setSoundVolume(float volume);
+	float getMusicVolume();
+
 	void setDifficulty(Difficulty difficulty);
 	Difficulty getDifficulty();
 

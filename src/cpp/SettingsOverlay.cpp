@@ -17,11 +17,14 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
     buttonTextures[1].loadFromFile(SOUND_ON_BUTTON);
     buttonTextures[2].loadFromFile(SOUND_OFF_BUTTON);
     buttonTextures[3].loadFromFile(NEXT_BUTTON);
+    buttonTextures[4].loadFromFile(MUSIC_ON_BUTTON);
+    buttonTextures[5].loadFromFile(MUSIC_OFF_BUTTON);
 
     buttons[0].setTexture(buttonTextures[0]);
     buttons[1].setTexture(buttonTextures[1]);
     buttons[2].setTexture(buttonTextures[3]);
     buttons[3].setTexture(buttonTextures[3]);
+    buttons[4].setTexture(buttonTextures[4]);
 
     // have to be done twice because of a bug
     init();
@@ -47,6 +50,9 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
     temp = buttons[3].getLocalBounds();
     buttons[3].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
 
+    temp = buttons[4].getLocalBounds();
+    buttons[4].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
+    
     // Close Button Action
     buttons[0].setOnAction([this]()
                            { 
@@ -61,11 +67,19 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
         if (sf::Listener::getGlobalVolume() == 0) {
             sf::Listener::setGlobalVolume(50);
             buttons[1].setTexture(buttonTextures[1]);
+            game->setMusicVolume(50);
+            buttons[4].setTexture(buttonTextures[4]);
         }
         else {
             sf::Listener::setGlobalVolume(0);
             buttons[1].setTexture(buttonTextures[2]);
-        } });
+            game->setMusicVolume(0);
+            buttons[4].setTexture(buttonTextures[5]);
+        } 
+
+        
+        
+    });
 
     // Dimensions Button Action
     buttons[2].setOnAction([this]
@@ -100,6 +114,19 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
         }
 
         game->setDifficulty(difficulty); });
+
+    // Music Button Action
+    buttons[4].setOnAction([this]()
+                           {
+        if (game->getMusicVolume() == 0) {
+            game->setMusicVolume(50);
+            buttons[4].setTexture(buttonTextures[4]);
+        }
+        else {
+            game->setMusicVolume(0);
+            buttons[4].setTexture(buttonTextures[5]);
+        } });
+
 }
 
 void SettingsOverlay::initScreenDimensions()
@@ -145,7 +172,7 @@ void SettingsOverlay::init()
     float scale = (float)game->height / (float)buttons[0].getLocalBounds().height;
     scale /= 12;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
         buttons[i].setScale(sf::Vector2f(scale, scale));
 
     // adjusting origin, scale and details of buttons to correctly place it in proper position etc
@@ -160,13 +187,15 @@ void SettingsOverlay::init()
     temp = background.getLocalBounds();
     buttons[1].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[1].getGlobalBounds().width * 1.25, temp.top + buttons[1].getGlobalBounds().height * 3.5));
 
-    buttons[2].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[2].getGlobalBounds().width * 1.25, temp.top + buttons[2].getGlobalBounds().height * 5));
+    buttons[2].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[2].getGlobalBounds().width * 1.25, temp.top + buttons[2].getGlobalBounds().height * 7.25));
 
-    buttons[3].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[3].getGlobalBounds().width * 1.25, temp.top + buttons[3].getGlobalBounds().height * 6.5));
+    buttons[3].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[3].getGlobalBounds().width * 1.25, temp.top + buttons[3].getGlobalBounds().height * 6));
 
+    buttons[4].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[4].getGlobalBounds().width * 1.25, temp.top + buttons[4].getGlobalBounds().height * 4.75));
+    
     font.loadFromFile(FONT_FILEPATH);
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         buttonTexts[i].setFont(font);
         buttonTexts[i].setCharacterSize(game->width / 20);
@@ -196,6 +225,9 @@ void SettingsOverlay::init()
     buttonTexts[4].setString(difficulties[difficultyIndex]);
     buttonTexts[4].setPosition(buttonTexts[3].getPosition().x + buttonTexts[3].getGlobalBounds().width + game->width * 0.05, buttons[3].getPosition().y);
 
+    buttonTexts[5].setString("Music");
+    buttonTexts[5].setPosition(temp.left + temp.width / 4.5, buttons[4].getPosition().y);
+
     for (int i = 0; i < 6; i++)
     {
         sf::FloatRect temp = controlsText[i].getLocalBounds();
@@ -214,14 +246,14 @@ void SettingsOverlay::init()
     controlsText[4].setString("Esc");
     controlsText[5].setString("Pause or Exit");
 
-    controlsText[0].setPosition(buttonTexts[0].getPosition().x, temp.top + buttons[3].getGlobalBounds().height * 8);
-    controlsText[1].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 8);
+    controlsText[0].setPosition(buttonTexts[0].getPosition().x * 1.05, temp.top + buttons[3].getGlobalBounds().height * 8.25);
+    controlsText[1].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 8.25);
 
-    controlsText[2].setPosition(buttonTexts[0].getPosition().x, temp.top + buttons[3].getGlobalBounds().height * 8.5);
-    controlsText[3].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 8.5);
+    controlsText[2].setPosition(buttonTexts[0].getPosition().x * 1.05, temp.top + buttons[3].getGlobalBounds().height * 8.75);
+    controlsText[3].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 8.75);
 
-    controlsText[4].setPosition(buttonTexts[0].getPosition().x, temp.top + buttons[3].getGlobalBounds().height * 9);
-    controlsText[5].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 9);
+    controlsText[4].setPosition(buttonTexts[0].getPosition().x * 1.05, temp.top + buttons[3].getGlobalBounds().height * 9.25);
+    controlsText[5].setPosition(buttonTexts[0].getPosition().x + game->width * 0.4f, temp.top + buttons[3].getGlobalBounds().height * 9.25);
 }
 
 void SettingsOverlay::handleInput(sf::Event event)
@@ -229,21 +261,21 @@ void SettingsOverlay::handleInput(sf::Event event)
     if (disabled)
         return;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
         buttons[i].handleInput(event);
 }
 
 void SettingsOverlay::update(const float dt)
 {
     if (disabled)
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
             buttons[i].setDisabled(true);
 
     else
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
             buttons[i].setDisabled(false);
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
         buttons[i].update(game->window);
 }
 
@@ -262,10 +294,10 @@ void SettingsOverlay::draw()
     game->window->draw(background);
     game->window->draw(table);
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
         game->window->draw(buttonTexts[i]);
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
         buttons[i].render(game->window);
 
     for (int i = 0; i < 6; i++)
