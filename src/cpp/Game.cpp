@@ -25,6 +25,7 @@ Game::Game()
 	// loading music
 	music.openFromFile(MUSIC_FILEPATH);
 	music.setLoop(true);
+	music.setVolume(15);
 	music.play();
 }
 

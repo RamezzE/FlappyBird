@@ -52,7 +52,7 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
 
     temp = buttons[4].getLocalBounds();
     buttons[4].setOrigin(sf::Vector2f(temp.left + temp.width / 2.0f, temp.top + temp.height / 2.0f));
-    
+
     // Close Button Action
     buttons[0].setOnAction([this]()
                            { 
@@ -63,22 +63,23 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
 
     // Sound Button Action
     buttons[1].setOnAction([this]()
-                           {
-        if (sf::Listener::getGlobalVolume() == 0) {
+    {
+        if (sf::Listener::getGlobalVolume() == 0)
+        {
             sf::Listener::setGlobalVolume(50);
             buttons[1].setTexture(buttonTextures[1]);
-            game->setMusicVolume(50);
+            game->setMusicVolume(15);
             buttons[4].setTexture(buttonTextures[4]);
+            buttons[4].setDisabled(false);
         }
-        else {
+        else
+        {
             sf::Listener::setGlobalVolume(0);
             buttons[1].setTexture(buttonTextures[2]);
             game->setMusicVolume(0);
             buttons[4].setTexture(buttonTextures[5]);
+            buttons[4].setDisabled(true);
         } 
-
-        
-        
     });
 
     // Dimensions Button Action
@@ -119,14 +120,13 @@ SettingsOverlay::SettingsOverlay(Game *myGame)
     buttons[4].setOnAction([this]()
                            {
         if (game->getMusicVolume() == 0) {
-            game->setMusicVolume(50);
+            game->setMusicVolume(15);
             buttons[4].setTexture(buttonTextures[4]);
         }
         else {
             game->setMusicVolume(0);
             buttons[4].setTexture(buttonTextures[5]);
         } });
-
 }
 
 void SettingsOverlay::initScreenDimensions()
@@ -192,7 +192,7 @@ void SettingsOverlay::init()
     buttons[3].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[3].getGlobalBounds().width * 1.25, temp.top + buttons[3].getGlobalBounds().height * 6));
 
     buttons[4].setPosition(sf::Vector2f((temp.left + temp.width) - buttons[4].getGlobalBounds().width * 1.25, temp.top + buttons[4].getGlobalBounds().height * 4.75));
-    
+
     font.loadFromFile(FONT_FILEPATH);
 
     for (int i = 0; i < 6; i++)
@@ -274,6 +274,9 @@ void SettingsOverlay::update(const float dt)
     else
         for (int i = 0; i < 5; i++)
             buttons[i].setDisabled(false);
+
+    if (sf::Listener::getGlobalVolume() == 0)
+        buttons[4].setDisabled(true);
 
     for (int i = 0; i < 5; i++)
         buttons[i].update(game->window);

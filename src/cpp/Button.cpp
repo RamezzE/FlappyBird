@@ -22,6 +22,9 @@ void Button::init()
     hoverColor = sf::Color(220, 220, 220);
 
     onAction = []() {};
+    buttonClickSoundBuffer.loadFromFile(BUTTON_CLICK_SOUND);
+    buttonClickSound.setBuffer(buttonClickSoundBuffer);
+    buttonClickSound.setVolume(50);
 }
 
 void Button::setPressedColor(sf::Color color)
@@ -64,8 +67,10 @@ void Button::handleInput(sf::Event event)
         switch (event.mouseButton.button)
         {
         case sf::Mouse::Left:
-            if (mouseOver) 
+            if (mouseOver) {
                 onAction();
+                buttonClickSound.play();
+            }
             break;
         }
         pressed = false;

@@ -1,7 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <functional>
 
+#include "Definitions.hpp"
 #include "Common.hpp"
 
 class Button
@@ -39,4 +41,7 @@ private:
     bool mouseOver, pressed, disabled;
 
     sf::Color pressedColor, hoverColor, disabledColor;
+    
+    sf::SoundBuffer buttonClickSoundBuffer;
+    sf::Sound buttonClickSound;
 };

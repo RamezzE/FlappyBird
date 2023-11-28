@@ -10,3 +10,4 @@ obj
 *.o
 highScore.dat
 assets/files
+*.dat

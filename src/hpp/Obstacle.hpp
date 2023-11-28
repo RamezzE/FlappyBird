@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <deque>
 #include <functional>
 
@@ -38,6 +39,9 @@ private:
 	Game* game;
 
 	float obstacleSpeed;
+
+	sf::SoundBuffer scoreBuffer;
+	sf::Sound scoreSound;
 
 	void spawnObstacle();
 

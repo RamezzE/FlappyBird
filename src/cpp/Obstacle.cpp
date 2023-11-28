@@ -10,6 +10,10 @@ Obstacle::Obstacle(Player *myPlayer, QuadTree<sf::Sprite> *quadTree)
 	myTree = quadTree;
 	obstacleSpeed = OBSTACLE_SPEED;
 	spawnGroundObstacle();
+
+	scoreBuffer.loadFromFile(SCORE_SOUND);
+	scoreSound.setBuffer(scoreBuffer);
+	scoreSound.setPitch(1.5);
 }
 
 void Obstacle::setGap(ushort verticalGap)
@@ -75,13 +79,12 @@ void Obstacle::moveObstacles(const float dt)
 
 	// adds score
 	if (addScore && !myPlayer->isCollided())
-	{
 		if (ObstacleSprites.front().getPosition().x + ObstacleSprites.front().getGlobalBounds().width < myPlayer->startXpos && addScore)
 		{
 			myPlayer->score++;
 			addScore = false;
+			scoreSound.play();
 		}
-	}
 
 	// moving all obstacles to the left
 	for (int i = 0; i < ObstacleSprites.size(); i++)
@@ -112,7 +115,7 @@ void Obstacle::update(const float dt, Game *game)
 			obstacleSpeed = OBSTACLE_SPEED;
 			break;
 		case Difficulty::Extreme:
-			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES*1.2;
+			distanceBetweenObstacles = DISTANCE_BETWEEN_OBSTACLES;
 			obstacleSpeed = OBSTACLE_SPEED * 1.5;
 			break;
 		default:
@@ -135,6 +138,7 @@ void Obstacle::update(const float dt, Game *game)
 
 	spawnGroundObstacle();
 	myTree->insert(&groundObstacle);
+	scoreSound.setVolume(20);
 }
 
 void Obstacle::draw(sf::RenderWindow *myWindow)

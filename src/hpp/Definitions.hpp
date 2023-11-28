@@ -21,6 +21,7 @@
 #define MENU_BUTTON "assets\\pics\\menu\\menu.png"
 #define PAUSE_BUTTON "assets\\pics\\menu\\pause.png"
 #define SETTINGS_BUTTON "assets\\pics\\menu\\setting.png"
+#define ABOUT_BUTTON "assets\\pics\\menu\\about.png"
 
 #define SETTINGS_CLOSE_BUTTON "assets\\pics\\settings\\close_2.png"
 #define SOUND_ON_BUTTON "assets\\pics\\settings\\sound_on.png"
@@ -28,9 +29,11 @@
 #define MUSIC_ON_BUTTON "assets\\pics\\settings\\music_on.png"
 #define MUSIC_OFF_BUTTON "assets\\pics\\settings\\music_off.png"
 
+#define BUTTON_CLICK_SOUND "assets\\sounds\\button_click.wav"
+#define SCORE_SOUND "assets\\sounds\\score.wav"
+
 #define NEXT_BUTTON "assets\\pics\\settings\\next.png"
 
-#define BIRD_JUMP_SOUND "assets\\sounds\\bird_jump2.wav"
 #define BIRD_COLLIDE_SOUND "assets\\sounds\\bird_collide.wav"
 #define BIRD_DIE_SOUND "assets\\sounds\\bird_die.wav"
 

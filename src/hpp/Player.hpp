@@ -57,7 +57,7 @@ private:
 	bool die(const float dt);
 	void readHighScore();
 
-	sf::SoundBuffer jumpBuffer, dieBuffer, collideBuffer;
-	sf::Sound jumpSound, dieSound, collideSound;
+	sf::SoundBuffer dieBuffer, collideBuffer;
+	sf::Sound dieSound, collideSound;
 };
 

@@ -14,11 +14,6 @@ Player::Player(QuadTree<sf::Sprite> *quadTree)
 
     playerSprite.setTexture(playerSpriteSheet[0]);
 
-    // loading jump sound
-    jumpBuffer.loadFromFile(BIRD_JUMP_SOUND);
-    jumpSound.setBuffer(jumpBuffer);
-    jumpSound.setPitch(2.0f);
-
     // loading die sound
     dieBuffer.loadFromFile(BIRD_DIE_SOUND);
     dieSound.setBuffer(dieBuffer);
@@ -114,13 +109,14 @@ void Player::update(const float dt, Game *myGame)
 
     if (collided)
     {
-        if (collideSound.getStatus() != sf::Sound::Playing)
-            collideSound.play();
         if (die(dt))
         {
             died = true;
             saveHighScore();
+            return;
         }
+        if (collideSound.getStatus() != sf::Sound::Playing)
+            collideSound.play();
         return;
     }
 
@@ -166,8 +162,6 @@ void Player::jump(const float dt)
     velocity.y -= PLAYER_SPEED;
     velocity.y += GRAVITY * dt;
     playerSprite.move(velocity * dt);
-
-    jumpSound.play();
 }
 
 void Player::fall(const float dt)
@@ -196,8 +190,8 @@ void Player::fall(const float dt)
 bool Player::die(const float dt)
 {
     if (queryTree()) {
-        dieSound.play();
         collideSound.stop();
+        dieSound.play();
         return true;
     }
 

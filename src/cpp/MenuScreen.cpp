@@ -15,17 +15,18 @@ void MenuScreen::init()
     buttonTextures[0].loadFromFile(PLAY_BUTTON);
     buttonTextures[1].loadFromFile(CLOSE_BUTTON);
     buttonTextures[2].loadFromFile(SETTINGS_BUTTON);
+    buttonTextures[3].loadFromFile(ABOUT_BUTTON);
 
     // setting images for background and buttons
     background.setTexture(&bgIMG);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
         buttons[i].setTexture(buttonTextures[i]);
 
     float scale = (float)game->height / (float)buttons[0].getLocalBounds().height;
     scale /= 10;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
         buttons[i].setScale(sf::Vector2f(scale, scale));
 
     // setting background size and position
@@ -64,6 +65,8 @@ void MenuScreen::init()
     // settings button
     buttons[2].setPosition(sf::Vector2f(game->width - (buttons[2].getGlobalBounds().width + +buttons[1].getGlobalBounds().width + game->width * 2 * 0.005f), game->height * 0.005f));
 
+    // about button
+    buttons[3].setPosition(sf::Vector2f(game->width * 0.005f, game->height * 0.005f));
 
     // setting up onAction for buttons
     buttons[0].setOnAction([game = this->game]() {
@@ -78,6 +81,22 @@ void MenuScreen::init()
         settings.enable();
     });
 
+    buttons[3].setOnAction([this]() {
+
+    const char* url = "https://github.com/RamezzE/FlappyBird";
+
+    #ifdef _WIN32
+        const char* command = "start";
+    #elif __APPLE__
+        const char* command = "open";
+    #else
+        const char* command = "xdg-open";
+    #endif
+
+    char fullCommand[256];
+    snprintf(fullCommand, sizeof(fullCommand), "%s %s", command, url);
+    system(fullCommand);
+    });
 }
 
 void MenuScreen::handleInput()
@@ -86,7 +105,7 @@ void MenuScreen::handleInput()
 
     while (game->window->pollEvent(event))
     {
-        for (ushort i = 0; i < 3; i++)
+        for (ushort i = 0; i < 4; i++)
             buttons[i].handleInput(event);
 
         settings.handleInput(event);
@@ -121,15 +140,15 @@ void MenuScreen::update(const float dt)
         
     settings.update(dt);
     if (settings.isOn()) 
-        for (ushort i = 0; i < 3; i++)
+        for (ushort i = 0; i < 4; i++)
             buttons[i].setDisabled(true);
 
     else 
-        for (ushort i = 0; i < 3; i++)
+        for (ushort i = 0; i < 4; i++)
             buttons[i].setDisabled(false);
     
     
-    for (ushort i = 0; i < 3; i++)
+    for (ushort i = 0; i < 4; i++)
         buttons[i].update(game->window);
 }
 
@@ -137,7 +156,7 @@ void MenuScreen::draw()
 {
     game->window->draw(background);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
         buttons[i].render(game->window);
 
     game->window->draw(title);

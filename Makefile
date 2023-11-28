@@ -13,19 +13,15 @@ DEFINITON_FILE := $(wildcard $(HPP_DIR)/Definitions.hpp)
 
 CC = g++
 
-CFLAGS       := -std=c++14 -g -gdwarf-2 -fno-omit-frame-pointer
-# CFLAGS       := -std=c++14
+# CFLAGS       := -std=c++14 -g -gdwarf-2 -fno-omit-frame-pointer
+CFLAGS       := -std=c++14
 
-# CPPFLAGS  := -I"SFML\include" -DSFML_STATIC
 CPPFLAGS  := -I"SFML\include"
 
 LDFLAGS := -L"SFML\lib"
 
-# LDLIBS := -lsfml-graphics-s-d -lsfml-window-s-d -lsfml-system-s-d -lopengl32 -lwinmm -lgdi32 -lsfml-main-d -lfreetype  "C:\GitHub\FlappyBird\openal32.lib" -lflac -lvorbisenc -lvorbisfile -lvorbis  -logg -lsfml-audio-s-d 
-# LDLIBS := -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lwinmm -lgdi32 -lsfml-main -lfreetype -mwindows
-# LDLIBS := -lsfml-graphics-d -lsfml-window-d -lsfml-system-d -lopengl32 -lwinmm -lgdi32 -lsfml-main-d -lfreetype -lsfml-audio-d
-
-LDLIBS := -lsfml-graphics-d -lsfml-window-d -lsfml-system-d -lsfml-audio-d
+# LDLIBS := -lsfml-graphics-d -lsfml-window-d -lsfml-system-d -lsfml-audio-d
+LDLIBS := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 # APP_NAME := "FlarkyBird"
 TARGET := "myApp.exe"
