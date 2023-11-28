@@ -13,6 +13,8 @@ GameScreen::GameScreen(Game *myGame)
 
     skyIMG.loadFromFile(SKY_FILEPATH);
     groundIMG.loadFromFile(GROUND_FILEPATH);
+    ground2IMG.loadFromFile(GROUND_FILEPATH);
+
     buttonTextures[0].loadFromFile(MENU_BUTTON);
     buttonTextures[1].loadFromFile(RETRY_BUTTON);
     buttonTextures[2].loadFromFile(PAUSE_BUTTON);
@@ -20,7 +22,8 @@ GameScreen::GameScreen(Game *myGame)
 
     sky.setTexture(&skyIMG);
     ground.setTexture(&groundIMG);
-
+    ground2.setTexture(&ground2IMG);
+    
     for (ushort i = 0; i < 3; i++)
         buttons[i].setTexture(buttonTextures[i]);
 
@@ -32,6 +35,10 @@ void GameScreen::init()
     // setting background size
     sky.setSize(sf::Vector2f(game->width * 1.5, game->height));
     ground.setSize(sf::Vector2f(game->width * 1.5, game->height));
+    ground2.setSize(sf::Vector2f(game->width * 1.5, game->height));
+
+    ground.setPosition(sf::Vector2f(game->width - ground.getSize().y,0));
+    ground2.setPosition(sf::Vector2f(ground.getPosition().x + ground.getSize().x, 0));
 
     ObstacleSpawner.setGap(player.getHeight() * 2.7f);
 
@@ -160,6 +167,10 @@ void GameScreen::handleInput()
 
 void GameScreen::update(float dt)
 {
+
+    if (!game->isPaused() && !player.isDead() && !player.isCollided())
+        loopGround(dt);
+    
     // quad Tree is reconstructed every frame
     myTree.reset();
 
@@ -228,6 +239,7 @@ void GameScreen::draw()
     ObstacleSpawner.draw(game->window);
 
     game->window->draw(ground);
+    game->window->draw(ground2);
     game->window->draw(scoreText);
     game->window->draw(highScoreText);
 
@@ -250,4 +262,17 @@ void GameScreen::flashScreen(sf::Clock flashCLK, Game *game)
         white.setFillColor(sf::Color(255, 255, 255, 100));
         game->window->draw(white);
     }
+}
+
+void GameScreen::loopGround(const float dt)
+{
+    // loops background
+    ground.move(-BACKGROUND_LOOP_SPEED * dt, 0);
+    ground2.move(-BACKGROUND_LOOP_SPEED * dt, 0);
+
+    if (ground.getPosition().x + ground.getGlobalBounds().width < 0)
+        ground.setPosition(sf::Vector2f(ground2.getPosition().x + ground2.getGlobalBounds().width, 0));
+
+    if (ground2.getPosition().x + ground2.getGlobalBounds().width < 0)
+        ground2.setPosition(sf::Vector2f(ground.getPosition().x + ground.getGlobalBounds().width, 0));
 }

@@ -25,17 +25,19 @@ private:
 
 	void replay();
 
+	void loopGround(const float dt);
+
 	Game *game;
 
 	static void flashScreen(sf::Clock flashCLK, Game *game);
 
 	QuadTree<sf::Sprite> myTree;
 	sf::FloatRect boundary;
-	sf::RectangleShape sky, ground;
+	sf::RectangleShape sky, ground, ground2;
 
 	sf::Clock flashCLK;
 
-	sf::Texture skyIMG, groundIMG;
+	sf::Texture skyIMG, groundIMG, ground2IMG;
 	
 	Button buttons[3]; // 0 = menu, 1 = retry, 2 = pause
 
