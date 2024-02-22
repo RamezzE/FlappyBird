@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
-#include <windows.h>
 
 #include "src/hpp/Game.hpp"
 
@@ -9,10 +8,6 @@ unsigned short widthRatio, heightRatio, myWidth, myHeight;
 
 int main()
 {
-    // hiding console
-    HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, 0);
-
     srand(time(NULL));
 
     const unsigned short screenWidth = sf::VideoMode::getDesktopMode().width;
