@@ -24,7 +24,7 @@ ifeq ($(OS),Windows_NT)
     # Windows-specific settings
     CPPFLAGS    := -I"$(SFML_DIR)\include"
     LDFLAGS     := -L"$(SFML_DIR)\lib"
-    LDLIBS      := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+    LDLIBS      := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -mwindows
     LDLIBS-D    := -lsfml-graphics-d -lsfml-window-d -lsfml-system-d -lsfml-audio-d
     TARGET      := "Flarky Bird.exe"
     RM          := del
