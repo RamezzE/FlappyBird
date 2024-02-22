@@ -6,7 +6,7 @@
 #define PLAYER_FRAME_4 "assets/pics/bird/frame-4.png"
 
 #define SKY_FILEPATH "assets/pics/background/SKY.png"
-#define GROUND_FILEPATH "assets/pics/background/ground.png"
+#define GROUND_FILEPATH "assets/pics/background/GROUND.png"
 
 #define OBSTACLE_UP_FILEPATH "assets/pics/obstacles/wood_log_up.png"
 #define OBSTACLE_DOWN_FILEPATH "assets/pics/obstacles/wood_log_down.png"
