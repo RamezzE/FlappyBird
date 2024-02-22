@@ -8,3 +8,6 @@ SFML-2.5.1 (mingw)
 SFML
 obj
 *.o
+/.idea
+/cmake-build-debug
+/bin
